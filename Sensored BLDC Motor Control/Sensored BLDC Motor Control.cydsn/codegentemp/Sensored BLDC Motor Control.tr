@@ -1,0 +1,130 @@
+##################################################################### 
+                    Table of Contents
+===================================================================== 
+	1::Clock Frequency Summary
+	2::Clock Relationship Summary
+	3::Datasheet Report
+		3.1::Setup to Clock
+		3.2::Clock to Out
+		3.3::Pad to Pad
+	4::Path Details for Clock Frequency Summary
+	5::Path Details for Clock Relationship Summary
+===================================================================== 
+                    End of Table of Contents
+##################################################################### 
+
+##################################################################### 
+                    1::Clock Frequency Summary
+===================================================================== 
+Number of clocks: 16
+Clock: ADC_SAR_Seq_1_intClock       | N/A  | Target: 16.00 MHz  | 
+Clock: ADC_SAR_Seq_1_intClock(FFB)  | N/A  | Target: 16.00 MHz  | 
+Clock: CyHFCLK                      | N/A  | Target: 48.00 MHz  | 
+Clock: CyILO                        | N/A  | Target: 0.03 MHz   | 
+Clock: CyIMO                        | N/A  | Target: 48.00 MHz  | 
+Clock: CyLFCLK                      | N/A  | Target: 0.03 MHz   | 
+Clock: CyRouted1                    | N/A  | Target: 48.00 MHz  | 
+Clock: CySYSCLK                     | N/A  | Target: 48.00 MHz  | 
+Clock: UART_BCP_SCBCLK              | N/A  | Target: 1.37 MHz   | 
+Clock: UART_BCP_SCBCLK(FFB)         | N/A  | Target: 1.37 MHz   | 
+Clock: UART_Pi_SCBCLK               | N/A  | Target: 0.92 MHz   | 
+Clock: UART_Pi_SCBCLK(FFB)          | N/A  | Target: 0.92 MHz   | 
+Clock: clock_1                      | N/A  | Target: 4.80 MHz   | 
+Clock: clock_1(FFB)                 | N/A  | Target: 4.80 MHz   | 
+Clock: clock_2                      | N/A  | Target: 0.20 MHz   | 
+Clock: clock_2(FFB)                 | N/A  | Target: 0.20 MHz   | 
+
+ =====================================================================
+                    End of Clock Frequency Summary
+ #####################################################################
+
+
+ #####################################################################
+                    2::Clock Relationship Summary
+ =====================================================================
+
+Launch Clock  Capture Clock  Constraint(R-R)  Slack(R-R)  Constraint(R-F)  Slack(R-F)  Constraint(F-F)  Slack(F-F)  Constraint(F-R)  Slack(F-R)  
+
+ =====================================================================
+                    End of Clock Relationship Summary
+ #####################################################################
+
+
+ #####################################################################
+                    3::Datasheet Report
+
+All values are in Picoseconds
+ =====================================================================
+
+3.1::Setup to Clock                     
+-------------------                     
+
+Port Name  Setup to Clk  Clock Name:Phase  
+---------  ------------  ----------------  
+
+
+-----------------------3.2::Clock to Out
+----------------------------------------
+
+Port Name     Clock to Out  Clock Name:Phase  
+------------  ------------  ----------------  
+PWMAH(0)_PAD  32863         clock_1(FFB):R    
+PWMAH(0)_PAD  32761         CyHFCLK:R         
+PWMAL(0)_PAD  31089         CyHFCLK:R         
+PWMBH(0)_PAD  34314         clock_1(FFB):R    
+PWMBH(0)_PAD  34212         CyHFCLK:R         
+PWMBL(0)_PAD  29703         CyHFCLK:R         
+PWMCH(0)_PAD  31194         clock_1(FFB):R    
+PWMCH(0)_PAD  31097         CyHFCLK:R         
+PWMCL(0)_PAD  30709         CyHFCLK:R         
+
+
+                         3.3::Pad to Pad
+                         ---------------
+
+Port Name (Source)  Port Name (Destination)  Delay  
+------------------  -----------------------  -----  
+Hall2(0)_PAD        PWMAH(0)_PAD             49577  
+Hall3(0)_PAD        PWMAH(0)_PAD             49080  
+Hall2(0)_PAD        PWMAL(0)_PAD             48423  
+Hall3(0)_PAD        PWMAL(0)_PAD             47527  
+Hall2(0)_PAD        PWMBH(0)_PAD             51019  
+Hall1(0)_PAD        PWMBH(0)_PAD             50188  
+Hall2(0)_PAD        PWMBL(0)_PAD             46520  
+Hall1(0)_PAD        PWMBL(0)_PAD             45688  
+Hall3(0)_PAD        PWMCH(0)_PAD             47951  
+Hall1(0)_PAD        PWMCH(0)_PAD             47228  
+Hall3(0)_PAD        PWMCL(0)_PAD             47957  
+Hall1(0)_PAD        PWMCL(0)_PAD             46684  
+
+ =====================================================================
+                    End of Datasheet Report
+ #####################################################################
+ #####################################################################
+                    4::Path Details for Clock Frequency Summary
+
+ =====================================================================
+                    End of Path Details for Clock Frequency Summary
+ #####################################################################
+
+
+ #####################################################################
+                    5::Path Details for Clock Relationship Summary
+ =====================================================================
+
+
+ =====================================================================
+                    End of Path Details for Clock Relationship Summary
+ #####################################################################
+
+##################################################################### 
+                    Detailed Report for all timing paths 
+===================================================================== 
+===================================================================== 
+                    End of Detailed Report for all timing paths 
+##################################################################### 
+
+##################################################################### 
+                    End of Timing Report 
+##################################################################### 
+

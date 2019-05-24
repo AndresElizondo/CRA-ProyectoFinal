@@ -1,0 +1,1175 @@
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"getvalue.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.VoltageCheck,"ax",%progbits
+  20              		.align	2
+  21              		.global	VoltageCheck
+  22              		.code	16
+  23              		.thumb_func
+  24              		.type	VoltageCheck, %function
+  25              	VoltageCheck:
+  26              	.LFB32:
+  27              		.file 1 "getvalue.c"
+   1:getvalue.c    **** /*******************************************************************************
+   2:getvalue.c    **** * Project Name		: Sensored BLDC Motor Control
+   3:getvalue.c    **** * File Name			: getvalue.c
+   4:getvalue.c    **** * Version			: 1.0
+   5:getvalue.c    **** * Device Used		: CY8C4245AXI-483     
+   6:getvalue.c    **** * Software Used		: PSoC Creator 4.2
+   7:getvalue.c    **** * Compiler Used		: ARM GCC 5.4.1 
+   8:getvalue.c    **** * Related Hardware  : CY8CKIT-042 PSoC 4 Pioneer Kit + CY8CKIT-037 PSoC 4
+   9:getvalue.c    **** *                     Motor Control Evaluation Kit
+  10:getvalue.c    **** ******************************************************************************
+  11:getvalue.c    **** * Copyright (2018), Cypress Semiconductor Corporation. All rights reserved.
+  12:getvalue.c    **** *******************************************************************************
+  13:getvalue.c    **** * This software, including source code, documentation and related materials
+  14:getvalue.c    **** * (“Software”), is owned by Cypress Semiconductor Corporation or one of its
+  15:getvalue.c    **** * subsidiaries (“Cypress”) and is protected by and subject to worldwide patent
+  16:getvalue.c    **** * protection (United States and foreign), United States copyright laws and
+  17:getvalue.c    **** * international treaty provisions. Therefore, you may use this Software only
+  18:getvalue.c    **** * as provided in the license agreement accompanying the software package from
+  19:getvalue.c    **** * which you obtained this Software (“EULA”).
+  20:getvalue.c    **** *
+  21:getvalue.c    **** * If no EULA applies, Cypress hereby grants you a personal, nonexclusive,
+  22:getvalue.c    **** * non-transferable license to copy, modify, and compile the Software source
+  23:getvalue.c    **** * code solely for use in connection with Cypress’s integrated circuit products.
+  24:getvalue.c    **** * Any reproduction, modification, translation, compilation, or representation
+  25:getvalue.c    **** * of this Software except as specified above is prohibited without the express
+  26:getvalue.c    **** * written permission of Cypress.
+  27:getvalue.c    **** *
+  28:getvalue.c    **** * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND, 
+  29:getvalue.c    **** * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED 
+  30:getvalue.c    **** * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 2
+
+
+  31:getvalue.c    **** * reserves the right to make changes to the Software without notice. Cypress 
+  32:getvalue.c    **** * does not assume any liability arising out of the application or use of the 
+  33:getvalue.c    **** * Software or any product or circuit described in the Software. Cypress does 
+  34:getvalue.c    **** * not authorize its products for use in any products where a malfunction or 
+  35:getvalue.c    **** * failure of the Cypress product may reasonably be expected to result in 
+  36:getvalue.c    **** * significant property damage, injury or death (“High Risk Product”). By 
+  37:getvalue.c    **** * including Cypress’s product in a High Risk Product, the manufacturer of such 
+  38:getvalue.c    **** * system or application assumes all risk of such use and in doing so agrees to 
+  39:getvalue.c    **** * indemnify Cypress against all liability.
+  40:getvalue.c    **** *******************************************************************************/
+  41:getvalue.c    **** #include <project.h>
+  42:getvalue.c    **** #include "speed.h"
+  43:getvalue.c    **** #include "motor.h"
+  44:getvalue.c    **** #include "getvalue.h"
+  45:getvalue.c    **** #include "userinterface.h"
+  46:getvalue.c    **** 
+  47:getvalue.c    **** /*******************************************************************************
+  48:getvalue.c    **** * Function Name: ReadVolt
+  49:getvalue.c    **** ********************************************************************************
+  50:getvalue.c    **** * Summary:
+  51:getvalue.c    **** * The ReadVolt function samples Vbus to protect board from low-voltage and high
+  52:getvalue.c    **** * voltage. 
+  53:getvalue.c    **** *
+  54:getvalue.c    **** * Parameters: None 
+  55:getvalue.c    **** *
+  56:getvalue.c    **** * Return: None
+  57:getvalue.c    **** *
+  58:getvalue.c    **** *******************************************************************************/
+  59:getvalue.c    **** 
+  60:getvalue.c    **** void VoltageCheck(void)
+  61:getvalue.c    **** {
+  28              		.loc 1 61 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 8
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32 0000 80B5     		push	{r7, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 7, -8
+  35              		.cfi_offset 14, -4
+  36 0002 82B0     		sub	sp, sp, #8
+  37              		.cfi_def_cfa_offset 16
+  38 0004 00AF     		add	r7, sp, #0
+  39              		.cfi_def_cfa_register 7
+  62:getvalue.c    ****     uint16 adcResult = 0;	
+  40              		.loc 1 62 0
+  41 0006 BB1D     		adds	r3, r7, #6
+  42 0008 0022     		movs	r2, #0
+  43 000a 1A80     		strh	r2, [r3]
+  63:getvalue.c    ****     static uint16 highVoltCounter = 0;
+  64:getvalue.c    ****     static uint16 lowVoltCounter = 0;    
+  65:getvalue.c    **** 	adcResult = (ADC_SAR_Seq_1_GetResult16(0) & 0x00ff);       /* filter unwanted MSB, 2011,12,29 */
+  44              		.loc 1 65 0
+  45 000c 0020     		movs	r0, #0
+  46 000e FFF7FEFF 		bl	ADC_SAR_Seq_1_GetResult16
+  47 0012 0300     		movs	r3, r0
+  48 0014 9AB2     		uxth	r2, r3
+  49 0016 BB1D     		adds	r3, r7, #6
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 3
+
+
+  50 0018 FF21     		movs	r1, #255
+  51 001a 0A40     		ands	r2, r1
+  52 001c 1A80     		strh	r2, [r3]
+  66:getvalue.c    **** 
+  67:getvalue.c    ****    /*Over voltage or under voltage*/
+  68:getvalue.c    ****     if(adcResult < LVTHRESHOLD)
+  53              		.loc 1 68 0
+  54 001e BB1D     		adds	r3, r7, #6
+  55 0020 1B88     		ldrh	r3, [r3]
+  56 0022 272B     		cmp	r3, #39
+  57 0024 06D8     		bhi	.L2
+  69:getvalue.c    ****     {
+  70:getvalue.c    ****     	lowVoltCounter++;					/*Record low voltage count*/
+  58              		.loc 1 70 0
+  59 0026 204B     		ldr	r3, .L9
+  60 0028 1B88     		ldrh	r3, [r3]
+  61 002a 0133     		adds	r3, r3, #1
+  62 002c 9AB2     		uxth	r2, r3
+  63 002e 1E4B     		ldr	r3, .L9
+  64 0030 1A80     		strh	r2, [r3]
+  65 0032 1EE0     		b	.L3
+  66              	.L2:
+  71:getvalue.c    ****     }
+  72:getvalue.c    ****     else if (adcResult > HVTHRESHOLD)
+  67              		.loc 1 72 0
+  68 0034 BB1D     		adds	r3, r7, #6
+  69 0036 1B88     		ldrh	r3, [r3]
+  70 0038 5A2B     		cmp	r3, #90
+  71 003a 06D9     		bls	.L4
+  73:getvalue.c    ****     {
+  74:getvalue.c    ****     	highVoltCounter++;					/*Record high voltage count*/
+  72              		.loc 1 74 0
+  73 003c 1B4B     		ldr	r3, .L9+4
+  74 003e 1B88     		ldrh	r3, [r3]
+  75 0040 0133     		adds	r3, r3, #1
+  76 0042 9AB2     		uxth	r2, r3
+  77 0044 194B     		ldr	r3, .L9+4
+  78 0046 1A80     		strh	r2, [r3]
+  79 0048 13E0     		b	.L3
+  80              	.L4:
+  75:getvalue.c    ****     }	   
+  76:getvalue.c    ****     else if((lowVoltCounter>0)||(highVoltCounter>0))		/*Eliminate pulse high or low voltage count*/
+  81              		.loc 1 76 0
+  82 004a 174B     		ldr	r3, .L9
+  83 004c 1B88     		ldrh	r3, [r3]
+  84 004e 002B     		cmp	r3, #0
+  85 0050 03D1     		bne	.L5
+  86              		.loc 1 76 0 is_stmt 0 discriminator 1
+  87 0052 164B     		ldr	r3, .L9+4
+  88 0054 1B88     		ldrh	r3, [r3]
+  89 0056 002B     		cmp	r3, #0
+  90 0058 0BD0     		beq	.L3
+  91              	.L5:
+  77:getvalue.c    ****     {
+  78:getvalue.c    ****     	lowVoltCounter--;
+  92              		.loc 1 78 0 is_stmt 1
+  93 005a 134B     		ldr	r3, .L9
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 4
+
+
+  94 005c 1B88     		ldrh	r3, [r3]
+  95 005e 013B     		subs	r3, r3, #1
+  96 0060 9AB2     		uxth	r2, r3
+  97 0062 114B     		ldr	r3, .L9
+  98 0064 1A80     		strh	r2, [r3]
+  79:getvalue.c    **** 		highVoltCounter--;
+  99              		.loc 1 79 0
+ 100 0066 114B     		ldr	r3, .L9+4
+ 101 0068 1B88     		ldrh	r3, [r3]
+ 102 006a 013B     		subs	r3, r3, #1
+ 103 006c 9AB2     		uxth	r2, r3
+ 104 006e 0F4B     		ldr	r3, .L9+4
+ 105 0070 1A80     		strh	r2, [r3]
+ 106              	.L3:
+  80:getvalue.c    ****     }
+  81:getvalue.c    **** 	
+  82:getvalue.c    ****    /*Last more than voltage error time threshold, then stop motor*/
+  83:getvalue.c    ****    	if(lowVoltCounter > LVCNTTHRES)
+ 107              		.loc 1 83 0
+ 108 0072 0D4B     		ldr	r3, .L9
+ 109 0074 1A88     		ldrh	r2, [r3]
+ 110 0076 A023     		movs	r3, #160
+ 111 0078 1B01     		lsls	r3, r3, #4
+ 112 007a 9A42     		cmp	r2, r3
+ 113 007c 04D9     		bls	.L6
+  84:getvalue.c    ****     {       
+  85:getvalue.c    ****    		errorState = lowVolt;
+ 114              		.loc 1 85 0
+ 115 007e 0C4B     		ldr	r3, .L9+8
+ 116 0080 0322     		movs	r2, #3
+ 117 0082 1A70     		strb	r2, [r3]
+  86:getvalue.c    ****     	UpdateStatusError();		
+ 118              		.loc 1 86 0
+ 119 0084 FFF7FEFF 		bl	UpdateStatusError
+ 120              	.L6:
+  87:getvalue.c    ****     }
+  88:getvalue.c    ****     if(highVoltCounter > HVCNTTHRES)
+ 121              		.loc 1 88 0
+ 122 0088 084B     		ldr	r3, .L9+4
+ 123 008a 1A88     		ldrh	r2, [r3]
+ 124 008c A023     		movs	r3, #160
+ 125 008e 1B01     		lsls	r3, r3, #4
+ 126 0090 9A42     		cmp	r2, r3
+ 127 0092 04D9     		bls	.L8
+  89:getvalue.c    ****     {
+  90:getvalue.c    ****    		errorState = highVolt;
+ 128              		.loc 1 90 0
+ 129 0094 064B     		ldr	r3, .L9+8
+ 130 0096 0422     		movs	r2, #4
+ 131 0098 1A70     		strb	r2, [r3]
+  91:getvalue.c    ****     	UpdateStatusError();
+ 132              		.loc 1 91 0
+ 133 009a FFF7FEFF 		bl	UpdateStatusError
+ 134              	.L8:
+  92:getvalue.c    ****     }
+  93:getvalue.c    **** }
+ 135              		.loc 1 93 0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 5
+
+
+ 136 009e C046     		nop
+ 137 00a0 BD46     		mov	sp, r7
+ 138 00a2 02B0     		add	sp, sp, #8
+ 139              		@ sp needed
+ 140 00a4 80BD     		pop	{r7, pc}
+ 141              	.L10:
+ 142 00a6 C046     		.align	2
+ 143              	.L9:
+ 144 00a8 00000000 		.word	lowVoltCounter.6339
+ 145 00ac 02000000 		.word	highVoltCounter.6338
+ 146 00b0 00000000 		.word	errorState
+ 147              		.cfi_endproc
+ 148              	.LFE32:
+ 149              		.size	VoltageCheck, .-VoltageCheck
+ 150              		.global	__aeabi_uidiv
+ 151              		.section	.text.ReadRpmRef,"ax",%progbits
+ 152              		.align	2
+ 153              		.global	ReadRpmRef
+ 154              		.code	16
+ 155              		.thumb_func
+ 156              		.type	ReadRpmRef, %function
+ 157              	ReadRpmRef:
+ 158              	.LFB33:
+  94:getvalue.c    **** 
+  95:getvalue.c    **** /*******************************************************************************
+  96:getvalue.c    **** * Function Name: ReadRpmRef
+  97:getvalue.c    **** ********************************************************************************
+  98:getvalue.c    **** * Summary:
+  99:getvalue.c    **** * The ReadRpmRef function reads speed reference value from potentiometer. 
+ 100:getvalue.c    **** *
+ 101:getvalue.c    **** * Parameters: None  
+ 102:getvalue.c    **** *
+ 103:getvalue.c    **** * Return: uint16  
+ 104:getvalue.c    **** *
+ 105:getvalue.c    **** *******************************************************************************/
+ 106:getvalue.c    **** uint16 ReadRpmRef(void)
+ 107:getvalue.c    **** {
+ 159              		.loc 1 107 0
+ 160              		.cfi_startproc
+ 161              		@ args = 0, pretend = 0, frame = 8
+ 162              		@ frame_needed = 1, uses_anonymous_args = 0
+ 163 0000 90B5     		push	{r4, r7, lr}
+ 164              		.cfi_def_cfa_offset 12
+ 165              		.cfi_offset 4, -12
+ 166              		.cfi_offset 7, -8
+ 167              		.cfi_offset 14, -4
+ 168 0002 83B0     		sub	sp, sp, #12
+ 169              		.cfi_def_cfa_offset 24
+ 170 0004 00AF     		add	r7, sp, #0
+ 171              		.cfi_def_cfa_register 7
+ 108:getvalue.c    ****     uint16 speedSampleCur = (ADC_SAR_Seq_1_GetResult16(SPEED_REF_CHAN) & 0x0FFF); 
+ 172              		.loc 1 108 0
+ 173 0006 0120     		movs	r0, #1
+ 174 0008 FFF7FEFF 		bl	ADC_SAR_Seq_1_GetResult16
+ 175 000c 0300     		movs	r3, r0
+ 176 000e 9AB2     		uxth	r2, r3
+ 177 0010 BB1D     		adds	r3, r7, #6
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 6
+
+
+ 178 0012 1205     		lsls	r2, r2, #20
+ 179 0014 120D     		lsrs	r2, r2, #20
+ 180 0016 1A80     		strh	r2, [r3]
+ 109:getvalue.c    ****     uint16 speedRange = UI_Data.maxSpeedRpm - UI_Data.minSpeedRpm;
+ 181              		.loc 1 109 0
+ 182 0018 194B     		ldr	r3, .L15
+ 183 001a 5989     		ldrh	r1, [r3, #10]
+ 184 001c 184B     		ldr	r3, .L15
+ 185 001e 9A89     		ldrh	r2, [r3, #12]
+ 186 0020 3B1D     		adds	r3, r7, #4
+ 187 0022 8A1A     		subs	r2, r1, r2
+ 188 0024 1A80     		strh	r2, [r3]
+ 110:getvalue.c    ****     uint16 speedGiven = 0;
+ 189              		.loc 1 110 0
+ 190 0026 BB1C     		adds	r3, r7, #2
+ 191 0028 0022     		movs	r2, #0
+ 192 002a 1A80     		strh	r2, [r3]
+ 111:getvalue.c    ****     
+ 112:getvalue.c    ****     if(speedSampleCur > MAX_SPEED_REF_ADC_VALUE)
+ 193              		.loc 1 112 0
+ 194 002c BB1D     		adds	r3, r7, #6
+ 195 002e 1B88     		ldrh	r3, [r3]
+ 196 0030 144A     		ldr	r2, .L15+4
+ 197 0032 9342     		cmp	r3, r2
+ 198 0034 02D9     		bls	.L12
+ 113:getvalue.c    ****         speedSampleCur = MAX_SPEED_REF_ADC_VALUE;
+ 199              		.loc 1 113 0
+ 200 0036 BB1D     		adds	r3, r7, #6
+ 201 0038 124A     		ldr	r2, .L15+4
+ 202 003a 1A80     		strh	r2, [r3]
+ 203              	.L12:
+ 114:getvalue.c    ****     if(speedSampleCur < MIN_SPEED_REF_ADC_VALUE)
+ 204              		.loc 1 114 0
+ 205 003c BB1D     		adds	r3, r7, #6
+ 206 003e 1B88     		ldrh	r3, [r3]
+ 207 0040 9B2B     		cmp	r3, #155
+ 208 0042 02D8     		bhi	.L13
+ 115:getvalue.c    ****         speedSampleCur = MIN_SPEED_REF_ADC_VALUE;
+ 209              		.loc 1 115 0
+ 210 0044 BB1D     		adds	r3, r7, #6
+ 211 0046 9C22     		movs	r2, #156
+ 212 0048 1A80     		strh	r2, [r3]
+ 213              	.L13:
+ 116:getvalue.c    ****     
+ 117:getvalue.c    ****     speedSampleCur -= MIN_SPEED_REF_ADC_VALUE;
+ 214              		.loc 1 117 0
+ 215 004a BB1D     		adds	r3, r7, #6
+ 216 004c BA1D     		adds	r2, r7, #6
+ 217 004e 1288     		ldrh	r2, [r2]
+ 218 0050 9C3A     		subs	r2, r2, #156
+ 219 0052 1A80     		strh	r2, [r3]
+ 118:getvalue.c    ****     speedGiven = UI_Data.minSpeedRpm + ((uint32)(speedSampleCur * speedRange) / 
+ 220              		.loc 1 118 0
+ 221 0054 0A4B     		ldr	r3, .L15
+ 222 0056 9C89     		ldrh	r4, [r3, #12]
+ 223 0058 BB1D     		adds	r3, r7, #6
+ 224 005a 1B88     		ldrh	r3, [r3]
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 7
+
+
+ 225 005c 3A1D     		adds	r2, r7, #4
+ 226 005e 1288     		ldrh	r2, [r2]
+ 227 0060 5343     		muls	r3, r2
+ 228 0062 0949     		ldr	r1, .L15+8
+ 229 0064 1800     		movs	r0, r3
+ 230 0066 FFF7FEFF 		bl	__aeabi_uidiv
+ 231 006a 0300     		movs	r3, r0
+ 232 006c 9AB2     		uxth	r2, r3
+ 233 006e BB1C     		adds	r3, r7, #2
+ 234 0070 A218     		adds	r2, r4, r2
+ 235 0072 1A80     		strh	r2, [r3]
+ 119:getvalue.c    ****                                                (MAX_SPEED_REF_ADC_VALUE - MIN_SPEED_REF_ADC_VALUE))
+ 120:getvalue.c    ****     
+ 121:getvalue.c    ****     return speedGiven;
+ 236              		.loc 1 121 0
+ 237 0074 BB1C     		adds	r3, r7, #2
+ 238 0076 1B88     		ldrh	r3, [r3]
+ 122:getvalue.c    **** //    uint16 speedSampleCur = MIN_SPEED_REF_ADC_VALUE; //(ADC_SAR_Seq_1_GetResult16(SPEED_REF_CHAN)
+ 123:getvalue.c    **** //    uint16 speedRange = UI_Data.maxSpeedRpm - UI_Data.minSpeedRpm;
+ 124:getvalue.c    **** //    uint16 speedGiven = 0;
+ 125:getvalue.c    **** //    
+ 126:getvalue.c    **** //    
+ 127:getvalue.c    **** //    if(speedSampleCur > MAX_SPEED_REF_ADC_VALUE)
+ 128:getvalue.c    **** //        speedSampleCur = MAX_SPEED_REF_ADC_VALUE;
+ 129:getvalue.c    **** //    if(speedSampleCur < MIN_SPEED_REF_ADC_VALUE)
+ 130:getvalue.c    **** //        speedSampleCur = MIN_SPEED_REF_ADC_VALUE;
+ 131:getvalue.c    **** //    
+ 132:getvalue.c    **** //    uint16 velocidadMotor = speedSampleCur - MIN_SPEED_REF_ADC_VALUE;
+ 133:getvalue.c    **** //    speedGiven = UI_Data.minSpeedRpm + ((uint32)(velocidadMotor * speedRange) / 
+ 134:getvalue.c    **** //                                           (MAX_SPEED_REF_ADC_VALUE - MIN_SPEED_REF_ADC_VALUE));
+ 135:getvalue.c    **** //   
+ 136:getvalue.c    **** //    return speedGiven;
+ 137:getvalue.c    **** }
+ 239              		.loc 1 137 0
+ 240 0078 1800     		movs	r0, r3
+ 241 007a BD46     		mov	sp, r7
+ 242 007c 03B0     		add	sp, sp, #12
+ 243              		@ sp needed
+ 244 007e 90BD     		pop	{r4, r7, pc}
+ 245              	.L16:
+ 246              		.align	2
+ 247              	.L15:
+ 248 0080 00000000 		.word	UI_Data
+ 249 0084 630F0000 		.word	3939
+ 250 0088 C70E0000 		.word	3783
+ 251              		.cfi_endproc
+ 252              	.LFE33:
+ 253              		.size	ReadRpmRef, .-ReadRpmRef
+ 254              		.bss
+ 255              		.align	1
+ 256              	lowVoltCounter.6339:
+ 257 0000 0000     		.space	2
+ 258              		.align	1
+ 259              	highVoltCounter.6338:
+ 260 0002 0000     		.space	2
+ 261              		.text
+ 262              	.Letext0:
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 8
+
+
+ 263              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 264              		.file 3 "motor.h"
+ 265              		.section	.debug_info,"",%progbits
+ 266              	.Ldebug_info0:
+ 267 0000 07020000 		.4byte	0x207
+ 268 0004 0400     		.2byte	0x4
+ 269 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 270 000a 04       		.byte	0x4
+ 271 000b 01       		.uleb128 0x1
+ 272 000c 28010000 		.4byte	.LASF38
+ 273 0010 0C       		.byte	0xc
+ 274 0011 3C020000 		.4byte	.LASF39
+ 275 0015 3A000000 		.4byte	.LASF40
+ 276 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 277 001d 00000000 		.4byte	0
+ 278 0021 00000000 		.4byte	.Ldebug_line0
+ 279 0025 02       		.uleb128 0x2
+ 280 0026 01       		.byte	0x1
+ 281 0027 06       		.byte	0x6
+ 282 0028 A2020000 		.4byte	.LASF0
+ 283 002c 02       		.uleb128 0x2
+ 284 002d 01       		.byte	0x1
+ 285 002e 08       		.byte	0x8
+ 286 002f BF010000 		.4byte	.LASF1
+ 287 0033 02       		.uleb128 0x2
+ 288 0034 02       		.byte	0x2
+ 289 0035 05       		.byte	0x5
+ 290 0036 D4010000 		.4byte	.LASF2
+ 291 003a 02       		.uleb128 0x2
+ 292 003b 02       		.byte	0x2
+ 293 003c 07       		.byte	0x7
+ 294 003d 15010000 		.4byte	.LASF3
+ 295 0041 02       		.uleb128 0x2
+ 296 0042 04       		.byte	0x4
+ 297 0043 05       		.byte	0x5
+ 298 0044 8D020000 		.4byte	.LASF4
+ 299 0048 02       		.uleb128 0x2
+ 300 0049 04       		.byte	0x4
+ 301 004a 07       		.byte	0x7
+ 302 004b FB000000 		.4byte	.LASF5
+ 303 004f 02       		.uleb128 0x2
+ 304 0050 08       		.byte	0x8
+ 305 0051 05       		.byte	0x5
+ 306 0052 5A020000 		.4byte	.LASF6
+ 307 0056 02       		.uleb128 0x2
+ 308 0057 08       		.byte	0x8
+ 309 0058 07       		.byte	0x7
+ 310 0059 1C020000 		.4byte	.LASF7
+ 311 005d 03       		.uleb128 0x3
+ 312 005e 04       		.byte	0x4
+ 313 005f 05       		.byte	0x5
+ 314 0060 696E7400 		.ascii	"int\000"
+ 315 0064 02       		.uleb128 0x2
+ 316 0065 04       		.byte	0x4
+ 317 0066 07       		.byte	0x7
+ 318 0067 04020000 		.4byte	.LASF8
+ 319 006b 04       		.uleb128 0x4
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 9
+
+
+ 320 006c E0000000 		.4byte	.LASF9
+ 321 0070 02       		.byte	0x2
+ 322 0071 E401     		.2byte	0x1e4
+ 323 0073 2C000000 		.4byte	0x2c
+ 324 0077 04       		.uleb128 0x4
+ 325 0078 EE010000 		.4byte	.LASF10
+ 326 007c 02       		.byte	0x2
+ 327 007d E501     		.2byte	0x1e5
+ 328 007f 3A000000 		.4byte	0x3a
+ 329 0083 04       		.uleb128 0x4
+ 330 0084 F5010000 		.4byte	.LASF11
+ 331 0088 02       		.byte	0x2
+ 332 0089 E601     		.2byte	0x1e6
+ 333 008b 48000000 		.4byte	0x48
+ 334 008f 02       		.uleb128 0x2
+ 335 0090 04       		.byte	0x4
+ 336 0091 04       		.byte	0x4
+ 337 0092 1C000000 		.4byte	.LASF12
+ 338 0096 02       		.uleb128 0x2
+ 339 0097 08       		.byte	0x8
+ 340 0098 04       		.byte	0x4
+ 341 0099 CD010000 		.4byte	.LASF13
+ 342 009d 02       		.uleb128 0x2
+ 343 009e 01       		.byte	0x1
+ 344 009f 08       		.byte	0x8
+ 345 00a0 68020000 		.4byte	.LASF14
+ 346 00a4 02       		.uleb128 0x2
+ 347 00a5 08       		.byte	0x8
+ 348 00a6 04       		.byte	0x4
+ 349 00a7 96020000 		.4byte	.LASF15
+ 350 00ab 02       		.uleb128 0x2
+ 351 00ac 04       		.byte	0x4
+ 352 00ad 07       		.byte	0x7
+ 353 00ae 51020000 		.4byte	.LASF16
+ 354 00b2 05       		.uleb128 0x5
+ 355 00b3 10       		.byte	0x10
+ 356 00b4 03       		.byte	0x3
+ 357 00b5 4C       		.byte	0x4c
+ 358 00b6 25010000 		.4byte	0x125
+ 359 00ba 06       		.uleb128 0x6
+ 360 00bb 44697200 		.ascii	"Dir\000"
+ 361 00bf 03       		.byte	0x3
+ 362 00c0 4E       		.byte	0x4e
+ 363 00c1 6B000000 		.4byte	0x6b
+ 364 00c5 00       		.byte	0
+ 365 00c6 07       		.uleb128 0x7
+ 366 00c7 75020000 		.4byte	.LASF17
+ 367 00cb 03       		.byte	0x3
+ 368 00cc 50       		.byte	0x50
+ 369 00cd 77000000 		.4byte	0x77
+ 370 00d1 02       		.byte	0x2
+ 371 00d2 07       		.uleb128 0x7
+ 372 00d3 2E000000 		.4byte	.LASF18
+ 373 00d7 03       		.byte	0x3
+ 374 00d8 51       		.byte	0x51
+ 375 00d9 77000000 		.4byte	0x77
+ 376 00dd 04       		.byte	0x4
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 10
+
+
+ 377 00de 06       		.uleb128 0x6
+ 378 00df 6B7000   		.ascii	"kp\000"
+ 379 00e2 03       		.byte	0x3
+ 380 00e3 53       		.byte	0x53
+ 381 00e4 77000000 		.4byte	0x77
+ 382 00e8 06       		.byte	0x6
+ 383 00e9 06       		.uleb128 0x6
+ 384 00ea 6B6900   		.ascii	"ki\000"
+ 385 00ed 03       		.byte	0x3
+ 386 00ee 54       		.byte	0x54
+ 387 00ef 77000000 		.4byte	0x77
+ 388 00f3 08       		.byte	0x8
+ 389 00f4 07       		.uleb128 0x7
+ 390 00f5 10000000 		.4byte	.LASF19
+ 391 00f9 03       		.byte	0x3
+ 392 00fa 56       		.byte	0x56
+ 393 00fb 77000000 		.4byte	0x77
+ 394 00ff 0A       		.byte	0xa
+ 395 0100 07       		.uleb128 0x7
+ 396 0101 22000000 		.4byte	.LASF20
+ 397 0105 03       		.byte	0x3
+ 398 0106 57       		.byte	0x57
+ 399 0107 77000000 		.4byte	0x77
+ 400 010b 0C       		.byte	0xc
+ 401 010c 07       		.uleb128 0x7
+ 402 010d BA000000 		.4byte	.LASF21
+ 403 0111 03       		.byte	0x3
+ 404 0112 58       		.byte	0x58
+ 405 0113 6B000000 		.4byte	0x6b
+ 406 0117 0E       		.byte	0xe
+ 407 0118 07       		.uleb128 0x7
+ 408 0119 FC010000 		.4byte	.LASF22
+ 409 011d 03       		.byte	0x3
+ 410 011e 59       		.byte	0x59
+ 411 011f 6B000000 		.4byte	0x6b
+ 412 0123 0F       		.byte	0xf
+ 413 0124 00       		.byte	0
+ 414 0125 08       		.uleb128 0x8
+ 415 0126 6D020000 		.4byte	.LASF23
+ 416 012a 03       		.byte	0x3
+ 417 012b 5A       		.byte	0x5a
+ 418 012c B2000000 		.4byte	0xb2
+ 419 0130 09       		.uleb128 0x9
+ 420 0131 A8000000 		.4byte	.LASF41
+ 421 0135 01       		.byte	0x1
+ 422 0136 2C000000 		.4byte	0x2c
+ 423 013a 03       		.byte	0x3
+ 424 013b 5E       		.byte	0x5e
+ 425 013c 5F010000 		.4byte	0x15f
+ 426 0140 0A       		.uleb128 0xa
+ 427 0141 B6010000 		.4byte	.LASF24
+ 428 0145 00       		.byte	0
+ 429 0146 0A       		.uleb128 0xa
+ 430 0147 AE020000 		.4byte	.LASF25
+ 431 014b 01       		.byte	0x1
+ 432 014c 0A       		.uleb128 0xa
+ 433 014d F1000000 		.4byte	.LASF26
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 11
+
+
+ 434 0151 02       		.byte	0x2
+ 435 0152 0A       		.uleb128 0xa
+ 436 0153 0D010000 		.4byte	.LASF27
+ 437 0157 03       		.byte	0x3
+ 438 0158 0A       		.uleb128 0xa
+ 439 0159 33020000 		.4byte	.LASF28
+ 440 015d 04       		.byte	0x4
+ 441 015e 00       		.byte	0
+ 442 015f 08       		.uleb128 0x8
+ 443 0160 00000000 		.4byte	.LASF29
+ 444 0164 03       		.byte	0x3
+ 445 0165 64       		.byte	0x64
+ 446 0166 30010000 		.4byte	0x130
+ 447 016a 0B       		.uleb128 0xb
+ 448 016b D3000000 		.4byte	.LASF42
+ 449 016f 01       		.byte	0x1
+ 450 0170 3C       		.byte	0x3c
+ 451 0171 00000000 		.4byte	.LFB32
+ 452 0175 B4000000 		.4byte	.LFE32-.LFB32
+ 453 0179 01       		.uleb128 0x1
+ 454 017a 9C       		.byte	0x9c
+ 455 017b B0010000 		.4byte	0x1b0
+ 456 017f 0C       		.uleb128 0xc
+ 457 0180 47020000 		.4byte	.LASF30
+ 458 0184 01       		.byte	0x1
+ 459 0185 3E       		.byte	0x3e
+ 460 0186 77000000 		.4byte	0x77
+ 461 018a 02       		.uleb128 0x2
+ 462 018b 91       		.byte	0x91
+ 463 018c 76       		.sleb128 -10
+ 464 018d 0C       		.uleb128 0xc
+ 465 018e DE010000 		.4byte	.LASF31
+ 466 0192 01       		.byte	0x1
+ 467 0193 3F       		.byte	0x3f
+ 468 0194 77000000 		.4byte	0x77
+ 469 0198 05       		.uleb128 0x5
+ 470 0199 03       		.byte	0x3
+ 471 019a 02000000 		.4byte	highVoltCounter.6338
+ 472 019e 0C       		.uleb128 0xc
+ 473 019f C4000000 		.4byte	.LASF32
+ 474 01a3 01       		.byte	0x1
+ 475 01a4 40       		.byte	0x40
+ 476 01a5 77000000 		.4byte	0x77
+ 477 01a9 05       		.uleb128 0x5
+ 478 01aa 03       		.byte	0x3
+ 479 01ab 00000000 		.4byte	lowVoltCounter.6339
+ 480 01af 00       		.byte	0
+ 481 01b0 0D       		.uleb128 0xd
+ 482 01b1 11020000 		.4byte	.LASF43
+ 483 01b5 01       		.byte	0x1
+ 484 01b6 6A       		.byte	0x6a
+ 485 01b7 77000000 		.4byte	0x77
+ 486 01bb 00000000 		.4byte	.LFB33
+ 487 01bf 8C000000 		.4byte	.LFE33-.LFB33
+ 488 01c3 01       		.uleb128 0x1
+ 489 01c4 9C       		.byte	0x9c
+ 490 01c5 F4010000 		.4byte	0x1f4
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 12
+
+
+ 491 01c9 0C       		.uleb128 0xc
+ 492 01ca 7E020000 		.4byte	.LASF33
+ 493 01ce 01       		.byte	0x1
+ 494 01cf 6C       		.byte	0x6c
+ 495 01d0 77000000 		.4byte	0x77
+ 496 01d4 02       		.uleb128 0x2
+ 497 01d5 91       		.byte	0x91
+ 498 01d6 6E       		.sleb128 -18
+ 499 01d7 0C       		.uleb128 0xc
+ 500 01d8 AF000000 		.4byte	.LASF34
+ 501 01dc 01       		.byte	0x1
+ 502 01dd 6D       		.byte	0x6d
+ 503 01de 77000000 		.4byte	0x77
+ 504 01e2 02       		.uleb128 0x2
+ 505 01e3 91       		.byte	0x91
+ 506 01e4 6C       		.sleb128 -20
+ 507 01e5 0C       		.uleb128 0xc
+ 508 01e6 B6020000 		.4byte	.LASF35
+ 509 01ea 01       		.byte	0x1
+ 510 01eb 6E       		.byte	0x6e
+ 511 01ec 77000000 		.4byte	0x77
+ 512 01f0 02       		.uleb128 0x2
+ 513 01f1 91       		.byte	0x91
+ 514 01f2 6A       		.sleb128 -22
+ 515 01f3 00       		.byte	0
+ 516 01f4 0E       		.uleb128 0xe
+ 517 01f5 E6000000 		.4byte	.LASF36
+ 518 01f9 03       		.byte	0x3
+ 519 01fa 66       		.byte	0x66
+ 520 01fb 5F010000 		.4byte	0x15f
+ 521 01ff 0E       		.uleb128 0xe
+ 522 0200 08000000 		.4byte	.LASF37
+ 523 0204 03       		.byte	0x3
+ 524 0205 68       		.byte	0x68
+ 525 0206 25010000 		.4byte	0x125
+ 526 020a 00       		.byte	0
+ 527              		.section	.debug_abbrev,"",%progbits
+ 528              	.Ldebug_abbrev0:
+ 529 0000 01       		.uleb128 0x1
+ 530 0001 11       		.uleb128 0x11
+ 531 0002 01       		.byte	0x1
+ 532 0003 25       		.uleb128 0x25
+ 533 0004 0E       		.uleb128 0xe
+ 534 0005 13       		.uleb128 0x13
+ 535 0006 0B       		.uleb128 0xb
+ 536 0007 03       		.uleb128 0x3
+ 537 0008 0E       		.uleb128 0xe
+ 538 0009 1B       		.uleb128 0x1b
+ 539 000a 0E       		.uleb128 0xe
+ 540 000b 55       		.uleb128 0x55
+ 541 000c 17       		.uleb128 0x17
+ 542 000d 11       		.uleb128 0x11
+ 543 000e 01       		.uleb128 0x1
+ 544 000f 10       		.uleb128 0x10
+ 545 0010 17       		.uleb128 0x17
+ 546 0011 00       		.byte	0
+ 547 0012 00       		.byte	0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 13
+
+
+ 548 0013 02       		.uleb128 0x2
+ 549 0014 24       		.uleb128 0x24
+ 550 0015 00       		.byte	0
+ 551 0016 0B       		.uleb128 0xb
+ 552 0017 0B       		.uleb128 0xb
+ 553 0018 3E       		.uleb128 0x3e
+ 554 0019 0B       		.uleb128 0xb
+ 555 001a 03       		.uleb128 0x3
+ 556 001b 0E       		.uleb128 0xe
+ 557 001c 00       		.byte	0
+ 558 001d 00       		.byte	0
+ 559 001e 03       		.uleb128 0x3
+ 560 001f 24       		.uleb128 0x24
+ 561 0020 00       		.byte	0
+ 562 0021 0B       		.uleb128 0xb
+ 563 0022 0B       		.uleb128 0xb
+ 564 0023 3E       		.uleb128 0x3e
+ 565 0024 0B       		.uleb128 0xb
+ 566 0025 03       		.uleb128 0x3
+ 567 0026 08       		.uleb128 0x8
+ 568 0027 00       		.byte	0
+ 569 0028 00       		.byte	0
+ 570 0029 04       		.uleb128 0x4
+ 571 002a 16       		.uleb128 0x16
+ 572 002b 00       		.byte	0
+ 573 002c 03       		.uleb128 0x3
+ 574 002d 0E       		.uleb128 0xe
+ 575 002e 3A       		.uleb128 0x3a
+ 576 002f 0B       		.uleb128 0xb
+ 577 0030 3B       		.uleb128 0x3b
+ 578 0031 05       		.uleb128 0x5
+ 579 0032 49       		.uleb128 0x49
+ 580 0033 13       		.uleb128 0x13
+ 581 0034 00       		.byte	0
+ 582 0035 00       		.byte	0
+ 583 0036 05       		.uleb128 0x5
+ 584 0037 13       		.uleb128 0x13
+ 585 0038 01       		.byte	0x1
+ 586 0039 0B       		.uleb128 0xb
+ 587 003a 0B       		.uleb128 0xb
+ 588 003b 3A       		.uleb128 0x3a
+ 589 003c 0B       		.uleb128 0xb
+ 590 003d 3B       		.uleb128 0x3b
+ 591 003e 0B       		.uleb128 0xb
+ 592 003f 01       		.uleb128 0x1
+ 593 0040 13       		.uleb128 0x13
+ 594 0041 00       		.byte	0
+ 595 0042 00       		.byte	0
+ 596 0043 06       		.uleb128 0x6
+ 597 0044 0D       		.uleb128 0xd
+ 598 0045 00       		.byte	0
+ 599 0046 03       		.uleb128 0x3
+ 600 0047 08       		.uleb128 0x8
+ 601 0048 3A       		.uleb128 0x3a
+ 602 0049 0B       		.uleb128 0xb
+ 603 004a 3B       		.uleb128 0x3b
+ 604 004b 0B       		.uleb128 0xb
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 14
+
+
+ 605 004c 49       		.uleb128 0x49
+ 606 004d 13       		.uleb128 0x13
+ 607 004e 38       		.uleb128 0x38
+ 608 004f 0B       		.uleb128 0xb
+ 609 0050 00       		.byte	0
+ 610 0051 00       		.byte	0
+ 611 0052 07       		.uleb128 0x7
+ 612 0053 0D       		.uleb128 0xd
+ 613 0054 00       		.byte	0
+ 614 0055 03       		.uleb128 0x3
+ 615 0056 0E       		.uleb128 0xe
+ 616 0057 3A       		.uleb128 0x3a
+ 617 0058 0B       		.uleb128 0xb
+ 618 0059 3B       		.uleb128 0x3b
+ 619 005a 0B       		.uleb128 0xb
+ 620 005b 49       		.uleb128 0x49
+ 621 005c 13       		.uleb128 0x13
+ 622 005d 38       		.uleb128 0x38
+ 623 005e 0B       		.uleb128 0xb
+ 624 005f 00       		.byte	0
+ 625 0060 00       		.byte	0
+ 626 0061 08       		.uleb128 0x8
+ 627 0062 16       		.uleb128 0x16
+ 628 0063 00       		.byte	0
+ 629 0064 03       		.uleb128 0x3
+ 630 0065 0E       		.uleb128 0xe
+ 631 0066 3A       		.uleb128 0x3a
+ 632 0067 0B       		.uleb128 0xb
+ 633 0068 3B       		.uleb128 0x3b
+ 634 0069 0B       		.uleb128 0xb
+ 635 006a 49       		.uleb128 0x49
+ 636 006b 13       		.uleb128 0x13
+ 637 006c 00       		.byte	0
+ 638 006d 00       		.byte	0
+ 639 006e 09       		.uleb128 0x9
+ 640 006f 04       		.uleb128 0x4
+ 641 0070 01       		.byte	0x1
+ 642 0071 03       		.uleb128 0x3
+ 643 0072 0E       		.uleb128 0xe
+ 644 0073 0B       		.uleb128 0xb
+ 645 0074 0B       		.uleb128 0xb
+ 646 0075 49       		.uleb128 0x49
+ 647 0076 13       		.uleb128 0x13
+ 648 0077 3A       		.uleb128 0x3a
+ 649 0078 0B       		.uleb128 0xb
+ 650 0079 3B       		.uleb128 0x3b
+ 651 007a 0B       		.uleb128 0xb
+ 652 007b 01       		.uleb128 0x1
+ 653 007c 13       		.uleb128 0x13
+ 654 007d 00       		.byte	0
+ 655 007e 00       		.byte	0
+ 656 007f 0A       		.uleb128 0xa
+ 657 0080 28       		.uleb128 0x28
+ 658 0081 00       		.byte	0
+ 659 0082 03       		.uleb128 0x3
+ 660 0083 0E       		.uleb128 0xe
+ 661 0084 1C       		.uleb128 0x1c
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 15
+
+
+ 662 0085 0B       		.uleb128 0xb
+ 663 0086 00       		.byte	0
+ 664 0087 00       		.byte	0
+ 665 0088 0B       		.uleb128 0xb
+ 666 0089 2E       		.uleb128 0x2e
+ 667 008a 01       		.byte	0x1
+ 668 008b 3F       		.uleb128 0x3f
+ 669 008c 19       		.uleb128 0x19
+ 670 008d 03       		.uleb128 0x3
+ 671 008e 0E       		.uleb128 0xe
+ 672 008f 3A       		.uleb128 0x3a
+ 673 0090 0B       		.uleb128 0xb
+ 674 0091 3B       		.uleb128 0x3b
+ 675 0092 0B       		.uleb128 0xb
+ 676 0093 27       		.uleb128 0x27
+ 677 0094 19       		.uleb128 0x19
+ 678 0095 11       		.uleb128 0x11
+ 679 0096 01       		.uleb128 0x1
+ 680 0097 12       		.uleb128 0x12
+ 681 0098 06       		.uleb128 0x6
+ 682 0099 40       		.uleb128 0x40
+ 683 009a 18       		.uleb128 0x18
+ 684 009b 9642     		.uleb128 0x2116
+ 685 009d 19       		.uleb128 0x19
+ 686 009e 01       		.uleb128 0x1
+ 687 009f 13       		.uleb128 0x13
+ 688 00a0 00       		.byte	0
+ 689 00a1 00       		.byte	0
+ 690 00a2 0C       		.uleb128 0xc
+ 691 00a3 34       		.uleb128 0x34
+ 692 00a4 00       		.byte	0
+ 693 00a5 03       		.uleb128 0x3
+ 694 00a6 0E       		.uleb128 0xe
+ 695 00a7 3A       		.uleb128 0x3a
+ 696 00a8 0B       		.uleb128 0xb
+ 697 00a9 3B       		.uleb128 0x3b
+ 698 00aa 0B       		.uleb128 0xb
+ 699 00ab 49       		.uleb128 0x49
+ 700 00ac 13       		.uleb128 0x13
+ 701 00ad 02       		.uleb128 0x2
+ 702 00ae 18       		.uleb128 0x18
+ 703 00af 00       		.byte	0
+ 704 00b0 00       		.byte	0
+ 705 00b1 0D       		.uleb128 0xd
+ 706 00b2 2E       		.uleb128 0x2e
+ 707 00b3 01       		.byte	0x1
+ 708 00b4 3F       		.uleb128 0x3f
+ 709 00b5 19       		.uleb128 0x19
+ 710 00b6 03       		.uleb128 0x3
+ 711 00b7 0E       		.uleb128 0xe
+ 712 00b8 3A       		.uleb128 0x3a
+ 713 00b9 0B       		.uleb128 0xb
+ 714 00ba 3B       		.uleb128 0x3b
+ 715 00bb 0B       		.uleb128 0xb
+ 716 00bc 27       		.uleb128 0x27
+ 717 00bd 19       		.uleb128 0x19
+ 718 00be 49       		.uleb128 0x49
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 16
+
+
+ 719 00bf 13       		.uleb128 0x13
+ 720 00c0 11       		.uleb128 0x11
+ 721 00c1 01       		.uleb128 0x1
+ 722 00c2 12       		.uleb128 0x12
+ 723 00c3 06       		.uleb128 0x6
+ 724 00c4 40       		.uleb128 0x40
+ 725 00c5 18       		.uleb128 0x18
+ 726 00c6 9642     		.uleb128 0x2116
+ 727 00c8 19       		.uleb128 0x19
+ 728 00c9 01       		.uleb128 0x1
+ 729 00ca 13       		.uleb128 0x13
+ 730 00cb 00       		.byte	0
+ 731 00cc 00       		.byte	0
+ 732 00cd 0E       		.uleb128 0xe
+ 733 00ce 34       		.uleb128 0x34
+ 734 00cf 00       		.byte	0
+ 735 00d0 03       		.uleb128 0x3
+ 736 00d1 0E       		.uleb128 0xe
+ 737 00d2 3A       		.uleb128 0x3a
+ 738 00d3 0B       		.uleb128 0xb
+ 739 00d4 3B       		.uleb128 0x3b
+ 740 00d5 0B       		.uleb128 0xb
+ 741 00d6 49       		.uleb128 0x49
+ 742 00d7 13       		.uleb128 0x13
+ 743 00d8 3F       		.uleb128 0x3f
+ 744 00d9 19       		.uleb128 0x19
+ 745 00da 3C       		.uleb128 0x3c
+ 746 00db 19       		.uleb128 0x19
+ 747 00dc 00       		.byte	0
+ 748 00dd 00       		.byte	0
+ 749 00de 00       		.byte	0
+ 750              		.section	.debug_aranges,"",%progbits
+ 751 0000 24000000 		.4byte	0x24
+ 752 0004 0200     		.2byte	0x2
+ 753 0006 00000000 		.4byte	.Ldebug_info0
+ 754 000a 04       		.byte	0x4
+ 755 000b 00       		.byte	0
+ 756 000c 0000     		.2byte	0
+ 757 000e 0000     		.2byte	0
+ 758 0010 00000000 		.4byte	.LFB32
+ 759 0014 B4000000 		.4byte	.LFE32-.LFB32
+ 760 0018 00000000 		.4byte	.LFB33
+ 761 001c 8C000000 		.4byte	.LFE33-.LFB33
+ 762 0020 00000000 		.4byte	0
+ 763 0024 00000000 		.4byte	0
+ 764              		.section	.debug_ranges,"",%progbits
+ 765              	.Ldebug_ranges0:
+ 766 0000 00000000 		.4byte	.LFB32
+ 767 0004 B4000000 		.4byte	.LFE32
+ 768 0008 00000000 		.4byte	.LFB33
+ 769 000c 8C000000 		.4byte	.LFE33
+ 770 0010 00000000 		.4byte	0
+ 771 0014 00000000 		.4byte	0
+ 772              		.section	.debug_line,"",%progbits
+ 773              	.Ldebug_line0:
+ 774 0000 99000000 		.section	.debug_str,"MS",%progbits,1
+ 774      02005000 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 17
+
+
+ 774      00000201 
+ 774      FB0E0D00 
+ 774      01010101 
+ 775              	.LASF29:
+ 776 0000 4572726F 		.ascii	"Error_T\000"
+ 776      725F5400 
+ 777              	.LASF37:
+ 778 0008 55495F44 		.ascii	"UI_Data\000"
+ 778      61746100 
+ 779              	.LASF19:
+ 780 0010 6D617853 		.ascii	"maxSpeedRpm\000"
+ 780      70656564 
+ 780      52706D00 
+ 781              	.LASF12:
+ 782 001c 666C6F61 		.ascii	"float\000"
+ 782      7400
+ 783              	.LASF20:
+ 784 0022 6D696E53 		.ascii	"minSpeedRpm\000"
+ 784      70656564 
+ 784      52706D00 
+ 785              	.LASF18:
+ 786 002e 73706565 		.ascii	"speedRpmRef\000"
+ 786      6452706D 
+ 786      52656600 
+ 787              	.LASF40:
+ 788 003a 433A5C55 		.ascii	"C:\\Users\\Andres Elizondo\\Documents\\PSoC Creator"
+ 788      73657273 
+ 788      5C416E64 
+ 788      72657320 
+ 788      456C697A 
+ 789 0069 5C53656E 		.ascii	"\\Sensored BLDC Motor Control\\Sensored BLDC Motor "
+ 789      736F7265 
+ 789      6420424C 
+ 789      4443204D 
+ 789      6F746F72 
+ 790 009a 436F6E74 		.ascii	"Control.cydsn\000"
+ 790      726F6C2E 
+ 790      63796473 
+ 790      6E00
+ 791              	.LASF41:
+ 792 00a8 5F457272 		.ascii	"_Error\000"
+ 792      6F7200
+ 793              	.LASF34:
+ 794 00af 73706565 		.ascii	"speedRange\000"
+ 794      6452616E 
+ 794      676500
+ 795              	.LASF21:
+ 796 00ba 706F6C65 		.ascii	"polePairs\000"
+ 796      50616972 
+ 796      7300
+ 797              	.LASF32:
+ 798 00c4 6C6F7756 		.ascii	"lowVoltCounter\000"
+ 798      6F6C7443 
+ 798      6F756E74 
+ 798      657200
+ 799              	.LASF42:
+ 800 00d3 566F6C74 		.ascii	"VoltageCheck\000"
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 18
+
+
+ 800      61676543 
+ 800      6865636B 
+ 800      00
+ 801              	.LASF9:
+ 802 00e0 75696E74 		.ascii	"uint8\000"
+ 802      3800
+ 803              	.LASF36:
+ 804 00e6 6572726F 		.ascii	"errorState\000"
+ 804      72537461 
+ 804      746500
+ 805              	.LASF26:
+ 806 00f1 68616C6C 		.ascii	"hallError\000"
+ 806      4572726F 
+ 806      7200
+ 807              	.LASF5:
+ 808 00fb 6C6F6E67 		.ascii	"long unsigned int\000"
+ 808      20756E73 
+ 808      69676E65 
+ 808      6420696E 
+ 808      7400
+ 809              	.LASF27:
+ 810 010d 6C6F7756 		.ascii	"lowVolt\000"
+ 810      6F6C7400 
+ 811              	.LASF3:
+ 812 0115 73686F72 		.ascii	"short unsigned int\000"
+ 812      7420756E 
+ 812      7369676E 
+ 812      65642069 
+ 812      6E7400
+ 813              	.LASF38:
+ 814 0128 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 814      43313120 
+ 814      352E342E 
+ 814      31203230 
+ 814      31363036 
+ 815 015b 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0 -mthumb -g -O"
+ 815      20726576 
+ 815      6973696F 
+ 815      6E203233 
+ 815      37373135 
+ 816 018e 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 816      66756E63 
+ 816      74696F6E 
+ 816      2D736563 
+ 816      74696F6E 
+ 817              	.LASF24:
+ 818 01b6 6E6F5F65 		.ascii	"no_error\000"
+ 818      72726F72 
+ 818      00
+ 819              	.LASF1:
+ 820 01bf 756E7369 		.ascii	"unsigned char\000"
+ 820      676E6564 
+ 820      20636861 
+ 820      7200
+ 821              	.LASF13:
+ 822 01cd 646F7562 		.ascii	"double\000"
+ 822      6C6500
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 19
+
+
+ 823              	.LASF2:
+ 824 01d4 73686F72 		.ascii	"short int\000"
+ 824      7420696E 
+ 824      7400
+ 825              	.LASF31:
+ 826 01de 68696768 		.ascii	"highVoltCounter\000"
+ 826      566F6C74 
+ 826      436F756E 
+ 826      74657200 
+ 827              	.LASF10:
+ 828 01ee 75696E74 		.ascii	"uint16\000"
+ 828      313600
+ 829              	.LASF11:
+ 830 01f5 75696E74 		.ascii	"uint32\000"
+ 830      333200
+ 831              	.LASF22:
+ 832 01fc 6D617843 		.ascii	"maxCurr\000"
+ 832      75727200 
+ 833              	.LASF8:
+ 834 0204 756E7369 		.ascii	"unsigned int\000"
+ 834      676E6564 
+ 834      20696E74 
+ 834      00
+ 835              	.LASF43:
+ 836 0211 52656164 		.ascii	"ReadRpmRef\000"
+ 836      52706D52 
+ 836      656600
+ 837              	.LASF7:
+ 838 021c 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 838      206C6F6E 
+ 838      6720756E 
+ 838      7369676E 
+ 838      65642069 
+ 839              	.LASF28:
+ 840 0233 68696768 		.ascii	"highVolt\000"
+ 840      566F6C74 
+ 840      00
+ 841              	.LASF39:
+ 842 023c 67657476 		.ascii	"getvalue.c\000"
+ 842      616C7565 
+ 842      2E6300
+ 843              	.LASF30:
+ 844 0247 61646352 		.ascii	"adcResult\000"
+ 844      6573756C 
+ 844      7400
+ 845              	.LASF16:
+ 846 0251 73697A65 		.ascii	"sizetype\000"
+ 846      74797065 
+ 846      00
+ 847              	.LASF6:
+ 848 025a 6C6F6E67 		.ascii	"long long int\000"
+ 848      206C6F6E 
+ 848      6720696E 
+ 848      7400
+ 849              	.LASF14:
+ 850 0268 63686172 		.ascii	"char\000"
+ 850      00
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccThvPSw.s 			page 20
+
+
+ 851              	.LASF23:
+ 852 026d 55495F44 		.ascii	"UI_DATA\000"
+ 852      41544100 
+ 853              	.LASF17:
+ 854 0275 73706565 		.ascii	"speedRpm\000"
+ 854      6452706D 
+ 854      00
+ 855              	.LASF33:
+ 856 027e 73706565 		.ascii	"speedSampleCur\000"
+ 856      6453616D 
+ 856      706C6543 
+ 856      757200
+ 857              	.LASF4:
+ 858 028d 6C6F6E67 		.ascii	"long int\000"
+ 858      20696E74 
+ 858      00
+ 859              	.LASF15:
+ 860 0296 6C6F6E67 		.ascii	"long double\000"
+ 860      20646F75 
+ 860      626C6500 
+ 861              	.LASF0:
+ 862 02a2 7369676E 		.ascii	"signed char\000"
+ 862      65642063 
+ 862      68617200 
+ 863              	.LASF25:
+ 864 02ae 6F766572 		.ascii	"overCur\000"
+ 864      43757200 
+ 865              	.LASF35:
+ 866 02b6 73706565 		.ascii	"speedGiven\000"
+ 866      64476976 
+ 866      656E00
+ 867              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

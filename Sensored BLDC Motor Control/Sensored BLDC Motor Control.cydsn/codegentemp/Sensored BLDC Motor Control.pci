@@ -1,0 +1,31 @@
+# Sensored BLDC Motor Control
+# 2019-05-24 05:22:11Z
+
+# IO_2@[IOP=(3)][IoId=(2)] is reserved: SWDDebugEnabled
+dont_use_io iocell 3 2
+# IO_3@[IOP=(3)][IoId=(3)] is reserved: SWDDebugEnabled
+dont_use_io iocell 3 3
+set_location "ClockGenBlock" m0s8clockgenblockcell -1 -1 0
+set_io "PWMCL(0)" iocell 3 5
+set_io "PWMBL(0)" iocell 3 6
+set_io "PWMAL(0)" iocell 0 6
+set_io "PWMCH(0)" iocell 3 7
+set_io "PWMBH(0)" iocell 2 7
+set_io "PWMAH(0)" iocell 3 4
+set_io "Hall3(0)" iocell 2 2
+set_io "Hall2(0)" iocell 2 4
+set_io "Hall1(0)" iocell 2 3
+set_io "STATUS_LED(0)" iocell 0 2
+set_io "\UART_BCP:tx(0)\" iocell 4 1
+set_io "\UART_BCP:rx(0)\" iocell 4 0
+set_io "SW2(0)" iocell 0 3
+set_io "\ADC_SAR_Seq_1:Bypass(0)\" iocell 1 7
+set_io "Pin_Ibus(0)" iocell 0 0
+set_io "Pin_Iref(0)" iocell 0 1
+set_io "Vbus(0)" iocell 2 6
+set_io "Vrpm(0)" iocell 2 1
+set_io "\UART_Pi:tx(0)\" iocell 3 1
+set_io "\UART_Pi:rx(0)\" iocell 3 0
+set_location "\ADC_SAR_Seq_1:cy_psoc4_sar\" p4sarcell -1 -1 0
+set_location "\IDAC_Iref:cy_psoc4_idac\" p4csidac8cell -1 -1 0
+set_location "\LPComp_OC:cy_psoc4_lpcomp_1\" p4lpcompcell -1 -1 0

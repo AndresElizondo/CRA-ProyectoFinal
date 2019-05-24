@@ -1,0 +1,1734 @@
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"motor.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.comm	UI_Cmd,1,4
+  20              		.comm	UI_Data,16,4
+  21              		.global	speedRef
+  22              		.bss
+  23              		.align	1
+  24              		.type	speedRef, %object
+  25              		.size	speedRef, 2
+  26              	speedRef:
+  27 0000 0000     		.space	2
+  28              		.global	speedCur
+  29              		.data
+  30              		.align	1
+  31              		.type	speedCur, %object
+  32              		.size	speedCur, 2
+  33              	speedCur:
+  34 0000 B80B     		.short	3000
+  35              		.global	preSpeedCur
+  36              		.bss
+  37              		.align	1
+  38              		.type	preSpeedCur, %object
+  39              		.size	preSpeedCur, 2
+  40              	preSpeedCur:
+  41 0002 0000     		.space	2
+  42              		.global	preCntCaptur
+  43              		.data
+  44              		.align	1
+  45              		.type	preCntCaptur, %object
+  46              		.size	preCntCaptur, 2
+  47              	preCntCaptur:
+  48 0002 3075     		.short	30000
+  49              		.global	dutyCycle
+  50              		.bss
+  51              		.type	dutyCycle, %object
+  52              		.size	dutyCycle, 1
+  53              	dutyCycle:
+  54 0004 00       		.space	1
+  55              		.global	pwmCnt
+  56 0005 00       		.align	1
+  57              		.type	pwmCnt, %object
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 2
+
+
+  58              		.size	pwmCnt, 2
+  59              	pwmCnt:
+  60 0006 0000     		.space	2
+  61              		.global	firstRun
+  62              		.data
+  63              		.type	firstRun, %object
+  64              		.size	firstRun, 1
+  65              	firstRun:
+  66 0004 01       		.byte	1
+  67              		.global	ocBlankCnt
+  68              		.bss
+  69              		.type	ocBlankCnt, %object
+  70              		.size	ocBlankCnt, 1
+  71              	ocBlankCnt:
+  72 0008 00       		.space	1
+  73              		.global	errorState
+  74              		.type	errorState, %object
+  75              		.size	errorState, 1
+  76              	errorState:
+  77 0009 00       		.space	1
+  78              		.global	stateSys
+  79              		.data
+  80              		.type	stateSys, %object
+  81              		.size	stateSys, 1
+  82              	stateSys:
+  83 0005 02       		.byte	2
+  84              		.section	.text.pwm_isr,"ax",%progbits
+  85              		.align	2
+  86              		.global	pwm_isr
+  87              		.code	16
+  88              		.thumb_func
+  89              		.type	pwm_isr, %function
+  90              	pwm_isr:
+  91              	.LFB32:
+  92              		.file 1 "motor.c"
+   1:motor.c       **** /*******************************************************************************
+   2:motor.c       **** * Project Name		: Sensored BLDC Motor Control
+   3:motor.c       **** * File Name			: motor.c
+   4:motor.c       **** * Version			: 1.0
+   5:motor.c       **** * Device Used		: CY8C4245AXI-483     
+   6:motor.c       **** * Software Used		: PSoC Creator 4.2
+   7:motor.c       **** * Compiler Used		: ARM GCC 5.4.1 
+   8:motor.c       **** * Related Hardware  : CY8CKIT-042 PSoC 4 Pioneer Kit + CY8CKIT-037 PSoC 4
+   9:motor.c       **** *                     Motor Control Evaluation Kit
+  10:motor.c       **** ******************************************************************************
+  11:motor.c       **** * Copyright (2018), Cypress Semiconductor Corporation. All rights reserved.
+  12:motor.c       **** *******************************************************************************
+  13:motor.c       **** * This software, including source code, documentation and related materials
+  14:motor.c       **** * (“Software”), is owned by Cypress Semiconductor Corporation or one of its
+  15:motor.c       **** * subsidiaries (“Cypress”) and is protected by and subject to worldwide patent
+  16:motor.c       **** * protection (United States and foreign), United States copyright laws and
+  17:motor.c       **** * international treaty provisions. Therefore, you may use this Software only
+  18:motor.c       **** * as provided in the license agreement accompanying the software package from
+  19:motor.c       **** * which you obtained this Software (“EULA”).
+  20:motor.c       **** *
+  21:motor.c       **** * If no EULA applies, Cypress hereby grants you a personal, nonexclusive,
+  22:motor.c       **** * non-transferable license to copy, modify, and compile the Software source
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 3
+
+
+  23:motor.c       **** * code solely for use in connection with Cypress’s integrated circuit products.
+  24:motor.c       **** * Any reproduction, modification, translation, compilation, or representation
+  25:motor.c       **** * of this Software except as specified above is prohibited without the express
+  26:motor.c       **** * written permission of Cypress.
+  27:motor.c       **** *
+  28:motor.c       **** * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND, 
+  29:motor.c       **** * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED 
+  30:motor.c       **** * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress 
+  31:motor.c       **** * reserves the right to make changes to the Software without notice. Cypress 
+  32:motor.c       **** * does not assume any liability arising out of the application or use of the 
+  33:motor.c       **** * Software or any product or circuit described in the Software. Cypress does 
+  34:motor.c       **** * not authorize its products for use in any products where a malfunction or 
+  35:motor.c       **** * failure of the Cypress product may reasonably be expected to result in 
+  36:motor.c       **** * significant property damage, injury or death (“High Risk Product”). By 
+  37:motor.c       **** * including Cypress’s product in a High Risk Product, the manufacturer of such 
+  38:motor.c       **** * system or application assumes all risk of such use and in doing so agrees to 
+  39:motor.c       **** * indemnify Cypress against all liability.
+  40:motor.c       **** *******************************************************************************/
+  41:motor.c       **** #include <project.h>
+  42:motor.c       **** #include "motor.h"
+  43:motor.c       **** #include "userinterface.h"
+  44:motor.c       **** #include "getvalue.h"
+  45:motor.c       **** 
+  46:motor.c       **** /* UI_MOTOR_STATUS Status */
+  47:motor.c       **** UI_CMD  UI_Cmd;
+  48:motor.c       **** UI_DATA UI_Data;
+  49:motor.c       **** 
+  50:motor.c       **** uint16 speedRef = 0;            /* Motor speed Reference */
+  51:motor.c       **** uint16 speedCur = 3000;         /* Current motor speed. */
+  52:motor.c       **** 
+  53:motor.c       **** uint16 preSpeedCur = 0;
+  54:motor.c       **** uint16 preCntCaptur = 30000;
+  55:motor.c       **** 
+  56:motor.c       **** uint8  dutyCycle = 0;            /* really now used as BYTE since use 8-bit PWM */
+  57:motor.c       **** uint16 pwmCnt = 0;
+  58:motor.c       **** uint8 firstRun = 1;
+  59:motor.c       **** uint8 ocBlankCnt = 0;
+  60:motor.c       **** Error_T errorState = no_error;
+  61:motor.c       **** uint8 stateSys = STATUS_STOP;
+  62:motor.c       **** 
+  63:motor.c       **** /*******************************************************************************
+  64:motor.c       **** * Function Name: pwm_isr
+  65:motor.c       **** ********************************************************************************
+  66:motor.c       **** *
+  67:motor.c       **** * Summary:
+  68:motor.c       **** * This function is PWM ISR. When TC happens, it increases PWM ticker, clears flag and 
+  69:motor.c       **** * enables over current protection ISR after startup.
+  70:motor.c       **** *
+  71:motor.c       **** * Parameters: None
+  72:motor.c       **** *
+  73:motor.c       **** * Return: None
+  74:motor.c       **** *
+  75:motor.c       **** *******************************************************************************/
+  76:motor.c       **** CY_ISR(pwm_isr)
+  77:motor.c       **** {	
+  93              		.loc 1 77 0
+  94              		.cfi_startproc
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 4
+
+
+  95              		@ args = 0, pretend = 0, frame = 0
+  96              		@ frame_needed = 1, uses_anonymous_args = 0
+  97 0000 80B5     		push	{r7, lr}
+  98              		.cfi_def_cfa_offset 8
+  99              		.cfi_offset 7, -8
+ 100              		.cfi_offset 14, -4
+ 101 0002 00AF     		add	r7, sp, #0
+ 102              		.cfi_def_cfa_register 7
+  78:motor.c       **** 	pwmCnt++;  
+ 103              		.loc 1 78 0
+ 104 0004 184B     		ldr	r3, .L5
+ 105 0006 1B88     		ldrh	r3, [r3]
+ 106 0008 0133     		adds	r3, r3, #1
+ 107 000a 9AB2     		uxth	r2, r3
+ 108 000c 164B     		ldr	r3, .L5
+ 109 000e 1A80     		strh	r2, [r3]
+  79:motor.c       **** 	
+  80:motor.c       ****     /* Avoid the current pulse interference in motor start-up*/
+  81:motor.c       ****     if (UI_Cmd.run)
+ 110              		.loc 1 81 0
+ 111 0010 164B     		ldr	r3, .L5+4
+ 112 0012 1B78     		ldrb	r3, [r3]
+ 113 0014 002B     		cmp	r3, #0
+ 114 0016 17D0     		beq	.L2
+  82:motor.c       ****     {
+  83:motor.c       ****         if(firstRun == 1)
+ 115              		.loc 1 83 0
+ 116 0018 154B     		ldr	r3, .L5+8
+ 117 001a 1B78     		ldrb	r3, [r3]
+ 118 001c 012B     		cmp	r3, #1
+ 119 001e 05D1     		bne	.L3
+  84:motor.c       ****         {
+  85:motor.c       ****             ocBlankCnt++;
+ 120              		.loc 1 85 0
+ 121 0020 144B     		ldr	r3, .L5+12
+ 122 0022 1B78     		ldrb	r3, [r3]
+ 123 0024 0133     		adds	r3, r3, #1
+ 124 0026 DAB2     		uxtb	r2, r3
+ 125 0028 124B     		ldr	r3, .L5+12
+ 126 002a 1A70     		strb	r2, [r3]
+ 127              	.L3:
+  86:motor.c       ****         }
+  87:motor.c       ****         if (ocBlankCnt > 2)    /*Ignore the first 2 PWM period = 50uS*3=150uS, then enable over cur
+ 128              		.loc 1 87 0
+ 129 002c 114B     		ldr	r3, .L5+12
+ 130 002e 1B78     		ldrb	r3, [r3]
+ 131 0030 022B     		cmp	r3, #2
+ 132 0032 09D9     		bls	.L2
+  88:motor.c       ****         {
+  89:motor.c       ****             firstRun = 0;
+ 133              		.loc 1 89 0
+ 134 0034 0E4B     		ldr	r3, .L5+8
+ 135 0036 0022     		movs	r2, #0
+ 136 0038 1A70     		strb	r2, [r3]
+  90:motor.c       ****             ocBlankCnt = 0;
+ 137              		.loc 1 90 0
+ 138 003a 0E4B     		ldr	r3, .L5+12
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 5
+
+
+ 139 003c 0022     		movs	r2, #0
+ 140 003e 1A70     		strb	r2, [r3]
+  91:motor.c       ****             isr_oc_Enable();
+ 141              		.loc 1 91 0
+ 142 0040 FFF7FEFF 		bl	isr_oc_Enable
+  92:motor.c       ****             isr_oc_ClearPending();
+ 143              		.loc 1 92 0
+ 144 0044 FFF7FEFF 		bl	isr_oc_ClearPending
+ 145              	.L2:
+  93:motor.c       ****         }
+  94:motor.c       ****     }
+  95:motor.c       **** 	
+  96:motor.c       **** 	/* Calculate the real time motor speed every 2000 PWM period*/
+  97:motor.c       **** 	if(pwmCnt >= 2001)
+ 146              		.loc 1 97 0
+ 147 0048 074B     		ldr	r3, .L5
+ 148 004a 1A88     		ldrh	r2, [r3]
+ 149 004c FA23     		movs	r3, #250
+ 150 004e DB00     		lsls	r3, r3, #3
+ 151 0050 9A42     		cmp	r2, r3
+ 152 0052 02D9     		bls	.L4
+  98:motor.c       **** 	{
+  99:motor.c       **** 		pwmCnt = 0;
+ 153              		.loc 1 99 0
+ 154 0054 044B     		ldr	r3, .L5
+ 155 0056 0022     		movs	r2, #0
+ 156 0058 1A80     		strh	r2, [r3]
+ 157              	.L4:
+ 100:motor.c       **** 	}
+ 101:motor.c       **** 
+ 102:motor.c       **** 	PWM_Drive_ClearInterrupt(PWM_Drive_INTR_MASK_TC);
+ 158              		.loc 1 102 0
+ 159 005a 0120     		movs	r0, #1
+ 160 005c FFF7FEFF 		bl	PWM_Drive_ClearInterrupt
+ 103:motor.c       **** }
+ 161              		.loc 1 103 0
+ 162 0060 C046     		nop
+ 163 0062 BD46     		mov	sp, r7
+ 164              		@ sp needed
+ 165 0064 80BD     		pop	{r7, pc}
+ 166              	.L6:
+ 167 0066 C046     		.align	2
+ 168              	.L5:
+ 169 0068 00000000 		.word	pwmCnt
+ 170 006c 00000000 		.word	UI_Cmd
+ 171 0070 00000000 		.word	firstRun
+ 172 0074 00000000 		.word	ocBlankCnt
+ 173              		.cfi_endproc
+ 174              	.LFE32:
+ 175              		.size	pwm_isr, .-pwm_isr
+ 176              		.section	.text.speed_measure_isr,"ax",%progbits
+ 177              		.align	2
+ 178              		.global	speed_measure_isr
+ 179              		.code	16
+ 180              		.thumb_func
+ 181              		.type	speed_measure_isr, %function
+ 182              	speed_measure_isr:
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 6
+
+
+ 183              	.LFB33:
+ 104:motor.c       **** 
+ 105:motor.c       **** /*******************************************************************************
+ 106:motor.c       **** * Function Name: speed_measure_isr
+ 107:motor.c       **** ********************************************************************************
+ 108:motor.c       **** *
+ 109:motor.c       **** * Summary:
+ 110:motor.c       **** * This function is ISR for motor speed measurement. 
+ 111:motor.c       **** * 
+ 112:motor.c       **** * Parameters: None
+ 113:motor.c       **** *
+ 114:motor.c       **** * Return: None
+ 115:motor.c       **** *
+ 116:motor.c       **** *******************************************************************************/
+ 117:motor.c       **** CY_ISR(speed_measure_isr)
+ 118:motor.c       **** {
+ 184              		.loc 1 118 0
+ 185              		.cfi_startproc
+ 186              		@ args = 0, pretend = 0, frame = 8
+ 187              		@ frame_needed = 1, uses_anonymous_args = 0
+ 188 0000 80B5     		push	{r7, lr}
+ 189              		.cfi_def_cfa_offset 8
+ 190              		.cfi_offset 7, -8
+ 191              		.cfi_offset 14, -4
+ 192 0002 82B0     		sub	sp, sp, #8
+ 193              		.cfi_def_cfa_offset 16
+ 194 0004 00AF     		add	r7, sp, #0
+ 195              		.cfi_def_cfa_register 7
+ 119:motor.c       ****     uint16 cntCaptur = 0;
+ 196              		.loc 1 119 0
+ 197 0006 BB1D     		adds	r3, r7, #6
+ 198 0008 0022     		movs	r2, #0
+ 199 000a 1A80     		strh	r2, [r3]
+ 120:motor.c       ****     
+ 121:motor.c       ****     cntCaptur = Counter_Spd_ReadCapture();
+ 200              		.loc 1 121 0
+ 201 000c FFF7FEFF 		bl	Counter_Spd_ReadCapture
+ 202 0010 0200     		movs	r2, r0
+ 203 0012 BB1D     		adds	r3, r7, #6
+ 204 0014 1A80     		strh	r2, [r3]
+ 122:motor.c       **** 	
+ 123:motor.c       **** 	speedCur = preCntCaptur - cntCaptur;
+ 205              		.loc 1 123 0
+ 206 0016 184B     		ldr	r3, .L9
+ 207 0018 1A88     		ldrh	r2, [r3]
+ 208 001a BB1D     		adds	r3, r7, #6
+ 209 001c 1B88     		ldrh	r3, [r3]
+ 210 001e D31A     		subs	r3, r2, r3
+ 211 0020 9AB2     		uxth	r2, r3
+ 212 0022 164B     		ldr	r3, .L9+4
+ 213 0024 1A80     		strh	r2, [r3]
+ 124:motor.c       **** 	
+ 125:motor.c       **** 	/* If speed is too low, Regard motor is stopped*/
+ 126:motor.c       ****      if(speedCur > 5000)		/* < 300Rpm*/
+ 214              		.loc 1 126 0
+ 215 0026 154B     		ldr	r3, .L9+4
+ 216 0028 1B88     		ldrh	r3, [r3]
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 7
+
+
+ 217 002a 154A     		ldr	r2, .L9+8
+ 218 002c 9342     		cmp	r3, r2
+ 219 002e 02D9     		bls	.L8
+ 127:motor.c       **** 		speedCur = 5000; 
+ 220              		.loc 1 127 0
+ 221 0030 124B     		ldr	r3, .L9+4
+ 222 0032 134A     		ldr	r2, .L9+8
+ 223 0034 1A80     		strh	r2, [r3]
+ 224              	.L8:
+ 128:motor.c       **** 	
+ 129:motor.c       ****     /* filter for speed measured */
+ 130:motor.c       ****     speedCur = (preSpeedCur >> 2) + (preSpeedCur >> 1) + (speedCur >> 2);	
+ 225              		.loc 1 130 0
+ 226 0036 134B     		ldr	r3, .L9+12
+ 227 0038 1B88     		ldrh	r3, [r3]
+ 228 003a 9B08     		lsrs	r3, r3, #2
+ 229 003c 9AB2     		uxth	r2, r3
+ 230 003e 114B     		ldr	r3, .L9+12
+ 231 0040 1B88     		ldrh	r3, [r3]
+ 232 0042 5B08     		lsrs	r3, r3, #1
+ 233 0044 9BB2     		uxth	r3, r3
+ 234 0046 D318     		adds	r3, r2, r3
+ 235 0048 9AB2     		uxth	r2, r3
+ 236 004a 0C4B     		ldr	r3, .L9+4
+ 237 004c 1B88     		ldrh	r3, [r3]
+ 238 004e 9B08     		lsrs	r3, r3, #2
+ 239 0050 9BB2     		uxth	r3, r3
+ 240 0052 D318     		adds	r3, r2, r3
+ 241 0054 9AB2     		uxth	r2, r3
+ 242 0056 094B     		ldr	r3, .L9+4
+ 243 0058 1A80     		strh	r2, [r3]
+ 131:motor.c       **** 	
+ 132:motor.c       ****     preCntCaptur = cntCaptur;
+ 244              		.loc 1 132 0
+ 245 005a 074B     		ldr	r3, .L9
+ 246 005c BA1D     		adds	r2, r7, #6
+ 247 005e 1288     		ldrh	r2, [r2]
+ 248 0060 1A80     		strh	r2, [r3]
+ 133:motor.c       **** 	preSpeedCur = speedCur; 
+ 249              		.loc 1 133 0
+ 250 0062 064B     		ldr	r3, .L9+4
+ 251 0064 1A88     		ldrh	r2, [r3]
+ 252 0066 074B     		ldr	r3, .L9+12
+ 253 0068 1A80     		strh	r2, [r3]
+ 134:motor.c       **** 	
+ 135:motor.c       **** 	Counter_Spd_ClearInterrupt(Counter_Spd_INTR_MASK_CC_MATCH);
+ 254              		.loc 1 135 0
+ 255 006a 0220     		movs	r0, #2
+ 256 006c FFF7FEFF 		bl	Counter_Spd_ClearInterrupt
+ 136:motor.c       **** }
+ 257              		.loc 1 136 0
+ 258 0070 C046     		nop
+ 259 0072 BD46     		mov	sp, r7
+ 260 0074 02B0     		add	sp, sp, #8
+ 261              		@ sp needed
+ 262 0076 80BD     		pop	{r7, pc}
+ 263              	.L10:
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 8
+
+
+ 264              		.align	2
+ 265              	.L9:
+ 266 0078 00000000 		.word	preCntCaptur
+ 267 007c 00000000 		.word	speedCur
+ 268 0080 88130000 		.word	5000
+ 269 0084 00000000 		.word	preSpeedCur
+ 270              		.cfi_endproc
+ 271              	.LFE33:
+ 272              		.size	speed_measure_isr, .-speed_measure_isr
+ 273              		.section	.text.over_current_isr,"ax",%progbits
+ 274              		.align	2
+ 275              		.global	over_current_isr
+ 276              		.code	16
+ 277              		.thumb_func
+ 278              		.type	over_current_isr, %function
+ 279              	over_current_isr:
+ 280              	.LFB34:
+ 137:motor.c       **** 
+ 138:motor.c       **** /*******************************************************************************
+ 139:motor.c       **** * Function Name: over_current_isr
+ 140:motor.c       **** ********************************************************************************
+ 141:motor.c       **** *
+ 142:motor.c       **** * Summary:
+ 143:motor.c       **** * This function is ISR for over current protection. It updates the error state flag. 
+ 144:motor.c       **** * 
+ 145:motor.c       **** * Parameters: None
+ 146:motor.c       **** *
+ 147:motor.c       **** * Return: None
+ 148:motor.c       **** *
+ 149:motor.c       **** *******************************************************************************/
+ 150:motor.c       **** CY_ISR(over_current_isr)
+ 151:motor.c       **** {	
+ 281              		.loc 1 151 0
+ 282              		.cfi_startproc
+ 283              		@ args = 0, pretend = 0, frame = 0
+ 284              		@ frame_needed = 1, uses_anonymous_args = 0
+ 285 0000 80B5     		push	{r7, lr}
+ 286              		.cfi_def_cfa_offset 8
+ 287              		.cfi_offset 7, -8
+ 288              		.cfi_offset 14, -4
+ 289 0002 00AF     		add	r7, sp, #0
+ 290              		.cfi_def_cfa_register 7
+ 152:motor.c       ****     UpdateStatusError();		/* If over current happens, stop motor*/
+ 291              		.loc 1 152 0
+ 292 0004 FFF7FEFF 		bl	UpdateStatusError
+ 153:motor.c       ****     errorState = overCur;
+ 293              		.loc 1 153 0
+ 294 0008 044B     		ldr	r3, .L12
+ 295 000a 0122     		movs	r2, #1
+ 296 000c 1A70     		strb	r2, [r3]
+ 154:motor.c       ****     LPComp_OC_ClearInterrupt(LPComp_OC_INTR_RISING);
+ 297              		.loc 1 154 0
+ 298 000e 0120     		movs	r0, #1
+ 299 0010 FFF7FEFF 		bl	LPComp_OC_ClearInterrupt
+ 155:motor.c       **** }
+ 300              		.loc 1 155 0
+ 301 0014 C046     		nop
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 9
+
+
+ 302 0016 BD46     		mov	sp, r7
+ 303              		@ sp needed
+ 304 0018 80BD     		pop	{r7, pc}
+ 305              	.L13:
+ 306 001a C046     		.align	2
+ 307              	.L12:
+ 308 001c 00000000 		.word	errorState
+ 309              		.cfi_endproc
+ 310              	.LFE34:
+ 311              		.size	over_current_isr, .-over_current_isr
+ 312              		.global	__aeabi_f2d
+ 313              		.global	__aeabi_dmul
+ 314              		.global	__aeabi_d2f
+ 315              		.global	__aeabi_fmul
+ 316              		.global	__aeabi_f2uiz
+ 317              		.section	.text.Init_UI_FW,"ax",%progbits
+ 318              		.align	2
+ 319              		.global	Init_UI_FW
+ 320              		.code	16
+ 321              		.thumb_func
+ 322              		.type	Init_UI_FW, %function
+ 323              	Init_UI_FW:
+ 324              	.LFB35:
+ 156:motor.c       **** 
+ 157:motor.c       **** /*******************************************************************************
+ 158:motor.c       **** * Function Name: Init_UI_FW
+ 159:motor.c       **** ********************************************************************************
+ 160:motor.c       **** * Summary: This function initializes parameters used in motor running.
+ 161:motor.c       **** *  
+ 162:motor.c       **** * Parameters: None  
+ 163:motor.c       **** *
+ 164:motor.c       **** * Return: None
+ 165:motor.c       **** *  
+ 166:motor.c       **** *******************************************************************************/
+ 167:motor.c       **** 
+ 168:motor.c       **** void Init_UI_FW(void)
+ 169:motor.c       **** {
+ 325              		.loc 1 169 0
+ 326              		.cfi_startproc
+ 327              		@ args = 0, pretend = 0, frame = 8
+ 328              		@ frame_needed = 1, uses_anonymous_args = 0
+ 329 0000 90B5     		push	{r4, r7, lr}
+ 330              		.cfi_def_cfa_offset 12
+ 331              		.cfi_offset 4, -12
+ 332              		.cfi_offset 7, -8
+ 333              		.cfi_offset 14, -4
+ 334 0002 83B0     		sub	sp, sp, #12
+ 335              		.cfi_def_cfa_offset 24
+ 336 0004 00AF     		add	r7, sp, #0
+ 337              		.cfi_def_cfa_register 7
+ 170:motor.c       ****     /* Setting UI Initial parameter*/
+ 171:motor.c       **** 	UI_Data.Dir = 0;                        // 0 giro manecillas | 1 giro en contra manecillas
+ 338              		.loc 1 171 0
+ 339 0006 204B     		ldr	r3, .L15
+ 340 0008 0022     		movs	r2, #0
+ 341 000a 1A70     		strb	r2, [r3]
+ 172:motor.c       ****     float rpmScaleMax = 0.4;                // Escala del rpm maximo (4000)
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 10
+
+
+ 342              		.loc 1 172 0
+ 343 000c 1F4B     		ldr	r3, .L15+4
+ 344 000e 7B60     		str	r3, [r7, #4]
+ 173:motor.c       ****     float rpmScaleMin = rpmScaleMax * 0.1;
+ 345              		.loc 1 173 0
+ 346 0010 7868     		ldr	r0, [r7, #4]
+ 347 0012 FFF7FEFF 		bl	__aeabi_f2d
+ 348 0016 1E4A     		ldr	r2, .L15+8
+ 349 0018 1E4B     		ldr	r3, .L15+12
+ 350 001a FFF7FEFF 		bl	__aeabi_dmul
+ 351 001e 0300     		movs	r3, r0
+ 352 0020 0C00     		movs	r4, r1
+ 353 0022 1800     		movs	r0, r3
+ 354 0024 2100     		movs	r1, r4
+ 355 0026 FFF7FEFF 		bl	__aeabi_d2f
+ 356 002a 031C     		adds	r3, r0, #0
+ 357 002c 3B60     		str	r3, [r7]
+ 174:motor.c       ****     UI_Data.maxSpeedRpm = 4000*rpmScaleMax;
+ 358              		.loc 1 174 0
+ 359 002e 1A49     		ldr	r1, .L15+16
+ 360 0030 7868     		ldr	r0, [r7, #4]
+ 361 0032 FFF7FEFF 		bl	__aeabi_fmul
+ 362 0036 031C     		adds	r3, r0, #0
+ 363 0038 181C     		adds	r0, r3, #0
+ 364 003a FFF7FEFF 		bl	__aeabi_f2uiz
+ 365 003e 0300     		movs	r3, r0
+ 366 0040 9AB2     		uxth	r2, r3
+ 367 0042 114B     		ldr	r3, .L15
+ 368 0044 5A81     		strh	r2, [r3, #10]
+ 175:motor.c       ****     UI_Data.minSpeedRpm = 4000*rpmScaleMin; // Era un valor de 500
+ 369              		.loc 1 175 0
+ 370 0046 1449     		ldr	r1, .L15+16
+ 371 0048 3868     		ldr	r0, [r7]
+ 372 004a FFF7FEFF 		bl	__aeabi_fmul
+ 373 004e 031C     		adds	r3, r0, #0
+ 374 0050 181C     		adds	r0, r3, #0
+ 375 0052 FFF7FEFF 		bl	__aeabi_f2uiz
+ 376 0056 0300     		movs	r3, r0
+ 377 0058 9AB2     		uxth	r2, r3
+ 378 005a 0B4B     		ldr	r3, .L15
+ 379 005c 9A81     		strh	r2, [r3, #12]
+ 176:motor.c       ****     UI_Data.speedRpmRef = 1000;
+ 380              		.loc 1 176 0
+ 381 005e 0A4B     		ldr	r3, .L15
+ 382 0060 FA22     		movs	r2, #250
+ 383 0062 9200     		lsls	r2, r2, #2
+ 384 0064 9A80     		strh	r2, [r3, #4]
+ 177:motor.c       ****     UI_Data.polePairs = 4;
+ 385              		.loc 1 177 0
+ 386 0066 084B     		ldr	r3, .L15
+ 387 0068 0422     		movs	r2, #4
+ 388 006a 9A73     		strb	r2, [r3, #14]
+ 178:motor.c       ****     UI_Data.maxCurr = MAX_CURR_MEDIUM; 
+ 389              		.loc 1 178 0
+ 390 006c 064B     		ldr	r3, .L15
+ 391 006e 4B22     		movs	r2, #75
+ 392 0070 DA73     		strb	r2, [r3, #15]
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 11
+
+
+ 179:motor.c       ****     UI_Data.kp = 500;
+ 393              		.loc 1 179 0
+ 394 0072 054B     		ldr	r3, .L15
+ 395 0074 FA22     		movs	r2, #250
+ 396 0076 5200     		lsls	r2, r2, #1
+ 397 0078 DA80     		strh	r2, [r3, #6]
+ 180:motor.c       ****     UI_Data.ki = 50;
+ 398              		.loc 1 180 0
+ 399 007a 034B     		ldr	r3, .L15
+ 400 007c 3222     		movs	r2, #50
+ 401 007e 1A81     		strh	r2, [r3, #8]
+ 181:motor.c       **** 	
+ 182:motor.c       **** }
+ 402              		.loc 1 182 0
+ 403 0080 C046     		nop
+ 404 0082 BD46     		mov	sp, r7
+ 405 0084 03B0     		add	sp, sp, #12
+ 406              		@ sp needed
+ 407 0086 90BD     		pop	{r4, r7, pc}
+ 408              	.L16:
+ 409              		.align	2
+ 410              	.L15:
+ 411 0088 00000000 		.word	UI_Data
+ 412 008c CDCCCC3E 		.word	1053609165
+ 413 0090 9A999999 		.word	-1717986918
+ 414 0094 9999B93F 		.word	1069128089
+ 415 0098 00007A45 		.word	1165623296
+ 416              		.cfi_endproc
+ 417              	.LFE35:
+ 418              		.size	Init_UI_FW, .-Init_UI_FW
+ 419              		.section	.text.Init_HW,"ax",%progbits
+ 420              		.align	2
+ 421              		.global	Init_HW
+ 422              		.code	16
+ 423              		.thumb_func
+ 424              		.type	Init_HW, %function
+ 425              	Init_HW:
+ 426              	.LFB36:
+ 183:motor.c       **** 
+ 184:motor.c       **** 
+ 185:motor.c       **** /*******************************************************************************
+ 186:motor.c       **** * Function Name: Init_HW
+ 187:motor.c       **** ********************************************************************************
+ 188:motor.c       **** * Summary: This function initializes system hardware peripherals 
+ 189:motor.c       **** *  
+ 190:motor.c       **** * Parameters: None  
+ 191:motor.c       **** *
+ 192:motor.c       **** * Return: None
+ 193:motor.c       **** *  
+ 194:motor.c       **** *******************************************************************************/
+ 195:motor.c       **** 
+ 196:motor.c       **** void Init_HW(void)
+ 197:motor.c       **** {
+ 427              		.loc 1 197 0
+ 428              		.cfi_startproc
+ 429              		@ args = 0, pretend = 0, frame = 0
+ 430              		@ frame_needed = 1, uses_anonymous_args = 0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 12
+
+
+ 431 0000 80B5     		push	{r7, lr}
+ 432              		.cfi_def_cfa_offset 8
+ 433              		.cfi_offset 7, -8
+ 434              		.cfi_offset 14, -4
+ 435 0002 00AF     		add	r7, sp, #0
+ 436              		.cfi_def_cfa_register 7
+ 198:motor.c       ****     /*PWM Initialization*/
+ 199:motor.c       **** 	PWM_Drive_Start();
+ 437              		.loc 1 199 0
+ 438 0004 FFF7FEFF 		bl	PWM_Drive_Start
+ 200:motor.c       ****     /*Enable PWM, disable PWM IO output*/
+ 201:motor.c       ****     CtrlReg_PWMOut_Write(0x01);       
+ 439              		.loc 1 201 0
+ 440 0008 0120     		movs	r0, #1
+ 441 000a FFF7FEFF 		bl	CtrlReg_PWMOut_Write
+ 202:motor.c       ****    
+ 203:motor.c       **** 	/*Speed Counter Initialization*/
+ 204:motor.c       **** 	Counter_Spd_Start();
+ 442              		.loc 1 204 0
+ 443 000e FFF7FEFF 		bl	Counter_Spd_Start
+ 205:motor.c       **** 	
+ 206:motor.c       ****     /*For voltage sample*/
+ 207:motor.c       **** 	ADC_SAR_Seq_1_Start();
+ 444              		.loc 1 207 0
+ 445 0012 FFF7FEFF 		bl	ADC_SAR_Seq_1_Start
+ 208:motor.c       ****     
+ 209:motor.c       ****     /*For over current protection*/
+ 210:motor.c       **** 	IDAC_Iref_Start();
+ 446              		.loc 1 210 0
+ 447 0016 FFF7FEFF 		bl	IDAC_Iref_Start
+ 211:motor.c       ****     IDAC_Iref_SetValue(0x7d);
+ 448              		.loc 1 211 0
+ 449 001a 7D20     		movs	r0, #125
+ 450 001c FFF7FEFF 		bl	IDAC_Iref_SetValue
+ 212:motor.c       ****     
+ 213:motor.c       ****     LPComp_OC_Start();
+ 451              		.loc 1 213 0
+ 452 0020 FFF7FEFF 		bl	LPComp_OC_Start
+ 214:motor.c       **** 	
+ 215:motor.c       ****     /*UART Init*/
+ 216:motor.c       ****     UART_BCP_Start();
+ 453              		.loc 1 216 0
+ 454 0024 FFF7FEFF 		bl	UART_BCP_Start
+ 217:motor.c       **** 
+ 218:motor.c       **** 	isr_pwm_Start();
+ 455              		.loc 1 218 0
+ 456 0028 FFF7FEFF 		bl	isr_pwm_Start
+ 219:motor.c       **** 	isr_pwm_StartEx(pwm_isr);
+ 457              		.loc 1 219 0
+ 458 002c 0C4B     		ldr	r3, .L18
+ 459 002e 1800     		movs	r0, r3
+ 460 0030 FFF7FEFF 		bl	isr_pwm_StartEx
+ 220:motor.c       **** 	isr_pwm_Enable();  
+ 461              		.loc 1 220 0
+ 462 0034 FFF7FEFF 		bl	isr_pwm_Enable
+ 221:motor.c       **** 	
+ 222:motor.c       **** 	isr_spd_Start(); 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 13
+
+
+ 463              		.loc 1 222 0
+ 464 0038 FFF7FEFF 		bl	isr_spd_Start
+ 223:motor.c       **** 	isr_spd_StartEx(speed_measure_isr);    
+ 465              		.loc 1 223 0
+ 466 003c 094B     		ldr	r3, .L18+4
+ 467 003e 1800     		movs	r0, r3
+ 468 0040 FFF7FEFF 		bl	isr_spd_StartEx
+ 224:motor.c       **** 	isr_spd_Enable(); 	
+ 469              		.loc 1 224 0
+ 470 0044 FFF7FEFF 		bl	isr_spd_Enable
+ 225:motor.c       ****     
+ 226:motor.c       **** 	isr_oc_Start(); 
+ 471              		.loc 1 226 0
+ 472 0048 FFF7FEFF 		bl	isr_oc_Start
+ 227:motor.c       **** 	isr_oc_StartEx(over_current_isr);    
+ 473              		.loc 1 227 0
+ 474 004c 064B     		ldr	r3, .L18+8
+ 475 004e 1800     		movs	r0, r3
+ 476 0050 FFF7FEFF 		bl	isr_oc_StartEx
+ 228:motor.c       **** 	isr_oc_Disable();  
+ 477              		.loc 1 228 0
+ 478 0054 FFF7FEFF 		bl	isr_oc_Disable
+ 229:motor.c       **** }
+ 479              		.loc 1 229 0
+ 480 0058 C046     		nop
+ 481 005a BD46     		mov	sp, r7
+ 482              		@ sp needed
+ 483 005c 80BD     		pop	{r7, pc}
+ 484              	.L19:
+ 485 005e C046     		.align	2
+ 486              	.L18:
+ 487 0060 00000000 		.word	pwm_isr
+ 488 0064 00000000 		.word	speed_measure_isr
+ 489 0068 00000000 		.word	over_current_isr
+ 490              		.cfi_endproc
+ 491              	.LFE36:
+ 492              		.size	Init_HW, .-Init_HW
+ 493              		.section	.text.Init_UI_HW,"ax",%progbits
+ 494              		.align	2
+ 495              		.global	Init_UI_HW
+ 496              		.code	16
+ 497              		.thumb_func
+ 498              		.type	Init_UI_HW, %function
+ 499              	Init_UI_HW:
+ 500              	.LFB37:
+ 230:motor.c       **** 
+ 231:motor.c       **** /*******************************************************************************
+ 232:motor.c       **** * Function Name: Init_UI_HW
+ 233:motor.c       **** ********************************************************************************
+ 234:motor.c       **** * Summary: This function initializes hardware peripherals for user interface
+ 235:motor.c       **** *  
+ 236:motor.c       **** * Parameters: None  
+ 237:motor.c       **** *
+ 238:motor.c       **** * Return: None
+ 239:motor.c       **** *  
+ 240:motor.c       **** *******************************************************************************/
+ 241:motor.c       **** void Init_UI_HW()
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 14
+
+
+ 242:motor.c       **** {
+ 501              		.loc 1 242 0
+ 502              		.cfi_startproc
+ 503              		@ args = 0, pretend = 0, frame = 0
+ 504              		@ frame_needed = 1, uses_anonymous_args = 0
+ 505 0000 80B5     		push	{r7, lr}
+ 506              		.cfi_def_cfa_offset 8
+ 507              		.cfi_offset 7, -8
+ 508              		.cfi_offset 14, -4
+ 509 0002 00AF     		add	r7, sp, #0
+ 510              		.cfi_def_cfa_register 7
+ 243:motor.c       **** 	UpdateStatusInit();
+ 511              		.loc 1 243 0
+ 512 0004 FFF7FEFF 		bl	UpdateStatusInit
+ 244:motor.c       **** }
+ 513              		.loc 1 244 0
+ 514 0008 C046     		nop
+ 515 000a BD46     		mov	sp, r7
+ 516              		@ sp needed
+ 517 000c 80BD     		pop	{r7, pc}
+ 518              		.cfi_endproc
+ 519              	.LFE37:
+ 520              		.size	Init_UI_HW, .-Init_UI_HW
+ 521 000e C046     		.text
+ 522              	.Letext0:
+ 523              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 524              		.file 3 "motor.h"
+ 525              		.section	.debug_info,"",%progbits
+ 526              	.Ldebug_info0:
+ 527 0000 ED020000 		.4byte	0x2ed
+ 528 0004 0400     		.2byte	0x4
+ 529 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 530 000a 04       		.byte	0x4
+ 531 000b 01       		.uleb128 0x1
+ 532 000c 7F010000 		.4byte	.LASF52
+ 533 0010 0C       		.byte	0xc
+ 534 0011 F9000000 		.4byte	.LASF53
+ 535 0015 4F000000 		.4byte	.LASF54
+ 536 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 537 001d 00000000 		.4byte	0
+ 538 0021 00000000 		.4byte	.Ldebug_line0
+ 539 0025 02       		.uleb128 0x2
+ 540 0026 01       		.byte	0x1
+ 541 0027 06       		.byte	0x6
+ 542 0028 0C030000 		.4byte	.LASF0
+ 543 002c 02       		.uleb128 0x2
+ 544 002d 01       		.byte	0x1
+ 545 002e 08       		.byte	0x8
+ 546 002f 4E020000 		.4byte	.LASF1
+ 547 0033 02       		.uleb128 0x2
+ 548 0034 02       		.byte	0x2
+ 549 0035 05       		.byte	0x5
+ 550 0036 36020000 		.4byte	.LASF2
+ 551 003a 02       		.uleb128 0x2
+ 552 003b 02       		.byte	0x2
+ 553 003c 07       		.byte	0x7
+ 554 003d 5A010000 		.4byte	.LASF3
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 15
+
+
+ 555 0041 02       		.uleb128 0x2
+ 556 0042 04       		.byte	0x4
+ 557 0043 05       		.byte	0x5
+ 558 0044 F0020000 		.4byte	.LASF4
+ 559 0048 02       		.uleb128 0x2
+ 560 0049 04       		.byte	0x4
+ 561 004a 07       		.byte	0x7
+ 562 004b 40010000 		.4byte	.LASF5
+ 563 004f 02       		.uleb128 0x2
+ 564 0050 08       		.byte	0x8
+ 565 0051 05       		.byte	0x5
+ 566 0052 A7020000 		.4byte	.LASF6
+ 567 0056 02       		.uleb128 0x2
+ 568 0057 08       		.byte	0x8
+ 569 0058 07       		.byte	0x7
+ 570 0059 69020000 		.4byte	.LASF7
+ 571 005d 03       		.uleb128 0x3
+ 572 005e 04       		.byte	0x4
+ 573 005f 05       		.byte	0x5
+ 574 0060 696E7400 		.ascii	"int\000"
+ 575 0064 02       		.uleb128 0x2
+ 576 0065 04       		.byte	0x4
+ 577 0066 07       		.byte	0x7
+ 578 0067 5C020000 		.4byte	.LASF8
+ 579 006b 04       		.uleb128 0x4
+ 580 006c DE020000 		.4byte	.LASF9
+ 581 0070 02       		.byte	0x2
+ 582 0071 E401     		.2byte	0x1e4
+ 583 0073 2C000000 		.4byte	0x2c
+ 584 0077 04       		.uleb128 0x4
+ 585 0078 40020000 		.4byte	.LASF10
+ 586 007c 02       		.byte	0x2
+ 587 007d E501     		.2byte	0x1e5
+ 588 007f 3A000000 		.4byte	0x3a
+ 589 0083 04       		.uleb128 0x4
+ 590 0084 47020000 		.4byte	.LASF11
+ 591 0088 02       		.byte	0x2
+ 592 0089 E601     		.2byte	0x1e6
+ 593 008b 48000000 		.4byte	0x48
+ 594 008f 02       		.uleb128 0x2
+ 595 0090 04       		.byte	0x4
+ 596 0091 04       		.byte	0x4
+ 597 0092 01010000 		.4byte	.LASF12
+ 598 0096 02       		.uleb128 0x2
+ 599 0097 08       		.byte	0x8
+ 600 0098 04       		.byte	0x4
+ 601 0099 28020000 		.4byte	.LASF13
+ 602 009d 02       		.uleb128 0x2
+ 603 009e 01       		.byte	0x1
+ 604 009f 08       		.byte	0x8
+ 605 00a0 B5020000 		.4byte	.LASF14
+ 606 00a4 02       		.uleb128 0x2
+ 607 00a5 08       		.byte	0x8
+ 608 00a6 04       		.byte	0x4
+ 609 00a7 00030000 		.4byte	.LASF15
+ 610 00ab 02       		.uleb128 0x2
+ 611 00ac 04       		.byte	0x4
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 16
+
+
+ 612 00ad 07       		.byte	0x7
+ 613 00ae 9E020000 		.4byte	.LASF16
+ 614 00b2 05       		.uleb128 0x5
+ 615 00b3 01       		.byte	0x1
+ 616 00b4 03       		.byte	0x3
+ 617 00b5 46       		.byte	0x46
+ 618 00b6 C7000000 		.4byte	0xc7
+ 619 00ba 06       		.uleb128 0x6
+ 620 00bb 72756E00 		.ascii	"run\000"
+ 621 00bf 03       		.byte	0x3
+ 622 00c0 48       		.byte	0x48
+ 623 00c1 6B000000 		.4byte	0x6b
+ 624 00c5 00       		.byte	0
+ 625 00c6 00       		.byte	0
+ 626 00c7 07       		.uleb128 0x7
+ 627 00c8 39010000 		.4byte	.LASF17
+ 628 00cc 03       		.byte	0x3
+ 629 00cd 49       		.byte	0x49
+ 630 00ce B2000000 		.4byte	0xb2
+ 631 00d2 05       		.uleb128 0x5
+ 632 00d3 10       		.byte	0x10
+ 633 00d4 03       		.byte	0x3
+ 634 00d5 4C       		.byte	0x4c
+ 635 00d6 45010000 		.4byte	0x145
+ 636 00da 06       		.uleb128 0x6
+ 637 00db 44697200 		.ascii	"Dir\000"
+ 638 00df 03       		.byte	0x3
+ 639 00e0 4E       		.byte	0x4e
+ 640 00e1 6B000000 		.4byte	0x6b
+ 641 00e5 00       		.byte	0
+ 642 00e6 08       		.uleb128 0x8
+ 643 00e7 D5020000 		.4byte	.LASF18
+ 644 00eb 03       		.byte	0x3
+ 645 00ec 50       		.byte	0x50
+ 646 00ed 77000000 		.4byte	0x77
+ 647 00f1 02       		.byte	0x2
+ 648 00f2 08       		.uleb128 0x8
+ 649 00f3 43000000 		.4byte	.LASF19
+ 650 00f7 03       		.byte	0x3
+ 651 00f8 51       		.byte	0x51
+ 652 00f9 77000000 		.4byte	0x77
+ 653 00fd 04       		.byte	0x4
+ 654 00fe 06       		.uleb128 0x6
+ 655 00ff 6B7000   		.ascii	"kp\000"
+ 656 0102 03       		.byte	0x3
+ 657 0103 53       		.byte	0x53
+ 658 0104 77000000 		.4byte	0x77
+ 659 0108 06       		.byte	0x6
+ 660 0109 06       		.uleb128 0x6
+ 661 010a 6B6900   		.ascii	"ki\000"
+ 662 010d 03       		.byte	0x3
+ 663 010e 54       		.byte	0x54
+ 664 010f 77000000 		.4byte	0x77
+ 665 0113 08       		.byte	0x8
+ 666 0114 08       		.uleb128 0x8
+ 667 0115 21000000 		.4byte	.LASF20
+ 668 0119 03       		.byte	0x3
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 17
+
+
+ 669 011a 56       		.byte	0x56
+ 670 011b 77000000 		.4byte	0x77
+ 671 011f 0A       		.byte	0xa
+ 672 0120 08       		.uleb128 0x8
+ 673 0121 37000000 		.4byte	.LASF21
+ 674 0125 03       		.byte	0x3
+ 675 0126 57       		.byte	0x57
+ 676 0127 77000000 		.4byte	0x77
+ 677 012b 0C       		.byte	0xc
+ 678 012c 08       		.uleb128 0x8
+ 679 012d DB000000 		.4byte	.LASF22
+ 680 0131 03       		.byte	0x3
+ 681 0132 58       		.byte	0x58
+ 682 0133 6B000000 		.4byte	0x6b
+ 683 0137 0E       		.byte	0xe
+ 684 0138 08       		.uleb128 0x8
+ 685 0139 BA020000 		.4byte	.LASF23
+ 686 013d 03       		.byte	0x3
+ 687 013e 59       		.byte	0x59
+ 688 013f 6B000000 		.4byte	0x6b
+ 689 0143 0F       		.byte	0xf
+ 690 0144 00       		.byte	0
+ 691 0145 07       		.uleb128 0x7
+ 692 0146 CD020000 		.4byte	.LASF24
+ 693 014a 03       		.byte	0x3
+ 694 014b 5A       		.byte	0x5a
+ 695 014c D2000000 		.4byte	0xd2
+ 696 0150 09       		.uleb128 0x9
+ 697 0151 BD000000 		.4byte	.LASF55
+ 698 0155 01       		.byte	0x1
+ 699 0156 2C000000 		.4byte	0x2c
+ 700 015a 03       		.byte	0x3
+ 701 015b 5E       		.byte	0x5e
+ 702 015c 7F010000 		.4byte	0x17f
+ 703 0160 0A       		.uleb128 0xa
+ 704 0161 0D020000 		.4byte	.LASF25
+ 705 0165 00       		.byte	0
+ 706 0166 0A       		.uleb128 0xa
+ 707 0167 80020000 		.4byte	.LASF26
+ 708 016b 01       		.byte	0x1
+ 709 016c 0A       		.uleb128 0xa
+ 710 016d 2F010000 		.4byte	.LASF27
+ 711 0171 02       		.byte	0x2
+ 712 0172 0A       		.uleb128 0xa
+ 713 0173 52010000 		.4byte	.LASF28
+ 714 0177 03       		.byte	0x3
+ 715 0178 0A       		.uleb128 0xa
+ 716 0179 88020000 		.4byte	.LASF29
+ 717 017d 04       		.byte	0x4
+ 718 017e 00       		.byte	0
+ 719 017f 07       		.uleb128 0x7
+ 720 0180 11000000 		.4byte	.LASF30
+ 721 0184 03       		.byte	0x3
+ 722 0185 64       		.byte	0x64
+ 723 0186 50010000 		.4byte	0x150
+ 724 018a 0B       		.uleb128 0xb
+ 725 018b 77010000 		.4byte	.LASF31
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 18
+
+
+ 726 018f 01       		.byte	0x1
+ 727 0190 4C       		.byte	0x4c
+ 728 0191 00000000 		.4byte	.LFB32
+ 729 0195 78000000 		.4byte	.LFE32-.LFB32
+ 730 0199 01       		.uleb128 0x1
+ 731 019a 9C       		.byte	0x9c
+ 732 019b 0C       		.uleb128 0xc
+ 733 019c 16020000 		.4byte	.LASF33
+ 734 01a0 01       		.byte	0x1
+ 735 01a1 75       		.byte	0x75
+ 736 01a2 00000000 		.4byte	.LFB33
+ 737 01a6 88000000 		.4byte	.LFE33-.LFB33
+ 738 01aa 01       		.uleb128 0x1
+ 739 01ab 9C       		.byte	0x9c
+ 740 01ac BF010000 		.4byte	0x1bf
+ 741 01b0 0D       		.uleb128 0xd
+ 742 01b1 6D010000 		.4byte	.LASF35
+ 743 01b5 01       		.byte	0x1
+ 744 01b6 77       		.byte	0x77
+ 745 01b7 77000000 		.4byte	0x77
+ 746 01bb 02       		.uleb128 0x2
+ 747 01bc 91       		.byte	0x91
+ 748 01bd 76       		.sleb128 -10
+ 749 01be 00       		.byte	0
+ 750 01bf 0B       		.uleb128 0xb
+ 751 01c0 00000000 		.4byte	.LASF32
+ 752 01c4 01       		.byte	0x1
+ 753 01c5 96       		.byte	0x96
+ 754 01c6 00000000 		.4byte	.LFB34
+ 755 01ca 20000000 		.4byte	.LFE34-.LFB34
+ 756 01ce 01       		.uleb128 0x1
+ 757 01cf 9C       		.byte	0x9c
+ 758 01d0 0C       		.uleb128 0xc
+ 759 01d1 C4000000 		.4byte	.LASF34
+ 760 01d5 01       		.byte	0x1
+ 761 01d6 A8       		.byte	0xa8
+ 762 01d7 00000000 		.4byte	.LFB35
+ 763 01db 9C000000 		.4byte	.LFE35-.LFB35
+ 764 01df 01       		.uleb128 0x1
+ 765 01e0 9C       		.byte	0x9c
+ 766 01e1 02020000 		.4byte	0x202
+ 767 01e5 0D       		.uleb128 0xd
+ 768 01e6 CF000000 		.4byte	.LASF36
+ 769 01ea 01       		.byte	0x1
+ 770 01eb AC       		.byte	0xac
+ 771 01ec 8F000000 		.4byte	0x8f
+ 772 01f0 02       		.uleb128 0x2
+ 773 01f1 91       		.byte	0x91
+ 774 01f2 6C       		.sleb128 -20
+ 775 01f3 0D       		.uleb128 0xd
+ 776 01f4 23010000 		.4byte	.LASF37
+ 777 01f8 01       		.byte	0x1
+ 778 01f9 AD       		.byte	0xad
+ 779 01fa 8F000000 		.4byte	0x8f
+ 780 01fe 02       		.uleb128 0x2
+ 781 01ff 91       		.byte	0x91
+ 782 0200 68       		.sleb128 -24
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 19
+
+
+ 783 0201 00       		.byte	0
+ 784 0202 0B       		.uleb128 0xb
+ 785 0203 07010000 		.4byte	.LASF38
+ 786 0207 01       		.byte	0x1
+ 787 0208 C4       		.byte	0xc4
+ 788 0209 00000000 		.4byte	.LFB36
+ 789 020d 6C000000 		.4byte	.LFE36-.LFB36
+ 790 0211 01       		.uleb128 0x1
+ 791 0212 9C       		.byte	0x9c
+ 792 0213 0B       		.uleb128 0xb
+ 793 0214 E5000000 		.4byte	.LASF39
+ 794 0218 01       		.byte	0x1
+ 795 0219 F1       		.byte	0xf1
+ 796 021a 00000000 		.4byte	.LFB37
+ 797 021e 0E000000 		.4byte	.LFE37-.LFB37
+ 798 0222 01       		.uleb128 0x1
+ 799 0223 9C       		.byte	0x9c
+ 800 0224 0E       		.uleb128 0xe
+ 801 0225 18010000 		.4byte	.LASF40
+ 802 0229 01       		.byte	0x1
+ 803 022a 3C       		.byte	0x3c
+ 804 022b 7F010000 		.4byte	0x17f
+ 805 022f 05       		.uleb128 0x5
+ 806 0230 03       		.byte	0x3
+ 807 0231 00000000 		.4byte	errorState
+ 808 0235 0E       		.uleb128 0xe
+ 809 0236 2F020000 		.4byte	.LASF41
+ 810 023a 01       		.byte	0x1
+ 811 023b 2F       		.byte	0x2f
+ 812 023c C7000000 		.4byte	0xc7
+ 813 0240 05       		.uleb128 0x5
+ 814 0241 03       		.byte	0x3
+ 815 0242 00000000 		.4byte	UI_Cmd
+ 816 0246 0E       		.uleb128 0xe
+ 817 0247 19000000 		.4byte	.LASF42
+ 818 024b 01       		.byte	0x1
+ 819 024c 30       		.byte	0x30
+ 820 024d 45010000 		.4byte	0x145
+ 821 0251 05       		.uleb128 0x5
+ 822 0252 03       		.byte	0x3
+ 823 0253 00000000 		.4byte	UI_Data
+ 824 0257 0E       		.uleb128 0xe
+ 825 0258 21030000 		.4byte	.LASF43
+ 826 025c 01       		.byte	0x1
+ 827 025d 32       		.byte	0x32
+ 828 025e 77000000 		.4byte	0x77
+ 829 0262 05       		.uleb128 0x5
+ 830 0263 03       		.byte	0x3
+ 831 0264 00000000 		.4byte	speedRef
+ 832 0268 0E       		.uleb128 0xe
+ 833 0269 0F010000 		.4byte	.LASF44
+ 834 026d 01       		.byte	0x1
+ 835 026e 33       		.byte	0x33
+ 836 026f 77000000 		.4byte	0x77
+ 837 0273 05       		.uleb128 0x5
+ 838 0274 03       		.byte	0x3
+ 839 0275 00000000 		.4byte	speedCur
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 20
+
+
+ 840 0279 0E       		.uleb128 0xe
+ 841 027a E4020000 		.4byte	.LASF45
+ 842 027e 01       		.byte	0x1
+ 843 027f 35       		.byte	0x35
+ 844 0280 77000000 		.4byte	0x77
+ 845 0284 05       		.uleb128 0x5
+ 846 0285 03       		.byte	0x3
+ 847 0286 00000000 		.4byte	preSpeedCur
+ 848 028a 0E       		.uleb128 0xe
+ 849 028b 91020000 		.4byte	.LASF46
+ 850 028f 01       		.byte	0x1
+ 851 0290 36       		.byte	0x36
+ 852 0291 77000000 		.4byte	0x77
+ 853 0295 05       		.uleb128 0x5
+ 854 0296 03       		.byte	0x3
+ 855 0297 00000000 		.4byte	preCntCaptur
+ 856 029b 0E       		.uleb128 0xe
+ 857 029c F9020000 		.4byte	.LASF47
+ 858 02a0 01       		.byte	0x1
+ 859 02a1 39       		.byte	0x39
+ 860 02a2 77000000 		.4byte	0x77
+ 861 02a6 05       		.uleb128 0x5
+ 862 02a7 03       		.byte	0x3
+ 863 02a8 00000000 		.4byte	pwmCnt
+ 864 02ac 0E       		.uleb128 0xe
+ 865 02ad 2D000000 		.4byte	.LASF48
+ 866 02b1 01       		.byte	0x1
+ 867 02b2 38       		.byte	0x38
+ 868 02b3 6B000000 		.4byte	0x6b
+ 869 02b7 05       		.uleb128 0x5
+ 870 02b8 03       		.byte	0x3
+ 871 02b9 00000000 		.4byte	dutyCycle
+ 872 02bd 0E       		.uleb128 0xe
+ 873 02be 18030000 		.4byte	.LASF49
+ 874 02c2 01       		.byte	0x1
+ 875 02c3 3D       		.byte	0x3d
+ 876 02c4 6B000000 		.4byte	0x6b
+ 877 02c8 05       		.uleb128 0x5
+ 878 02c9 03       		.byte	0x3
+ 879 02ca 00000000 		.4byte	stateSys
+ 880 02ce 0E       		.uleb128 0xe
+ 881 02cf F0000000 		.4byte	.LASF50
+ 882 02d3 01       		.byte	0x1
+ 883 02d4 3A       		.byte	0x3a
+ 884 02d5 6B000000 		.4byte	0x6b
+ 885 02d9 05       		.uleb128 0x5
+ 886 02da 03       		.byte	0x3
+ 887 02db 00000000 		.4byte	firstRun
+ 888 02df 0E       		.uleb128 0xe
+ 889 02e0 C2020000 		.4byte	.LASF51
+ 890 02e4 01       		.byte	0x1
+ 891 02e5 3B       		.byte	0x3b
+ 892 02e6 6B000000 		.4byte	0x6b
+ 893 02ea 05       		.uleb128 0x5
+ 894 02eb 03       		.byte	0x3
+ 895 02ec 00000000 		.4byte	ocBlankCnt
+ 896 02f0 00       		.byte	0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 21
+
+
+ 897              		.section	.debug_abbrev,"",%progbits
+ 898              	.Ldebug_abbrev0:
+ 899 0000 01       		.uleb128 0x1
+ 900 0001 11       		.uleb128 0x11
+ 901 0002 01       		.byte	0x1
+ 902 0003 25       		.uleb128 0x25
+ 903 0004 0E       		.uleb128 0xe
+ 904 0005 13       		.uleb128 0x13
+ 905 0006 0B       		.uleb128 0xb
+ 906 0007 03       		.uleb128 0x3
+ 907 0008 0E       		.uleb128 0xe
+ 908 0009 1B       		.uleb128 0x1b
+ 909 000a 0E       		.uleb128 0xe
+ 910 000b 55       		.uleb128 0x55
+ 911 000c 17       		.uleb128 0x17
+ 912 000d 11       		.uleb128 0x11
+ 913 000e 01       		.uleb128 0x1
+ 914 000f 10       		.uleb128 0x10
+ 915 0010 17       		.uleb128 0x17
+ 916 0011 00       		.byte	0
+ 917 0012 00       		.byte	0
+ 918 0013 02       		.uleb128 0x2
+ 919 0014 24       		.uleb128 0x24
+ 920 0015 00       		.byte	0
+ 921 0016 0B       		.uleb128 0xb
+ 922 0017 0B       		.uleb128 0xb
+ 923 0018 3E       		.uleb128 0x3e
+ 924 0019 0B       		.uleb128 0xb
+ 925 001a 03       		.uleb128 0x3
+ 926 001b 0E       		.uleb128 0xe
+ 927 001c 00       		.byte	0
+ 928 001d 00       		.byte	0
+ 929 001e 03       		.uleb128 0x3
+ 930 001f 24       		.uleb128 0x24
+ 931 0020 00       		.byte	0
+ 932 0021 0B       		.uleb128 0xb
+ 933 0022 0B       		.uleb128 0xb
+ 934 0023 3E       		.uleb128 0x3e
+ 935 0024 0B       		.uleb128 0xb
+ 936 0025 03       		.uleb128 0x3
+ 937 0026 08       		.uleb128 0x8
+ 938 0027 00       		.byte	0
+ 939 0028 00       		.byte	0
+ 940 0029 04       		.uleb128 0x4
+ 941 002a 16       		.uleb128 0x16
+ 942 002b 00       		.byte	0
+ 943 002c 03       		.uleb128 0x3
+ 944 002d 0E       		.uleb128 0xe
+ 945 002e 3A       		.uleb128 0x3a
+ 946 002f 0B       		.uleb128 0xb
+ 947 0030 3B       		.uleb128 0x3b
+ 948 0031 05       		.uleb128 0x5
+ 949 0032 49       		.uleb128 0x49
+ 950 0033 13       		.uleb128 0x13
+ 951 0034 00       		.byte	0
+ 952 0035 00       		.byte	0
+ 953 0036 05       		.uleb128 0x5
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 22
+
+
+ 954 0037 13       		.uleb128 0x13
+ 955 0038 01       		.byte	0x1
+ 956 0039 0B       		.uleb128 0xb
+ 957 003a 0B       		.uleb128 0xb
+ 958 003b 3A       		.uleb128 0x3a
+ 959 003c 0B       		.uleb128 0xb
+ 960 003d 3B       		.uleb128 0x3b
+ 961 003e 0B       		.uleb128 0xb
+ 962 003f 01       		.uleb128 0x1
+ 963 0040 13       		.uleb128 0x13
+ 964 0041 00       		.byte	0
+ 965 0042 00       		.byte	0
+ 966 0043 06       		.uleb128 0x6
+ 967 0044 0D       		.uleb128 0xd
+ 968 0045 00       		.byte	0
+ 969 0046 03       		.uleb128 0x3
+ 970 0047 08       		.uleb128 0x8
+ 971 0048 3A       		.uleb128 0x3a
+ 972 0049 0B       		.uleb128 0xb
+ 973 004a 3B       		.uleb128 0x3b
+ 974 004b 0B       		.uleb128 0xb
+ 975 004c 49       		.uleb128 0x49
+ 976 004d 13       		.uleb128 0x13
+ 977 004e 38       		.uleb128 0x38
+ 978 004f 0B       		.uleb128 0xb
+ 979 0050 00       		.byte	0
+ 980 0051 00       		.byte	0
+ 981 0052 07       		.uleb128 0x7
+ 982 0053 16       		.uleb128 0x16
+ 983 0054 00       		.byte	0
+ 984 0055 03       		.uleb128 0x3
+ 985 0056 0E       		.uleb128 0xe
+ 986 0057 3A       		.uleb128 0x3a
+ 987 0058 0B       		.uleb128 0xb
+ 988 0059 3B       		.uleb128 0x3b
+ 989 005a 0B       		.uleb128 0xb
+ 990 005b 49       		.uleb128 0x49
+ 991 005c 13       		.uleb128 0x13
+ 992 005d 00       		.byte	0
+ 993 005e 00       		.byte	0
+ 994 005f 08       		.uleb128 0x8
+ 995 0060 0D       		.uleb128 0xd
+ 996 0061 00       		.byte	0
+ 997 0062 03       		.uleb128 0x3
+ 998 0063 0E       		.uleb128 0xe
+ 999 0064 3A       		.uleb128 0x3a
+ 1000 0065 0B       		.uleb128 0xb
+ 1001 0066 3B       		.uleb128 0x3b
+ 1002 0067 0B       		.uleb128 0xb
+ 1003 0068 49       		.uleb128 0x49
+ 1004 0069 13       		.uleb128 0x13
+ 1005 006a 38       		.uleb128 0x38
+ 1006 006b 0B       		.uleb128 0xb
+ 1007 006c 00       		.byte	0
+ 1008 006d 00       		.byte	0
+ 1009 006e 09       		.uleb128 0x9
+ 1010 006f 04       		.uleb128 0x4
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 23
+
+
+ 1011 0070 01       		.byte	0x1
+ 1012 0071 03       		.uleb128 0x3
+ 1013 0072 0E       		.uleb128 0xe
+ 1014 0073 0B       		.uleb128 0xb
+ 1015 0074 0B       		.uleb128 0xb
+ 1016 0075 49       		.uleb128 0x49
+ 1017 0076 13       		.uleb128 0x13
+ 1018 0077 3A       		.uleb128 0x3a
+ 1019 0078 0B       		.uleb128 0xb
+ 1020 0079 3B       		.uleb128 0x3b
+ 1021 007a 0B       		.uleb128 0xb
+ 1022 007b 01       		.uleb128 0x1
+ 1023 007c 13       		.uleb128 0x13
+ 1024 007d 00       		.byte	0
+ 1025 007e 00       		.byte	0
+ 1026 007f 0A       		.uleb128 0xa
+ 1027 0080 28       		.uleb128 0x28
+ 1028 0081 00       		.byte	0
+ 1029 0082 03       		.uleb128 0x3
+ 1030 0083 0E       		.uleb128 0xe
+ 1031 0084 1C       		.uleb128 0x1c
+ 1032 0085 0B       		.uleb128 0xb
+ 1033 0086 00       		.byte	0
+ 1034 0087 00       		.byte	0
+ 1035 0088 0B       		.uleb128 0xb
+ 1036 0089 2E       		.uleb128 0x2e
+ 1037 008a 00       		.byte	0
+ 1038 008b 3F       		.uleb128 0x3f
+ 1039 008c 19       		.uleb128 0x19
+ 1040 008d 03       		.uleb128 0x3
+ 1041 008e 0E       		.uleb128 0xe
+ 1042 008f 3A       		.uleb128 0x3a
+ 1043 0090 0B       		.uleb128 0xb
+ 1044 0091 3B       		.uleb128 0x3b
+ 1045 0092 0B       		.uleb128 0xb
+ 1046 0093 27       		.uleb128 0x27
+ 1047 0094 19       		.uleb128 0x19
+ 1048 0095 11       		.uleb128 0x11
+ 1049 0096 01       		.uleb128 0x1
+ 1050 0097 12       		.uleb128 0x12
+ 1051 0098 06       		.uleb128 0x6
+ 1052 0099 40       		.uleb128 0x40
+ 1053 009a 18       		.uleb128 0x18
+ 1054 009b 9642     		.uleb128 0x2116
+ 1055 009d 19       		.uleb128 0x19
+ 1056 009e 00       		.byte	0
+ 1057 009f 00       		.byte	0
+ 1058 00a0 0C       		.uleb128 0xc
+ 1059 00a1 2E       		.uleb128 0x2e
+ 1060 00a2 01       		.byte	0x1
+ 1061 00a3 3F       		.uleb128 0x3f
+ 1062 00a4 19       		.uleb128 0x19
+ 1063 00a5 03       		.uleb128 0x3
+ 1064 00a6 0E       		.uleb128 0xe
+ 1065 00a7 3A       		.uleb128 0x3a
+ 1066 00a8 0B       		.uleb128 0xb
+ 1067 00a9 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 24
+
+
+ 1068 00aa 0B       		.uleb128 0xb
+ 1069 00ab 27       		.uleb128 0x27
+ 1070 00ac 19       		.uleb128 0x19
+ 1071 00ad 11       		.uleb128 0x11
+ 1072 00ae 01       		.uleb128 0x1
+ 1073 00af 12       		.uleb128 0x12
+ 1074 00b0 06       		.uleb128 0x6
+ 1075 00b1 40       		.uleb128 0x40
+ 1076 00b2 18       		.uleb128 0x18
+ 1077 00b3 9642     		.uleb128 0x2116
+ 1078 00b5 19       		.uleb128 0x19
+ 1079 00b6 01       		.uleb128 0x1
+ 1080 00b7 13       		.uleb128 0x13
+ 1081 00b8 00       		.byte	0
+ 1082 00b9 00       		.byte	0
+ 1083 00ba 0D       		.uleb128 0xd
+ 1084 00bb 34       		.uleb128 0x34
+ 1085 00bc 00       		.byte	0
+ 1086 00bd 03       		.uleb128 0x3
+ 1087 00be 0E       		.uleb128 0xe
+ 1088 00bf 3A       		.uleb128 0x3a
+ 1089 00c0 0B       		.uleb128 0xb
+ 1090 00c1 3B       		.uleb128 0x3b
+ 1091 00c2 0B       		.uleb128 0xb
+ 1092 00c3 49       		.uleb128 0x49
+ 1093 00c4 13       		.uleb128 0x13
+ 1094 00c5 02       		.uleb128 0x2
+ 1095 00c6 18       		.uleb128 0x18
+ 1096 00c7 00       		.byte	0
+ 1097 00c8 00       		.byte	0
+ 1098 00c9 0E       		.uleb128 0xe
+ 1099 00ca 34       		.uleb128 0x34
+ 1100 00cb 00       		.byte	0
+ 1101 00cc 03       		.uleb128 0x3
+ 1102 00cd 0E       		.uleb128 0xe
+ 1103 00ce 3A       		.uleb128 0x3a
+ 1104 00cf 0B       		.uleb128 0xb
+ 1105 00d0 3B       		.uleb128 0x3b
+ 1106 00d1 0B       		.uleb128 0xb
+ 1107 00d2 49       		.uleb128 0x49
+ 1108 00d3 13       		.uleb128 0x13
+ 1109 00d4 3F       		.uleb128 0x3f
+ 1110 00d5 19       		.uleb128 0x19
+ 1111 00d6 02       		.uleb128 0x2
+ 1112 00d7 18       		.uleb128 0x18
+ 1113 00d8 00       		.byte	0
+ 1114 00d9 00       		.byte	0
+ 1115 00da 00       		.byte	0
+ 1116              		.section	.debug_aranges,"",%progbits
+ 1117 0000 44000000 		.4byte	0x44
+ 1118 0004 0200     		.2byte	0x2
+ 1119 0006 00000000 		.4byte	.Ldebug_info0
+ 1120 000a 04       		.byte	0x4
+ 1121 000b 00       		.byte	0
+ 1122 000c 0000     		.2byte	0
+ 1123 000e 0000     		.2byte	0
+ 1124 0010 00000000 		.4byte	.LFB32
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 25
+
+
+ 1125 0014 78000000 		.4byte	.LFE32-.LFB32
+ 1126 0018 00000000 		.4byte	.LFB33
+ 1127 001c 88000000 		.4byte	.LFE33-.LFB33
+ 1128 0020 00000000 		.4byte	.LFB34
+ 1129 0024 20000000 		.4byte	.LFE34-.LFB34
+ 1130 0028 00000000 		.4byte	.LFB35
+ 1131 002c 9C000000 		.4byte	.LFE35-.LFB35
+ 1132 0030 00000000 		.4byte	.LFB36
+ 1133 0034 6C000000 		.4byte	.LFE36-.LFB36
+ 1134 0038 00000000 		.4byte	.LFB37
+ 1135 003c 0E000000 		.4byte	.LFE37-.LFB37
+ 1136 0040 00000000 		.4byte	0
+ 1137 0044 00000000 		.4byte	0
+ 1138              		.section	.debug_ranges,"",%progbits
+ 1139              	.Ldebug_ranges0:
+ 1140 0000 00000000 		.4byte	.LFB32
+ 1141 0004 78000000 		.4byte	.LFE32
+ 1142 0008 00000000 		.4byte	.LFB33
+ 1143 000c 88000000 		.4byte	.LFE33
+ 1144 0010 00000000 		.4byte	.LFB34
+ 1145 0014 20000000 		.4byte	.LFE34
+ 1146 0018 00000000 		.4byte	.LFB35
+ 1147 001c 9C000000 		.4byte	.LFE35
+ 1148 0020 00000000 		.4byte	.LFB36
+ 1149 0024 6C000000 		.4byte	.LFE36
+ 1150 0028 00000000 		.4byte	.LFB37
+ 1151 002c 0E000000 		.4byte	.LFE37
+ 1152 0030 00000000 		.4byte	0
+ 1153 0034 00000000 		.4byte	0
+ 1154              		.section	.debug_line,"",%progbits
+ 1155              	.Ldebug_line0:
+ 1156 0000 EE000000 		.section	.debug_str,"MS",%progbits,1
+ 1156      02004D00 
+ 1156      00000201 
+ 1156      FB0E0D00 
+ 1156      01010101 
+ 1157              	.LASF32:
+ 1158 0000 6F766572 		.ascii	"over_current_isr\000"
+ 1158      5F637572 
+ 1158      72656E74 
+ 1158      5F697372 
+ 1158      00
+ 1159              	.LASF30:
+ 1160 0011 4572726F 		.ascii	"Error_T\000"
+ 1160      725F5400 
+ 1161              	.LASF42:
+ 1162 0019 55495F44 		.ascii	"UI_Data\000"
+ 1162      61746100 
+ 1163              	.LASF20:
+ 1164 0021 6D617853 		.ascii	"maxSpeedRpm\000"
+ 1164      70656564 
+ 1164      52706D00 
+ 1165              	.LASF48:
+ 1166 002d 64757479 		.ascii	"dutyCycle\000"
+ 1166      4379636C 
+ 1166      6500
+ 1167              	.LASF21:
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 26
+
+
+ 1168 0037 6D696E53 		.ascii	"minSpeedRpm\000"
+ 1168      70656564 
+ 1168      52706D00 
+ 1169              	.LASF19:
+ 1170 0043 73706565 		.ascii	"speedRpmRef\000"
+ 1170      6452706D 
+ 1170      52656600 
+ 1171              	.LASF54:
+ 1172 004f 433A5C55 		.ascii	"C:\\Users\\Andres Elizondo\\Documents\\PSoC Creator"
+ 1172      73657273 
+ 1172      5C416E64 
+ 1172      72657320 
+ 1172      456C697A 
+ 1173 007e 5C53656E 		.ascii	"\\Sensored BLDC Motor Control\\Sensored BLDC Motor "
+ 1173      736F7265 
+ 1173      6420424C 
+ 1173      4443204D 
+ 1173      6F746F72 
+ 1174 00af 436F6E74 		.ascii	"Control.cydsn\000"
+ 1174      726F6C2E 
+ 1174      63796473 
+ 1174      6E00
+ 1175              	.LASF55:
+ 1176 00bd 5F457272 		.ascii	"_Error\000"
+ 1176      6F7200
+ 1177              	.LASF34:
+ 1178 00c4 496E6974 		.ascii	"Init_UI_FW\000"
+ 1178      5F55495F 
+ 1178      465700
+ 1179              	.LASF36:
+ 1180 00cf 72706D53 		.ascii	"rpmScaleMax\000"
+ 1180      63616C65 
+ 1180      4D617800 
+ 1181              	.LASF22:
+ 1182 00db 706F6C65 		.ascii	"polePairs\000"
+ 1182      50616972 
+ 1182      7300
+ 1183              	.LASF39:
+ 1184 00e5 496E6974 		.ascii	"Init_UI_HW\000"
+ 1184      5F55495F 
+ 1184      485700
+ 1185              	.LASF50:
+ 1186 00f0 66697273 		.ascii	"firstRun\000"
+ 1186      7452756E 
+ 1186      00
+ 1187              	.LASF53:
+ 1188 00f9 6D6F746F 		.ascii	"motor.c\000"
+ 1188      722E6300 
+ 1189              	.LASF12:
+ 1190 0101 666C6F61 		.ascii	"float\000"
+ 1190      7400
+ 1191              	.LASF38:
+ 1192 0107 496E6974 		.ascii	"Init_HW\000"
+ 1192      5F485700 
+ 1193              	.LASF44:
+ 1194 010f 73706565 		.ascii	"speedCur\000"
+ 1194      64437572 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 27
+
+
+ 1194      00
+ 1195              	.LASF40:
+ 1196 0118 6572726F 		.ascii	"errorState\000"
+ 1196      72537461 
+ 1196      746500
+ 1197              	.LASF37:
+ 1198 0123 72706D53 		.ascii	"rpmScaleMin\000"
+ 1198      63616C65 
+ 1198      4D696E00 
+ 1199              	.LASF27:
+ 1200 012f 68616C6C 		.ascii	"hallError\000"
+ 1200      4572726F 
+ 1200      7200
+ 1201              	.LASF17:
+ 1202 0139 55495F43 		.ascii	"UI_CMD\000"
+ 1202      4D4400
+ 1203              	.LASF5:
+ 1204 0140 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1204      20756E73 
+ 1204      69676E65 
+ 1204      6420696E 
+ 1204      7400
+ 1205              	.LASF28:
+ 1206 0152 6C6F7756 		.ascii	"lowVolt\000"
+ 1206      6F6C7400 
+ 1207              	.LASF3:
+ 1208 015a 73686F72 		.ascii	"short unsigned int\000"
+ 1208      7420756E 
+ 1208      7369676E 
+ 1208      65642069 
+ 1208      6E7400
+ 1209              	.LASF35:
+ 1210 016d 636E7443 		.ascii	"cntCaptur\000"
+ 1210      61707475 
+ 1210      7200
+ 1211              	.LASF31:
+ 1212 0177 70776D5F 		.ascii	"pwm_isr\000"
+ 1212      69737200 
+ 1213              	.LASF52:
+ 1214 017f 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1214      43313120 
+ 1214      352E342E 
+ 1214      31203230 
+ 1214      31363036 
+ 1215 01b2 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0 -mthumb -g -O"
+ 1215      20726576 
+ 1215      6973696F 
+ 1215      6E203233 
+ 1215      37373135 
+ 1216 01e5 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1216      66756E63 
+ 1216      74696F6E 
+ 1216      2D736563 
+ 1216      74696F6E 
+ 1217              	.LASF25:
+ 1218 020d 6E6F5F65 		.ascii	"no_error\000"
+ 1218      72726F72 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 28
+
+
+ 1218      00
+ 1219              	.LASF33:
+ 1220 0216 73706565 		.ascii	"speed_measure_isr\000"
+ 1220      645F6D65 
+ 1220      61737572 
+ 1220      655F6973 
+ 1220      7200
+ 1221              	.LASF13:
+ 1222 0228 646F7562 		.ascii	"double\000"
+ 1222      6C6500
+ 1223              	.LASF41:
+ 1224 022f 55495F43 		.ascii	"UI_Cmd\000"
+ 1224      6D6400
+ 1225              	.LASF2:
+ 1226 0236 73686F72 		.ascii	"short int\000"
+ 1226      7420696E 
+ 1226      7400
+ 1227              	.LASF10:
+ 1228 0240 75696E74 		.ascii	"uint16\000"
+ 1228      313600
+ 1229              	.LASF11:
+ 1230 0247 75696E74 		.ascii	"uint32\000"
+ 1230      333200
+ 1231              	.LASF1:
+ 1232 024e 756E7369 		.ascii	"unsigned char\000"
+ 1232      676E6564 
+ 1232      20636861 
+ 1232      7200
+ 1233              	.LASF8:
+ 1234 025c 756E7369 		.ascii	"unsigned int\000"
+ 1234      676E6564 
+ 1234      20696E74 
+ 1234      00
+ 1235              	.LASF7:
+ 1236 0269 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1236      206C6F6E 
+ 1236      6720756E 
+ 1236      7369676E 
+ 1236      65642069 
+ 1237              	.LASF26:
+ 1238 0280 6F766572 		.ascii	"overCur\000"
+ 1238      43757200 
+ 1239              	.LASF29:
+ 1240 0288 68696768 		.ascii	"highVolt\000"
+ 1240      566F6C74 
+ 1240      00
+ 1241              	.LASF46:
+ 1242 0291 70726543 		.ascii	"preCntCaptur\000"
+ 1242      6E744361 
+ 1242      70747572 
+ 1242      00
+ 1243              	.LASF16:
+ 1244 029e 73697A65 		.ascii	"sizetype\000"
+ 1244      74797065 
+ 1244      00
+ 1245              	.LASF6:
+ 1246 02a7 6C6F6E67 		.ascii	"long long int\000"
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccMjcGsj.s 			page 29
+
+
+ 1246      206C6F6E 
+ 1246      6720696E 
+ 1246      7400
+ 1247              	.LASF14:
+ 1248 02b5 63686172 		.ascii	"char\000"
+ 1248      00
+ 1249              	.LASF23:
+ 1250 02ba 6D617843 		.ascii	"maxCurr\000"
+ 1250      75727200 
+ 1251              	.LASF51:
+ 1252 02c2 6F63426C 		.ascii	"ocBlankCnt\000"
+ 1252      616E6B43 
+ 1252      6E7400
+ 1253              	.LASF24:
+ 1254 02cd 55495F44 		.ascii	"UI_DATA\000"
+ 1254      41544100 
+ 1255              	.LASF18:
+ 1256 02d5 73706565 		.ascii	"speedRpm\000"
+ 1256      6452706D 
+ 1256      00
+ 1257              	.LASF9:
+ 1258 02de 75696E74 		.ascii	"uint8\000"
+ 1258      3800
+ 1259              	.LASF45:
+ 1260 02e4 70726553 		.ascii	"preSpeedCur\000"
+ 1260      70656564 
+ 1260      43757200 
+ 1261              	.LASF4:
+ 1262 02f0 6C6F6E67 		.ascii	"long int\000"
+ 1262      20696E74 
+ 1262      00
+ 1263              	.LASF47:
+ 1264 02f9 70776D43 		.ascii	"pwmCnt\000"
+ 1264      6E7400
+ 1265              	.LASF15:
+ 1266 0300 6C6F6E67 		.ascii	"long double\000"
+ 1266      20646F75 
+ 1266      626C6500 
+ 1267              	.LASF0:
+ 1268 030c 7369676E 		.ascii	"signed char\000"
+ 1268      65642063 
+ 1268      68617200 
+ 1269              	.LASF49:
+ 1270 0318 73746174 		.ascii	"stateSys\000"
+ 1270      65537973 
+ 1270      00
+ 1271              	.LASF43:
+ 1272 0321 73706565 		.ascii	"speedRef\000"
+ 1272      64526566 
+ 1272      00
+ 1273              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

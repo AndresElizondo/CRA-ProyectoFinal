@@ -1,0 +1,2474 @@
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"UART_Pi_UART.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.UART_Pi_UartInit,"ax",%progbits
+  20              		.align	2
+  21              		.global	UART_Pi_UartInit
+  22              		.code	16
+  23              		.thumb_func
+  24              		.type	UART_Pi_UartInit, %function
+  25              	UART_Pi_UartInit:
+  26              	.LFB0:
+  27              		.file 1 "Generated_Source\\PSoC4\\UART_Pi_UART.c"
+   1:Generated_Source\PSoC4/UART_Pi_UART.c **** /***************************************************************************//**
+   2:Generated_Source\PSoC4/UART_Pi_UART.c **** * \file UART_Pi_UART.c
+   3:Generated_Source\PSoC4/UART_Pi_UART.c **** * \version 4.0
+   4:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+   5:Generated_Source\PSoC4/UART_Pi_UART.c **** * \brief
+   6:Generated_Source\PSoC4/UART_Pi_UART.c **** *  This file provides the source code to the API for the SCB Component in
+   7:Generated_Source\PSoC4/UART_Pi_UART.c **** *  UART mode.
+   8:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+   9:Generated_Source\PSoC4/UART_Pi_UART.c **** * Note:
+  10:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+  11:Generated_Source\PSoC4/UART_Pi_UART.c **** *******************************************************************************
+  12:Generated_Source\PSoC4/UART_Pi_UART.c **** * \copyright
+  13:Generated_Source\PSoC4/UART_Pi_UART.c **** * Copyright 2013-2017, Cypress Semiconductor Corporation.  All rights reserved.
+  14:Generated_Source\PSoC4/UART_Pi_UART.c **** * You may use this file only in accordance with the license, terms, conditions,
+  15:Generated_Source\PSoC4/UART_Pi_UART.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  16:Generated_Source\PSoC4/UART_Pi_UART.c **** * the software package with which this file was provided.
+  17:Generated_Source\PSoC4/UART_Pi_UART.c **** *******************************************************************************/
+  18:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+  19:Generated_Source\PSoC4/UART_Pi_UART.c **** #include "UART_Pi_PVT.h"
+  20:Generated_Source\PSoC4/UART_Pi_UART.c **** #include "UART_Pi_SPI_UART_PVT.h"
+  21:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+  22:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+  23:Generated_Source\PSoC4/UART_Pi_UART.c **** #if (UART_Pi_UART_WAKE_ENABLE_CONST && UART_Pi_UART_RX_WAKEUP_IRQ)
+  24:Generated_Source\PSoC4/UART_Pi_UART.c ****     /**
+  25:Generated_Source\PSoC4/UART_Pi_UART.c ****     * \addtogroup group_globals
+  26:Generated_Source\PSoC4/UART_Pi_UART.c ****     * \{
+  27:Generated_Source\PSoC4/UART_Pi_UART.c ****     */
+  28:Generated_Source\PSoC4/UART_Pi_UART.c ****     /** This global variable determines whether to enable Skip Start
+  29:Generated_Source\PSoC4/UART_Pi_UART.c ****     * functionality when UART_Pi_Sleep() function is called:
+  30:Generated_Source\PSoC4/UART_Pi_UART.c ****     * 0 – disable, other values – enable. Default value is 1.
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 2
+
+
+  31:Generated_Source\PSoC4/UART_Pi_UART.c ****     * It is only available when Enable wakeup from Deep Sleep Mode is enabled.
+  32:Generated_Source\PSoC4/UART_Pi_UART.c ****     */
+  33:Generated_Source\PSoC4/UART_Pi_UART.c ****     uint8 UART_Pi_skipStart = 1u;
+  34:Generated_Source\PSoC4/UART_Pi_UART.c ****     /** \} globals */
+  35:Generated_Source\PSoC4/UART_Pi_UART.c **** #endif /* (UART_Pi_UART_WAKE_ENABLE_CONST && UART_Pi_UART_RX_WAKEUP_IRQ) */
+  36:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+  37:Generated_Source\PSoC4/UART_Pi_UART.c **** #if(UART_Pi_SCB_MODE_UNCONFIG_CONST_CFG)
+  38:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+  39:Generated_Source\PSoC4/UART_Pi_UART.c ****     /***************************************
+  40:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  Configuration Structure Initialization
+  41:Generated_Source\PSoC4/UART_Pi_UART.c ****     ***************************************/
+  42:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+  43:Generated_Source\PSoC4/UART_Pi_UART.c ****     const UART_Pi_UART_INIT_STRUCT UART_Pi_configUart =
+  44:Generated_Source\PSoC4/UART_Pi_UART.c ****     {
+  45:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_SUB_MODE,
+  46:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_DIRECTION,
+  47:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_DATA_BITS_NUM,
+  48:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_PARITY_TYPE,
+  49:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_STOP_BITS_NUM,
+  50:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_OVS_FACTOR,
+  51:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_IRDA_LOW_POWER,
+  52:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_MEDIAN_FILTER_ENABLE,
+  53:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_RETRY_ON_NACK,
+  54:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_IRDA_POLARITY,
+  55:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_DROP_ON_PARITY_ERR,
+  56:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_DROP_ON_FRAME_ERR,
+  57:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_WAKE_ENABLE,
+  58:Generated_Source\PSoC4/UART_Pi_UART.c ****         0u,
+  59:Generated_Source\PSoC4/UART_Pi_UART.c ****         NULL,
+  60:Generated_Source\PSoC4/UART_Pi_UART.c ****         0u,
+  61:Generated_Source\PSoC4/UART_Pi_UART.c ****         NULL,
+  62:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_MP_MODE_ENABLE,
+  63:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_MP_ACCEPT_ADDRESS,
+  64:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_MP_RX_ADDRESS,
+  65:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_MP_RX_ADDRESS_MASK,
+  66:Generated_Source\PSoC4/UART_Pi_UART.c ****         (uint32) UART_Pi_SCB_IRQ_INTERNAL,
+  67:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_INTR_RX_MASK,
+  68:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_RX_TRIGGER_LEVEL,
+  69:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_INTR_TX_MASK,
+  70:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_TX_TRIGGER_LEVEL,
+  71:Generated_Source\PSoC4/UART_Pi_UART.c ****         (uint8) UART_Pi_UART_BYTE_MODE_ENABLE,
+  72:Generated_Source\PSoC4/UART_Pi_UART.c ****         (uint8) UART_Pi_UART_CTS_ENABLE,
+  73:Generated_Source\PSoC4/UART_Pi_UART.c ****         (uint8) UART_Pi_UART_CTS_POLARITY,
+  74:Generated_Source\PSoC4/UART_Pi_UART.c ****         (uint8) UART_Pi_UART_RTS_POLARITY,
+  75:Generated_Source\PSoC4/UART_Pi_UART.c ****         (uint8) UART_Pi_UART_RTS_FIFO_LEVEL,
+  76:Generated_Source\PSoC4/UART_Pi_UART.c ****         (uint8) UART_Pi_UART_RX_BREAK_WIDTH
+  77:Generated_Source\PSoC4/UART_Pi_UART.c ****     };
+  78:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+  79:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+  80:Generated_Source\PSoC4/UART_Pi_UART.c ****     /*******************************************************************************
+  81:Generated_Source\PSoC4/UART_Pi_UART.c ****     * Function Name: UART_Pi_UartInit
+  82:Generated_Source\PSoC4/UART_Pi_UART.c ****     ****************************************************************************//**
+  83:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+  84:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  Configures the UART_Pi for UART operation.
+  85:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+  86:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  This function is intended specifically to be used when the UART_Pi
+  87:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  configuration is set to “Unconfigured UART_Pi” in the customizer.
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 3
+
+
+  88:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  After initializing the UART_Pi in UART mode using this function,
+  89:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  the component can be enabled using the UART_Pi_Start() or
+  90:Generated_Source\PSoC4/UART_Pi_UART.c ****     * UART_Pi_Enable() function.
+  91:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  This function uses a pointer to a structure that provides the configuration
+  92:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  settings. This structure contains the same information that would otherwise
+  93:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  be provided by the customizer settings.
+  94:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+  95:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  \param config: pointer to a structure that contains the following list of
+  96:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   fields. These fields match the selections available in the customizer.
+  97:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   Refer to the customizer for further description of the settings.
+  98:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+  99:Generated_Source\PSoC4/UART_Pi_UART.c ****     *******************************************************************************/
+ 100:Generated_Source\PSoC4/UART_Pi_UART.c ****     void UART_Pi_UartInit(const UART_Pi_UART_INIT_STRUCT *config)
+ 101:Generated_Source\PSoC4/UART_Pi_UART.c ****     {
+ 102:Generated_Source\PSoC4/UART_Pi_UART.c ****         uint32 pinsConfig;
+ 103:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 104:Generated_Source\PSoC4/UART_Pi_UART.c ****         if (NULL == config)
+ 105:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 106:Generated_Source\PSoC4/UART_Pi_UART.c ****             CYASSERT(0u != 0u); /* Halt execution due to bad function parameter */
+ 107:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 108:Generated_Source\PSoC4/UART_Pi_UART.c ****         else
+ 109:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 110:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Get direction to configure UART pins: TX, RX or TX+RX */
+ 111:Generated_Source\PSoC4/UART_Pi_UART.c ****             pinsConfig  = config->direction;
+ 112:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 113:Generated_Source\PSoC4/UART_Pi_UART.c ****         #if !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1)
+ 114:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Add RTS and CTS pins to configure */
+ 115:Generated_Source\PSoC4/UART_Pi_UART.c ****             pinsConfig |= (0u != config->rtsRxFifoLevel) ? (UART_Pi_UART_RTS_PIN_ENABLE) : (0u);
+ 116:Generated_Source\PSoC4/UART_Pi_UART.c ****             pinsConfig |= (0u != config->enableCts)      ? (UART_Pi_UART_CTS_PIN_ENABLE) : (0u);
+ 117:Generated_Source\PSoC4/UART_Pi_UART.c ****         #endif /* !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1) */
+ 118:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 119:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Configure pins */
+ 120:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_SetPins(UART_Pi_SCB_MODE_UART, config->mode, pinsConfig);
+ 121:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 122:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Store internal configuration */
+ 123:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_scbMode       = (uint8) UART_Pi_SCB_MODE_UART;
+ 124:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_scbEnableWake = (uint8) config->enableWake;
+ 125:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_scbEnableIntr = (uint8) config->enableInterrupt;
+ 126:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 127:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Set RX direction internal variables */
+ 128:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_rxBuffer      =         config->rxBuffer;
+ 129:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_rxDataBits    = (uint8) config->dataBits;
+ 130:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_rxBufferSize  =         config->rxBufferSize;
+ 131:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 132:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Set TX direction internal variables */
+ 133:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_txBuffer      =         config->txBuffer;
+ 134:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_txDataBits    = (uint8) config->dataBits;
+ 135:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_txBufferSize  =         config->txBufferSize;
+ 136:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 137:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Configure UART interface */
+ 138:Generated_Source\PSoC4/UART_Pi_UART.c ****             if(UART_Pi_UART_MODE_IRDA == config->mode)
+ 139:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 140:Generated_Source\PSoC4/UART_Pi_UART.c ****                 /* OVS settings: IrDA */
+ 141:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_CTRL_REG  = ((0u != config->enableIrdaLowPower) ?
+ 142:Generated_Source\PSoC4/UART_Pi_UART.c ****                                                 (UART_Pi_UART_GET_CTRL_OVS_IRDA_LP(config->oversamp
+ 143:Generated_Source\PSoC4/UART_Pi_UART.c ****                                                 (UART_Pi_CTRL_OVS_IRDA_OVS16));
+ 144:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 4
+
+
+ 145:Generated_Source\PSoC4/UART_Pi_UART.c ****             else
+ 146:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 147:Generated_Source\PSoC4/UART_Pi_UART.c ****                 /* OVS settings: UART and SmartCard */
+ 148:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_CTRL_REG  = UART_Pi_GET_CTRL_OVS(config->oversample);
+ 149:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ 150:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 151:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_CTRL_REG     |= UART_Pi_GET_CTRL_BYTE_MODE  (config->enableByteMode)      |
+ 152:Generated_Source\PSoC4/UART_Pi_UART.c ****                                              UART_Pi_GET_CTRL_ADDR_ACCEPT(config->multiprocAcceptAd
+ 153:Generated_Source\PSoC4/UART_Pi_UART.c ****                                              UART_Pi_CTRL_UART;
+ 154:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 155:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Configure sub-mode: UART, SmartCard or IrDA */
+ 156:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_UART_CTRL_REG = UART_Pi_GET_UART_CTRL_MODE(config->mode);
+ 157:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 158:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Configure RX direction */
+ 159:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_UART_RX_CTRL_REG = UART_Pi_GET_UART_RX_CTRL_MODE(config->stopBits)             
+ 160:Generated_Source\PSoC4/UART_Pi_UART.c ****                                         UART_Pi_GET_UART_RX_CTRL_POLARITY(config->enableInvertedRx)
+ 161:Generated_Source\PSoC4/UART_Pi_UART.c ****                                         UART_Pi_GET_UART_RX_CTRL_MP_MODE(config->enableMultiproc)  
+ 162:Generated_Source\PSoC4/UART_Pi_UART.c ****                                         UART_Pi_GET_UART_RX_CTRL_DROP_ON_PARITY_ERR(config->dropOnP
+ 163:Generated_Source\PSoC4/UART_Pi_UART.c ****                                         UART_Pi_GET_UART_RX_CTRL_DROP_ON_FRAME_ERR(config->dropOnFr
+ 164:Generated_Source\PSoC4/UART_Pi_UART.c ****                                         UART_Pi_GET_UART_RX_CTRL_BREAK_WIDTH(config->breakWidth);
+ 165:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 166:Generated_Source\PSoC4/UART_Pi_UART.c ****             if(UART_Pi_UART_PARITY_NONE != config->parity)
+ 167:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 168:Generated_Source\PSoC4/UART_Pi_UART.c ****                UART_Pi_UART_RX_CTRL_REG |= UART_Pi_GET_UART_RX_CTRL_PARITY(config->parity) |
+ 169:Generated_Source\PSoC4/UART_Pi_UART.c ****                                                     UART_Pi_UART_RX_CTRL_PARITY_ENABLED;
+ 170:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ 171:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 172:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_RX_CTRL_REG      = UART_Pi_GET_RX_CTRL_DATA_WIDTH(config->dataBits)       |
+ 173:Generated_Source\PSoC4/UART_Pi_UART.c ****                                                 UART_Pi_GET_RX_CTRL_MEDIAN(config->enableMedianFilt
+ 174:Generated_Source\PSoC4/UART_Pi_UART.c ****                                                 UART_Pi_GET_UART_RX_CTRL_ENABLED(config->direction)
+ 175:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 176:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_RX_FIFO_CTRL_REG = UART_Pi_GET_RX_FIFO_CTRL_TRIGGER_LEVEL(config->rxTriggerLeve
+ 177:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 178:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Configure MP address */
+ 179:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_RX_MATCH_REG     = UART_Pi_GET_RX_MATCH_ADDR(config->multiprocAddr) |
+ 180:Generated_Source\PSoC4/UART_Pi_UART.c ****                                                 UART_Pi_GET_RX_MATCH_MASK(config->multiprocAddrMask
+ 181:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 182:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Configure RX direction */
+ 183:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_UART_TX_CTRL_REG = UART_Pi_GET_UART_TX_CTRL_MODE(config->stopBits) |
+ 184:Generated_Source\PSoC4/UART_Pi_UART.c ****                                                 UART_Pi_GET_UART_TX_CTRL_RETRY_NACK(config->enableR
+ 185:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 186:Generated_Source\PSoC4/UART_Pi_UART.c ****             if(UART_Pi_UART_PARITY_NONE != config->parity)
+ 187:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 188:Generated_Source\PSoC4/UART_Pi_UART.c ****                UART_Pi_UART_TX_CTRL_REG |= UART_Pi_GET_UART_TX_CTRL_PARITY(config->parity) |
+ 189:Generated_Source\PSoC4/UART_Pi_UART.c ****                                                     UART_Pi_UART_TX_CTRL_PARITY_ENABLED;
+ 190:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ 191:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 192:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_TX_CTRL_REG      = UART_Pi_GET_TX_CTRL_DATA_WIDTH(config->dataBits)    |
+ 193:Generated_Source\PSoC4/UART_Pi_UART.c ****                                                 UART_Pi_GET_UART_TX_CTRL_ENABLED(config->direction)
+ 194:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 195:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_TX_FIFO_CTRL_REG = UART_Pi_GET_TX_FIFO_CTRL_TRIGGER_LEVEL(config->txTriggerLeve
+ 196:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 197:Generated_Source\PSoC4/UART_Pi_UART.c ****         #if !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1)
+ 198:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_UART_FLOW_CTRL_REG = UART_Pi_GET_UART_FLOW_CTRL_CTS_ENABLE(config->enableCts) |
+ 199:Generated_Source\PSoC4/UART_Pi_UART.c ****                                             UART_Pi_GET_UART_FLOW_CTRL_CTS_POLARITY (config->ctsPol
+ 200:Generated_Source\PSoC4/UART_Pi_UART.c ****                                             UART_Pi_GET_UART_FLOW_CTRL_RTS_POLARITY (config->rtsPol
+ 201:Generated_Source\PSoC4/UART_Pi_UART.c ****                                             UART_Pi_GET_UART_FLOW_CTRL_TRIGGER_LEVEL(config->rtsRxF
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 5
+
+
+ 202:Generated_Source\PSoC4/UART_Pi_UART.c ****         #endif /* !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1) */
+ 203:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 204:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Configure interrupt with UART handler but do not enable it */
+ 205:Generated_Source\PSoC4/UART_Pi_UART.c ****             CyIntDisable    (UART_Pi_ISR_NUMBER);
+ 206:Generated_Source\PSoC4/UART_Pi_UART.c ****             CyIntSetPriority(UART_Pi_ISR_NUMBER, UART_Pi_ISR_PRIORITY);
+ 207:Generated_Source\PSoC4/UART_Pi_UART.c ****             (void) CyIntSetVector(UART_Pi_ISR_NUMBER, &UART_Pi_SPI_UART_ISR);
+ 208:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 209:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Configure WAKE interrupt */
+ 210:Generated_Source\PSoC4/UART_Pi_UART.c ****         #if(UART_Pi_UART_RX_WAKEUP_IRQ)
+ 211:Generated_Source\PSoC4/UART_Pi_UART.c ****             CyIntDisable    (UART_Pi_RX_WAKE_ISR_NUMBER);
+ 212:Generated_Source\PSoC4/UART_Pi_UART.c ****             CyIntSetPriority(UART_Pi_RX_WAKE_ISR_NUMBER, UART_Pi_RX_WAKE_ISR_PRIORITY);
+ 213:Generated_Source\PSoC4/UART_Pi_UART.c ****             (void) CyIntSetVector(UART_Pi_RX_WAKE_ISR_NUMBER, &UART_Pi_UART_WAKEUP_ISR);
+ 214:Generated_Source\PSoC4/UART_Pi_UART.c ****         #endif /* (UART_Pi_UART_RX_WAKEUP_IRQ) */
+ 215:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 216:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Configure interrupt sources */
+ 217:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_INTR_I2C_EC_MASK_REG = UART_Pi_NO_INTR_SOURCES;
+ 218:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_INTR_SPI_EC_MASK_REG = UART_Pi_NO_INTR_SOURCES;
+ 219:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_INTR_SLAVE_MASK_REG  = UART_Pi_NO_INTR_SOURCES;
+ 220:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_INTR_MASTER_MASK_REG = UART_Pi_NO_INTR_SOURCES;
+ 221:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_INTR_RX_MASK_REG     = config->rxInterruptMask;
+ 222:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_INTR_TX_MASK_REG     = config->txInterruptMask;
+ 223:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 224:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Configure TX interrupt sources to restore. */
+ 225:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_IntrTxMask = LO16(UART_Pi_INTR_TX_MASK_REG);
+ 226:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 227:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Clear RX buffer indexes */
+ 228:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_rxBufferHead     = 0u;
+ 229:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_rxBufferTail     = 0u;
+ 230:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_rxBufferOverflow = 0u;
+ 231:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 232:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Clear TX buffer indexes */
+ 233:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_txBufferHead = 0u;
+ 234:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_txBufferTail = 0u;
+ 235:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 236:Generated_Source\PSoC4/UART_Pi_UART.c ****     }
+ 237:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 238:Generated_Source\PSoC4/UART_Pi_UART.c **** #else
+ 239:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 240:Generated_Source\PSoC4/UART_Pi_UART.c ****     /*******************************************************************************
+ 241:Generated_Source\PSoC4/UART_Pi_UART.c ****     * Function Name: UART_Pi_UartInit
+ 242:Generated_Source\PSoC4/UART_Pi_UART.c ****     ****************************************************************************//**
+ 243:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 244:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  Configures the SCB for the UART operation.
+ 245:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 246:Generated_Source\PSoC4/UART_Pi_UART.c ****     *******************************************************************************/
+ 247:Generated_Source\PSoC4/UART_Pi_UART.c ****     void UART_Pi_UartInit(void)
+ 248:Generated_Source\PSoC4/UART_Pi_UART.c ****     {
+  28              		.loc 1 248 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32 0000 80B5     		push	{r7, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 7, -8
+  35              		.cfi_offset 14, -4
+  36 0002 00AF     		add	r7, sp, #0
+  37              		.cfi_def_cfa_register 7
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 6
+
+
+ 249:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Configure UART interface */
+ 250:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_CTRL_REG = UART_Pi_UART_DEFAULT_CTRL;
+  38              		.loc 1 250 0
+  39 0004 204B     		ldr	r3, .L2
+  40 0006 214A     		ldr	r2, .L2+4
+  41 0008 1A60     		str	r2, [r3]
+ 251:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 252:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Configure sub-mode: UART, SmartCard or IrDA */
+ 253:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_CTRL_REG = UART_Pi_UART_DEFAULT_UART_CTRL;
+  42              		.loc 1 253 0
+  43 000a 214B     		ldr	r3, .L2+8
+  44 000c 0022     		movs	r2, #0
+  45 000e 1A60     		str	r2, [r3]
+ 254:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 255:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Configure RX direction */
+ 256:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_RX_CTRL_REG = UART_Pi_UART_DEFAULT_UART_RX_CTRL;
+  46              		.loc 1 256 0
+  47 0010 204B     		ldr	r3, .L2+12
+  48 0012 214A     		ldr	r2, .L2+16
+  49 0014 1A60     		str	r2, [r3]
+ 257:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_RX_CTRL_REG      = UART_Pi_UART_DEFAULT_RX_CTRL;
+  50              		.loc 1 257 0
+  51 0016 214B     		ldr	r3, .L2+20
+  52 0018 214A     		ldr	r2, .L2+24
+  53 001a 1A60     		str	r2, [r3]
+ 258:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_RX_FIFO_CTRL_REG = UART_Pi_UART_DEFAULT_RX_FIFO_CTRL;
+  54              		.loc 1 258 0
+  55 001c 214B     		ldr	r3, .L2+28
+  56 001e 0722     		movs	r2, #7
+  57 0020 1A60     		str	r2, [r3]
+ 259:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_RX_MATCH_REG     = UART_Pi_UART_DEFAULT_RX_MATCH_REG;
+  58              		.loc 1 259 0
+  59 0022 214B     		ldr	r3, .L2+32
+  60 0024 0022     		movs	r2, #0
+  61 0026 1A60     		str	r2, [r3]
+ 260:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 261:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Configure TX direction */
+ 262:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_TX_CTRL_REG = UART_Pi_UART_DEFAULT_UART_TX_CTRL;
+  62              		.loc 1 262 0
+  63 0028 204B     		ldr	r3, .L2+36
+  64 002a 3122     		movs	r2, #49
+  65 002c 1A60     		str	r2, [r3]
+ 263:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_TX_CTRL_REG      = UART_Pi_UART_DEFAULT_TX_CTRL;
+  66              		.loc 1 263 0
+  67 002e 204B     		ldr	r3, .L2+40
+  68 0030 1B4A     		ldr	r2, .L2+24
+  69 0032 1A60     		str	r2, [r3]
+ 264:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_TX_FIFO_CTRL_REG = UART_Pi_UART_DEFAULT_TX_FIFO_CTRL;
+  70              		.loc 1 264 0
+  71 0034 1F4B     		ldr	r3, .L2+44
+  72 0036 0022     		movs	r2, #0
+  73 0038 1A60     		str	r2, [r3]
+ 265:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 266:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1)
+ 267:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UART_FLOW_CTRL_REG = UART_Pi_UART_DEFAULT_FLOW_CTRL;
+ 268:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1) */
+ 269:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 7
+
+
+ 270:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Configure interrupt with UART handler but do not enable it */
+ 271:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if(UART_Pi_SCB_IRQ_INTERNAL)
+ 272:Generated_Source\PSoC4/UART_Pi_UART.c ****         CyIntDisable    (UART_Pi_ISR_NUMBER);
+  74              		.loc 1 272 0
+  75 003a 0B20     		movs	r0, #11
+  76 003c FFF7FEFF 		bl	CyIntDisable
+ 273:Generated_Source\PSoC4/UART_Pi_UART.c ****         CyIntSetPriority(UART_Pi_ISR_NUMBER, UART_Pi_ISR_PRIORITY);
+  77              		.loc 1 273 0
+  78 0040 0321     		movs	r1, #3
+  79 0042 0B20     		movs	r0, #11
+  80 0044 FFF7FEFF 		bl	CyIntSetPriority
+ 274:Generated_Source\PSoC4/UART_Pi_UART.c ****         (void) CyIntSetVector(UART_Pi_ISR_NUMBER, &UART_Pi_SPI_UART_ISR);
+  81              		.loc 1 274 0
+  82 0048 1B4B     		ldr	r3, .L2+48
+  83 004a 1900     		movs	r1, r3
+  84 004c 0B20     		movs	r0, #11
+  85 004e FFF7FEFF 		bl	CyIntSetVector
+ 275:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* (UART_Pi_SCB_IRQ_INTERNAL) */
+ 276:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 277:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Configure WAKE interrupt */
+ 278:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if(UART_Pi_UART_RX_WAKEUP_IRQ)
+ 279:Generated_Source\PSoC4/UART_Pi_UART.c ****         CyIntDisable    (UART_Pi_RX_WAKE_ISR_NUMBER);
+ 280:Generated_Source\PSoC4/UART_Pi_UART.c ****         CyIntSetPriority(UART_Pi_RX_WAKE_ISR_NUMBER, UART_Pi_RX_WAKE_ISR_PRIORITY);
+ 281:Generated_Source\PSoC4/UART_Pi_UART.c ****         (void) CyIntSetVector(UART_Pi_RX_WAKE_ISR_NUMBER, &UART_Pi_UART_WAKEUP_ISR);
+ 282:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* (UART_Pi_UART_RX_WAKEUP_IRQ) */
+ 283:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 284:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Configure interrupt sources */
+ 285:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_INTR_I2C_EC_MASK_REG = UART_Pi_UART_DEFAULT_INTR_I2C_EC_MASK;
+  86              		.loc 1 285 0
+  87 0052 1A4B     		ldr	r3, .L2+52
+  88 0054 0022     		movs	r2, #0
+  89 0056 1A60     		str	r2, [r3]
+ 286:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_INTR_SPI_EC_MASK_REG = UART_Pi_UART_DEFAULT_INTR_SPI_EC_MASK;
+  90              		.loc 1 286 0
+  91 0058 194B     		ldr	r3, .L2+56
+  92 005a 0022     		movs	r2, #0
+  93 005c 1A60     		str	r2, [r3]
+ 287:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_INTR_SLAVE_MASK_REG  = UART_Pi_UART_DEFAULT_INTR_SLAVE_MASK;
+  94              		.loc 1 287 0
+  95 005e 194B     		ldr	r3, .L2+60
+  96 0060 0022     		movs	r2, #0
+  97 0062 1A60     		str	r2, [r3]
+ 288:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_INTR_MASTER_MASK_REG = UART_Pi_UART_DEFAULT_INTR_MASTER_MASK;
+  98              		.loc 1 288 0
+  99 0064 184B     		ldr	r3, .L2+64
+ 100 0066 0022     		movs	r2, #0
+ 101 0068 1A60     		str	r2, [r3]
+ 289:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_INTR_RX_MASK_REG     = UART_Pi_UART_DEFAULT_INTR_RX_MASK;
+ 102              		.loc 1 289 0
+ 103 006a 184B     		ldr	r3, .L2+68
+ 104 006c 0422     		movs	r2, #4
+ 105 006e 1A60     		str	r2, [r3]
+ 290:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_INTR_TX_MASK_REG     = UART_Pi_UART_DEFAULT_INTR_TX_MASK;
+ 106              		.loc 1 290 0
+ 107 0070 174B     		ldr	r3, .L2+72
+ 108 0072 0022     		movs	r2, #0
+ 109 0074 1A60     		str	r2, [r3]
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 8
+
+
+ 291:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 292:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Configure TX interrupt sources to restore. */
+ 293:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_IntrTxMask = LO16(UART_Pi_INTR_TX_MASK_REG);
+ 110              		.loc 1 293 0
+ 111 0076 164B     		ldr	r3, .L2+72
+ 112 0078 1B68     		ldr	r3, [r3]
+ 113 007a 9AB2     		uxth	r2, r3
+ 114 007c 154B     		ldr	r3, .L2+76
+ 115 007e 1A80     		strh	r2, [r3]
+ 294:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 295:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if(UART_Pi_INTERNAL_RX_SW_BUFFER_CONST)
+ 296:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_rxBufferHead     = 0u;
+ 297:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_rxBufferTail     = 0u;
+ 298:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_rxBufferOverflow = 0u;
+ 299:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* (UART_Pi_INTERNAL_RX_SW_BUFFER_CONST) */
+ 300:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 301:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if(UART_Pi_INTERNAL_TX_SW_BUFFER_CONST)
+ 302:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_txBufferHead = 0u;
+ 303:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_txBufferTail = 0u;
+ 304:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* (UART_Pi_INTERNAL_TX_SW_BUFFER_CONST) */
+ 305:Generated_Source\PSoC4/UART_Pi_UART.c ****     }
+ 116              		.loc 1 305 0
+ 117 0080 C046     		nop
+ 118 0082 BD46     		mov	sp, r7
+ 119              		@ sp needed
+ 120 0084 80BD     		pop	{r7, pc}
+ 121              	.L3:
+ 122 0086 C046     		.align	2
+ 123              	.L2:
+ 124 0088 00000740 		.word	1074200576
+ 125 008c 07000002 		.word	33554439
+ 126 0090 40000740 		.word	1074200640
+ 127 0094 48000740 		.word	1074200648
+ 128 0098 31000A00 		.word	655409
+ 129 009c 00030740 		.word	1074201344
+ 130 00a0 07000080 		.word	-2147483641
+ 131 00a4 04030740 		.word	1074201348
+ 132 00a8 10030740 		.word	1074201360
+ 133 00ac 44000740 		.word	1074200644
+ 134 00b0 00020740 		.word	1074201088
+ 135 00b4 04020740 		.word	1074201092
+ 136 00b8 00000000 		.word	UART_Pi_SPI_UART_ISR
+ 137 00bc 880E0740 		.word	1074204296
+ 138 00c0 C80E0740 		.word	1074204360
+ 139 00c4 480F0740 		.word	1074204488
+ 140 00c8 080F0740 		.word	1074204424
+ 141 00cc C80F0740 		.word	1074204616
+ 142 00d0 880F0740 		.word	1074204552
+ 143 00d4 00000000 		.word	UART_Pi_IntrTxMask
+ 144              		.cfi_endproc
+ 145              	.LFE0:
+ 146              		.size	UART_Pi_UartInit, .-UART_Pi_UartInit
+ 147              		.section	.text.UART_Pi_UartPostEnable,"ax",%progbits
+ 148              		.align	2
+ 149              		.global	UART_Pi_UartPostEnable
+ 150              		.code	16
+ 151              		.thumb_func
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 9
+
+
+ 152              		.type	UART_Pi_UartPostEnable, %function
+ 153              	UART_Pi_UartPostEnable:
+ 154              	.LFB1:
+ 306:Generated_Source\PSoC4/UART_Pi_UART.c **** #endif /* (UART_Pi_SCB_MODE_UNCONFIG_CONST_CFG) */
+ 307:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 308:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 309:Generated_Source\PSoC4/UART_Pi_UART.c **** /*******************************************************************************
+ 310:Generated_Source\PSoC4/UART_Pi_UART.c **** * Function Name: UART_Pi_UartPostEnable
+ 311:Generated_Source\PSoC4/UART_Pi_UART.c **** ****************************************************************************//**
+ 312:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+ 313:Generated_Source\PSoC4/UART_Pi_UART.c **** *  Restores HSIOM settings for the UART output pins (TX and/or RTS) to be
+ 314:Generated_Source\PSoC4/UART_Pi_UART.c **** *  controlled by the SCB UART.
+ 315:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+ 316:Generated_Source\PSoC4/UART_Pi_UART.c **** *******************************************************************************/
+ 317:Generated_Source\PSoC4/UART_Pi_UART.c **** void UART_Pi_UartPostEnable(void)
+ 318:Generated_Source\PSoC4/UART_Pi_UART.c **** {
+ 155              		.loc 1 318 0
+ 156              		.cfi_startproc
+ 157              		@ args = 0, pretend = 0, frame = 0
+ 158              		@ frame_needed = 1, uses_anonymous_args = 0
+ 159 0000 80B5     		push	{r7, lr}
+ 160              		.cfi_def_cfa_offset 8
+ 161              		.cfi_offset 7, -8
+ 162              		.cfi_offset 14, -4
+ 163 0002 00AF     		add	r7, sp, #0
+ 164              		.cfi_def_cfa_register 7
+ 319:Generated_Source\PSoC4/UART_Pi_UART.c **** #if (UART_Pi_SCB_MODE_UNCONFIG_CONST_CFG)
+ 320:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if (UART_Pi_TX_SDA_MISO_PIN)
+ 321:Generated_Source\PSoC4/UART_Pi_UART.c ****         if (UART_Pi_CHECK_TX_SDA_MISO_PIN_USED)
+ 322:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 323:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Set SCB UART to drive the output pin */
+ 324:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_SET_HSIOM_SEL(UART_Pi_TX_SDA_MISO_HSIOM_REG, UART_Pi_TX_SDA_MISO_HSIOM_MASK,
+ 325:Generated_Source\PSoC4/UART_Pi_UART.c ****                                            UART_Pi_TX_SDA_MISO_HSIOM_POS, UART_Pi_TX_SDA_MISO_HSIOM
+ 326:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 327:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* (UART_Pi_TX_SDA_MISO_PIN_PIN) */
+ 328:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 329:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1)
+ 330:Generated_Source\PSoC4/UART_Pi_UART.c ****         #if (UART_Pi_SS0_PIN)
+ 331:Generated_Source\PSoC4/UART_Pi_UART.c ****             if (UART_Pi_CHECK_SS0_PIN_USED)
+ 332:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 333:Generated_Source\PSoC4/UART_Pi_UART.c ****                 /* Set SCB UART to drive the output pin */
+ 334:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_SET_HSIOM_SEL(UART_Pi_SS0_HSIOM_REG, UART_Pi_SS0_HSIOM_MASK,
+ 335:Generated_Source\PSoC4/UART_Pi_UART.c ****                                                UART_Pi_SS0_HSIOM_POS, UART_Pi_SS0_HSIOM_SEL_UART);
+ 336:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ 337:Generated_Source\PSoC4/UART_Pi_UART.c ****         #endif /* (UART_Pi_SS0_PIN) */
+ 338:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1) */
+ 339:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 340:Generated_Source\PSoC4/UART_Pi_UART.c **** #else
+ 341:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if (UART_Pi_UART_TX_PIN)
+ 342:Generated_Source\PSoC4/UART_Pi_UART.c ****          /* Set SCB UART to drive the output pin */
+ 343:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_SET_HSIOM_SEL(UART_Pi_TX_HSIOM_REG, UART_Pi_TX_HSIOM_MASK,
+ 165              		.loc 1 343 0
+ 166 0004 074B     		ldr	r3, .L5
+ 167 0006 074A     		ldr	r2, .L5
+ 168 0008 1268     		ldr	r2, [r2]
+ 169 000a F021     		movs	r1, #240
+ 170 000c 8A43     		bics	r2, r1
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 10
+
+
+ 171 000e 9021     		movs	r1, #144
+ 172 0010 0A43     		orrs	r2, r1
+ 173 0012 1A60     		str	r2, [r3]
+ 344:Generated_Source\PSoC4/UART_Pi_UART.c ****                                        UART_Pi_TX_HSIOM_POS, UART_Pi_TX_HSIOM_SEL_UART);
+ 345:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* (UART_Pi_UART_TX_PIN) */
+ 346:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 347:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if (UART_Pi_UART_RTS_PIN)
+ 348:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Set SCB UART to drive the output pin */
+ 349:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_SET_HSIOM_SEL(UART_Pi_RTS_HSIOM_REG, UART_Pi_RTS_HSIOM_MASK,
+ 350:Generated_Source\PSoC4/UART_Pi_UART.c ****                                        UART_Pi_RTS_HSIOM_POS, UART_Pi_RTS_HSIOM_SEL_UART);
+ 351:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* (UART_Pi_UART_RTS_PIN) */
+ 352:Generated_Source\PSoC4/UART_Pi_UART.c **** #endif /* (UART_Pi_SCB_MODE_UNCONFIG_CONST_CFG) */
+ 353:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 354:Generated_Source\PSoC4/UART_Pi_UART.c ****     /* Restore TX interrupt sources. */
+ 355:Generated_Source\PSoC4/UART_Pi_UART.c ****     UART_Pi_SetTxInterruptMode(UART_Pi_IntrTxMask);
+ 174              		.loc 1 355 0
+ 175 0014 044B     		ldr	r3, .L5+4
+ 176 0016 054A     		ldr	r2, .L5+8
+ 177 0018 1288     		ldrh	r2, [r2]
+ 178 001a 1A60     		str	r2, [r3]
+ 356:Generated_Source\PSoC4/UART_Pi_UART.c **** }
+ 179              		.loc 1 356 0
+ 180 001c C046     		nop
+ 181 001e BD46     		mov	sp, r7
+ 182              		@ sp needed
+ 183 0020 80BD     		pop	{r7, pc}
+ 184              	.L6:
+ 185 0022 C046     		.align	2
+ 186              	.L5:
+ 187 0024 0C000140 		.word	1073807372
+ 188 0028 880F0740 		.word	1074204552
+ 189 002c 00000000 		.word	UART_Pi_IntrTxMask
+ 190              		.cfi_endproc
+ 191              	.LFE1:
+ 192              		.size	UART_Pi_UartPostEnable, .-UART_Pi_UartPostEnable
+ 193              		.section	.text.UART_Pi_UartStop,"ax",%progbits
+ 194              		.align	2
+ 195              		.global	UART_Pi_UartStop
+ 196              		.code	16
+ 197              		.thumb_func
+ 198              		.type	UART_Pi_UartStop, %function
+ 199              	UART_Pi_UartStop:
+ 200              	.LFB2:
+ 357:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 358:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 359:Generated_Source\PSoC4/UART_Pi_UART.c **** /*******************************************************************************
+ 360:Generated_Source\PSoC4/UART_Pi_UART.c **** * Function Name: UART_Pi_UartStop
+ 361:Generated_Source\PSoC4/UART_Pi_UART.c **** ****************************************************************************//**
+ 362:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+ 363:Generated_Source\PSoC4/UART_Pi_UART.c **** *  Changes the HSIOM settings for the UART output pins (TX and/or RTS) to keep
+ 364:Generated_Source\PSoC4/UART_Pi_UART.c **** *  them inactive after the block is disabled. The output pins are controlled by
+ 365:Generated_Source\PSoC4/UART_Pi_UART.c **** *  the GPIO data register. Also, the function disables the skip start feature
+ 366:Generated_Source\PSoC4/UART_Pi_UART.c **** *  to not cause it to trigger after the component is enabled.
+ 367:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+ 368:Generated_Source\PSoC4/UART_Pi_UART.c **** *******************************************************************************/
+ 369:Generated_Source\PSoC4/UART_Pi_UART.c **** void UART_Pi_UartStop(void)
+ 370:Generated_Source\PSoC4/UART_Pi_UART.c **** {
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 11
+
+
+ 201              		.loc 1 370 0
+ 202              		.cfi_startproc
+ 203              		@ args = 0, pretend = 0, frame = 0
+ 204              		@ frame_needed = 1, uses_anonymous_args = 0
+ 205 0000 80B5     		push	{r7, lr}
+ 206              		.cfi_def_cfa_offset 8
+ 207              		.cfi_offset 7, -8
+ 208              		.cfi_offset 14, -4
+ 209 0002 00AF     		add	r7, sp, #0
+ 210              		.cfi_def_cfa_register 7
+ 371:Generated_Source\PSoC4/UART_Pi_UART.c **** #if(UART_Pi_SCB_MODE_UNCONFIG_CONST_CFG)
+ 372:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if (UART_Pi_TX_SDA_MISO_PIN)
+ 373:Generated_Source\PSoC4/UART_Pi_UART.c ****         if (UART_Pi_CHECK_TX_SDA_MISO_PIN_USED)
+ 374:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 375:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Set GPIO to drive output pin */
+ 376:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_SET_HSIOM_SEL(UART_Pi_TX_SDA_MISO_HSIOM_REG, UART_Pi_TX_SDA_MISO_HSIOM_MASK,
+ 377:Generated_Source\PSoC4/UART_Pi_UART.c ****                                            UART_Pi_TX_SDA_MISO_HSIOM_POS, UART_Pi_TX_SDA_MISO_HSIOM
+ 378:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 379:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* (UART_Pi_TX_SDA_MISO_PIN_PIN) */
+ 380:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 381:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1)
+ 382:Generated_Source\PSoC4/UART_Pi_UART.c ****         #if (UART_Pi_SS0_PIN)
+ 383:Generated_Source\PSoC4/UART_Pi_UART.c ****             if (UART_Pi_CHECK_SS0_PIN_USED)
+ 384:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 385:Generated_Source\PSoC4/UART_Pi_UART.c ****                 /* Set output pin state after block is disabled */
+ 386:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_spi_ss0_Write(UART_Pi_GET_UART_RTS_INACTIVE);
+ 387:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 388:Generated_Source\PSoC4/UART_Pi_UART.c ****                 /* Set GPIO to drive output pin */
+ 389:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_SET_HSIOM_SEL(UART_Pi_SS0_HSIOM_REG, UART_Pi_SS0_HSIOM_MASK,
+ 390:Generated_Source\PSoC4/UART_Pi_UART.c ****                                                UART_Pi_SS0_HSIOM_POS, UART_Pi_SS0_HSIOM_SEL_GPIO);
+ 391:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ 392:Generated_Source\PSoC4/UART_Pi_UART.c ****         #endif /* (UART_Pi_SS0_PIN) */
+ 393:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1) */
+ 394:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 395:Generated_Source\PSoC4/UART_Pi_UART.c **** #else
+ 396:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if (UART_Pi_UART_TX_PIN)
+ 397:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Set GPIO to drive output pin */
+ 398:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_SET_HSIOM_SEL(UART_Pi_TX_HSIOM_REG, UART_Pi_TX_HSIOM_MASK,
+ 211              		.loc 1 398 0
+ 212 0004 084B     		ldr	r3, .L8
+ 213 0006 084A     		ldr	r2, .L8
+ 214 0008 1268     		ldr	r2, [r2]
+ 215 000a F021     		movs	r1, #240
+ 216 000c 8A43     		bics	r2, r1
+ 217 000e 1A60     		str	r2, [r3]
+ 399:Generated_Source\PSoC4/UART_Pi_UART.c ****                                        UART_Pi_TX_HSIOM_POS, UART_Pi_TX_HSIOM_SEL_GPIO);
+ 400:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* (UART_Pi_UART_TX_PIN) */
+ 401:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 402:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if (UART_Pi_UART_RTS_PIN)
+ 403:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Set output pin state after block is disabled */
+ 404:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_rts_Write(UART_Pi_GET_UART_RTS_INACTIVE);
+ 405:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 406:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Set GPIO to drive output pin */
+ 407:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_SET_HSIOM_SEL(UART_Pi_RTS_HSIOM_REG, UART_Pi_RTS_HSIOM_MASK,
+ 408:Generated_Source\PSoC4/UART_Pi_UART.c ****                                        UART_Pi_RTS_HSIOM_POS, UART_Pi_RTS_HSIOM_SEL_GPIO);
+ 409:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* (UART_Pi_UART_RTS_PIN) */
+ 410:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 12
+
+
+ 411:Generated_Source\PSoC4/UART_Pi_UART.c **** #endif /* (UART_Pi_SCB_MODE_UNCONFIG_CONST_CFG) */
+ 412:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 413:Generated_Source\PSoC4/UART_Pi_UART.c **** #if (UART_Pi_UART_WAKE_ENABLE_CONST)
+ 414:Generated_Source\PSoC4/UART_Pi_UART.c ****     /* Disable skip start feature used for wakeup */
+ 415:Generated_Source\PSoC4/UART_Pi_UART.c ****     UART_Pi_UART_RX_CTRL_REG &= (uint32) ~UART_Pi_UART_RX_CTRL_SKIP_START;
+ 416:Generated_Source\PSoC4/UART_Pi_UART.c **** #endif /* (UART_Pi_UART_WAKE_ENABLE_CONST) */
+ 417:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 418:Generated_Source\PSoC4/UART_Pi_UART.c ****     /* Store TX interrupt sources (exclude level triggered). */
+ 419:Generated_Source\PSoC4/UART_Pi_UART.c ****     UART_Pi_IntrTxMask = LO16(UART_Pi_GetTxInterruptMode() & UART_Pi_INTR_UART_TX_RESTORE);
+ 218              		.loc 1 419 0
+ 219 0010 064B     		ldr	r3, .L8+4
+ 220 0012 1B68     		ldr	r3, [r3]
+ 221 0014 9AB2     		uxth	r2, r3
+ 222 0016 E423     		movs	r3, #228
+ 223 0018 DB00     		lsls	r3, r3, #3
+ 224 001a 1340     		ands	r3, r2
+ 225 001c 9AB2     		uxth	r2, r3
+ 226 001e 044B     		ldr	r3, .L8+8
+ 227 0020 1A80     		strh	r2, [r3]
+ 420:Generated_Source\PSoC4/UART_Pi_UART.c **** }
+ 228              		.loc 1 420 0
+ 229 0022 C046     		nop
+ 230 0024 BD46     		mov	sp, r7
+ 231              		@ sp needed
+ 232 0026 80BD     		pop	{r7, pc}
+ 233              	.L9:
+ 234              		.align	2
+ 235              	.L8:
+ 236 0028 0C000140 		.word	1073807372
+ 237 002c 880F0740 		.word	1074204552
+ 238 0030 00000000 		.word	UART_Pi_IntrTxMask
+ 239              		.cfi_endproc
+ 240              	.LFE2:
+ 241              		.size	UART_Pi_UartStop, .-UART_Pi_UartStop
+ 242              		.section	.text.UART_Pi_UartSetRxAddress,"ax",%progbits
+ 243              		.align	2
+ 244              		.global	UART_Pi_UartSetRxAddress
+ 245              		.code	16
+ 246              		.thumb_func
+ 247              		.type	UART_Pi_UartSetRxAddress, %function
+ 248              	UART_Pi_UartSetRxAddress:
+ 249              	.LFB3:
+ 421:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 422:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 423:Generated_Source\PSoC4/UART_Pi_UART.c **** /*******************************************************************************
+ 424:Generated_Source\PSoC4/UART_Pi_UART.c **** * Function Name: UART_Pi_UartSetRxAddress
+ 425:Generated_Source\PSoC4/UART_Pi_UART.c **** ****************************************************************************//**
+ 426:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+ 427:Generated_Source\PSoC4/UART_Pi_UART.c **** *  Sets the hardware detectable receiver address for the UART in the
+ 428:Generated_Source\PSoC4/UART_Pi_UART.c **** *  Multiprocessor mode.
+ 429:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+ 430:Generated_Source\PSoC4/UART_Pi_UART.c **** *  \param address: Address for hardware address detection.
+ 431:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+ 432:Generated_Source\PSoC4/UART_Pi_UART.c **** *******************************************************************************/
+ 433:Generated_Source\PSoC4/UART_Pi_UART.c **** void UART_Pi_UartSetRxAddress(uint32 address)
+ 434:Generated_Source\PSoC4/UART_Pi_UART.c **** {
+ 250              		.loc 1 434 0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 13
+
+
+ 251              		.cfi_startproc
+ 252              		@ args = 0, pretend = 0, frame = 16
+ 253              		@ frame_needed = 1, uses_anonymous_args = 0
+ 254 0000 80B5     		push	{r7, lr}
+ 255              		.cfi_def_cfa_offset 8
+ 256              		.cfi_offset 7, -8
+ 257              		.cfi_offset 14, -4
+ 258 0002 84B0     		sub	sp, sp, #16
+ 259              		.cfi_def_cfa_offset 24
+ 260 0004 00AF     		add	r7, sp, #0
+ 261              		.cfi_def_cfa_register 7
+ 262 0006 7860     		str	r0, [r7, #4]
+ 435:Generated_Source\PSoC4/UART_Pi_UART.c ****      uint32 matchReg;
+ 436:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 437:Generated_Source\PSoC4/UART_Pi_UART.c ****     matchReg = UART_Pi_RX_MATCH_REG;
+ 263              		.loc 1 437 0
+ 264 0008 094B     		ldr	r3, .L11
+ 265 000a 1B68     		ldr	r3, [r3]
+ 266 000c FB60     		str	r3, [r7, #12]
+ 438:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 439:Generated_Source\PSoC4/UART_Pi_UART.c ****     matchReg &= ((uint32) ~UART_Pi_RX_MATCH_ADDR_MASK); /* Clear address bits */
+ 267              		.loc 1 439 0
+ 268 000e FB68     		ldr	r3, [r7, #12]
+ 269 0010 FF22     		movs	r2, #255
+ 270 0012 9343     		bics	r3, r2
+ 271 0014 FB60     		str	r3, [r7, #12]
+ 440:Generated_Source\PSoC4/UART_Pi_UART.c ****     matchReg |= ((uint32)  (address & UART_Pi_RX_MATCH_ADDR_MASK)); /* Set address  */
+ 272              		.loc 1 440 0
+ 273 0016 7B68     		ldr	r3, [r7, #4]
+ 274 0018 FF22     		movs	r2, #255
+ 275 001a 1340     		ands	r3, r2
+ 276 001c FA68     		ldr	r2, [r7, #12]
+ 277 001e 1343     		orrs	r3, r2
+ 278 0020 FB60     		str	r3, [r7, #12]
+ 441:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 442:Generated_Source\PSoC4/UART_Pi_UART.c ****     UART_Pi_RX_MATCH_REG = matchReg;
+ 279              		.loc 1 442 0
+ 280 0022 034B     		ldr	r3, .L11
+ 281 0024 FA68     		ldr	r2, [r7, #12]
+ 282 0026 1A60     		str	r2, [r3]
+ 443:Generated_Source\PSoC4/UART_Pi_UART.c **** }
+ 283              		.loc 1 443 0
+ 284 0028 C046     		nop
+ 285 002a BD46     		mov	sp, r7
+ 286 002c 04B0     		add	sp, sp, #16
+ 287              		@ sp needed
+ 288 002e 80BD     		pop	{r7, pc}
+ 289              	.L12:
+ 290              		.align	2
+ 291              	.L11:
+ 292 0030 10030740 		.word	1074201360
+ 293              		.cfi_endproc
+ 294              	.LFE3:
+ 295              		.size	UART_Pi_UartSetRxAddress, .-UART_Pi_UartSetRxAddress
+ 296              		.section	.text.UART_Pi_UartSetRxAddressMask,"ax",%progbits
+ 297              		.align	2
+ 298              		.global	UART_Pi_UartSetRxAddressMask
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 14
+
+
+ 299              		.code	16
+ 300              		.thumb_func
+ 301              		.type	UART_Pi_UartSetRxAddressMask, %function
+ 302              	UART_Pi_UartSetRxAddressMask:
+ 303              	.LFB4:
+ 444:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 445:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 446:Generated_Source\PSoC4/UART_Pi_UART.c **** /*******************************************************************************
+ 447:Generated_Source\PSoC4/UART_Pi_UART.c **** * Function Name: UART_Pi_UartSetRxAddressMask
+ 448:Generated_Source\PSoC4/UART_Pi_UART.c **** ****************************************************************************//**
+ 449:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+ 450:Generated_Source\PSoC4/UART_Pi_UART.c **** *  Sets the hardware address mask for the UART in the Multiprocessor mode.
+ 451:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+ 452:Generated_Source\PSoC4/UART_Pi_UART.c **** *  \param addressMask: Address mask.
+ 453:Generated_Source\PSoC4/UART_Pi_UART.c **** *   - Bit value 0 – excludes bit from address comparison.
+ 454:Generated_Source\PSoC4/UART_Pi_UART.c **** *   - Bit value 1 – the bit needs to match with the corresponding bit
+ 455:Generated_Source\PSoC4/UART_Pi_UART.c **** *     of the address.
+ 456:Generated_Source\PSoC4/UART_Pi_UART.c **** *
+ 457:Generated_Source\PSoC4/UART_Pi_UART.c **** *******************************************************************************/
+ 458:Generated_Source\PSoC4/UART_Pi_UART.c **** void UART_Pi_UartSetRxAddressMask(uint32 addressMask)
+ 459:Generated_Source\PSoC4/UART_Pi_UART.c **** {
+ 304              		.loc 1 459 0
+ 305              		.cfi_startproc
+ 306              		@ args = 0, pretend = 0, frame = 16
+ 307              		@ frame_needed = 1, uses_anonymous_args = 0
+ 308 0000 80B5     		push	{r7, lr}
+ 309              		.cfi_def_cfa_offset 8
+ 310              		.cfi_offset 7, -8
+ 311              		.cfi_offset 14, -4
+ 312 0002 84B0     		sub	sp, sp, #16
+ 313              		.cfi_def_cfa_offset 24
+ 314 0004 00AF     		add	r7, sp, #0
+ 315              		.cfi_def_cfa_register 7
+ 316 0006 7860     		str	r0, [r7, #4]
+ 460:Generated_Source\PSoC4/UART_Pi_UART.c ****     uint32 matchReg;
+ 461:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 462:Generated_Source\PSoC4/UART_Pi_UART.c ****     matchReg = UART_Pi_RX_MATCH_REG;
+ 317              		.loc 1 462 0
+ 318 0008 094B     		ldr	r3, .L14
+ 319 000a 1B68     		ldr	r3, [r3]
+ 320 000c FB60     		str	r3, [r7, #12]
+ 463:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 464:Generated_Source\PSoC4/UART_Pi_UART.c ****     matchReg &= ((uint32) ~UART_Pi_RX_MATCH_MASK_MASK); /* Clear address mask bits */
+ 321              		.loc 1 464 0
+ 322 000e FB68     		ldr	r3, [r7, #12]
+ 323 0010 084A     		ldr	r2, .L14+4
+ 324 0012 1340     		ands	r3, r2
+ 325 0014 FB60     		str	r3, [r7, #12]
+ 465:Generated_Source\PSoC4/UART_Pi_UART.c ****     matchReg |= ((uint32) (addressMask << UART_Pi_RX_MATCH_MASK_POS));
+ 326              		.loc 1 465 0
+ 327 0016 7B68     		ldr	r3, [r7, #4]
+ 328 0018 1B04     		lsls	r3, r3, #16
+ 329 001a FA68     		ldr	r2, [r7, #12]
+ 330 001c 1343     		orrs	r3, r2
+ 331 001e FB60     		str	r3, [r7, #12]
+ 466:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 467:Generated_Source\PSoC4/UART_Pi_UART.c ****     UART_Pi_RX_MATCH_REG = matchReg;
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 15
+
+
+ 332              		.loc 1 467 0
+ 333 0020 034B     		ldr	r3, .L14
+ 334 0022 FA68     		ldr	r2, [r7, #12]
+ 335 0024 1A60     		str	r2, [r3]
+ 468:Generated_Source\PSoC4/UART_Pi_UART.c **** }
+ 336              		.loc 1 468 0
+ 337 0026 C046     		nop
+ 338 0028 BD46     		mov	sp, r7
+ 339 002a 04B0     		add	sp, sp, #16
+ 340              		@ sp needed
+ 341 002c 80BD     		pop	{r7, pc}
+ 342              	.L15:
+ 343 002e C046     		.align	2
+ 344              	.L14:
+ 345 0030 10030740 		.word	1074201360
+ 346 0034 FFFF00FF 		.word	-16711681
+ 347              		.cfi_endproc
+ 348              	.LFE4:
+ 349              		.size	UART_Pi_UartSetRxAddressMask, .-UART_Pi_UartSetRxAddressMask
+ 350              		.section	.text.UART_Pi_UartGetChar,"ax",%progbits
+ 351              		.align	2
+ 352              		.global	UART_Pi_UartGetChar
+ 353              		.code	16
+ 354              		.thumb_func
+ 355              		.type	UART_Pi_UartGetChar, %function
+ 356              	UART_Pi_UartGetChar:
+ 357              	.LFB5:
+ 469:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 470:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 471:Generated_Source\PSoC4/UART_Pi_UART.c **** #if(UART_Pi_UART_RX_DIRECTION)
+ 472:Generated_Source\PSoC4/UART_Pi_UART.c ****     /*******************************************************************************
+ 473:Generated_Source\PSoC4/UART_Pi_UART.c ****     * Function Name: UART_Pi_UartGetChar
+ 474:Generated_Source\PSoC4/UART_Pi_UART.c ****     ****************************************************************************//**
+ 475:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 476:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  Retrieves next data element from receive buffer.
+ 477:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  This function is designed for ASCII characters and returns a char where
+ 478:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  1 to 255 are valid characters and 0 indicates an error occurred or no data
+ 479:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  is present.
+ 480:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  - RX software buffer is disabled: Returns data element retrieved from RX
+ 481:Generated_Source\PSoC4/UART_Pi_UART.c ****     *    FIFO.
+ 482:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  - RX software buffer is enabled: Returns data element from the software
+ 483:Generated_Source\PSoC4/UART_Pi_UART.c ****     *    receive buffer.
+ 484:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 485:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  \return
+ 486:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   Next data element from the receive buffer. ASCII character values from
+ 487:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   1 to 255 are valid. A returned zero signifies an error condition or no
+ 488:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   data available.
+ 489:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 490:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  \sideeffect
+ 491:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   The errors bits may not correspond with reading characters due to
+ 492:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   RX FIFO and software buffer usage.
+ 493:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   RX software buffer is enabled: The internal software buffer overflow
+ 494:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   is not treated as an error condition.
+ 495:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   Check UART_Pi_rxBufferOverflow to capture that error condition.
+ 496:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 497:Generated_Source\PSoC4/UART_Pi_UART.c ****     *******************************************************************************/
+ 498:Generated_Source\PSoC4/UART_Pi_UART.c ****     uint32 UART_Pi_UartGetChar(void)
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 16
+
+
+ 499:Generated_Source\PSoC4/UART_Pi_UART.c ****     {
+ 358              		.loc 1 499 0
+ 359              		.cfi_startproc
+ 360              		@ args = 0, pretend = 0, frame = 8
+ 361              		@ frame_needed = 1, uses_anonymous_args = 0
+ 362 0000 80B5     		push	{r7, lr}
+ 363              		.cfi_def_cfa_offset 8
+ 364              		.cfi_offset 7, -8
+ 365              		.cfi_offset 14, -4
+ 366 0002 82B0     		sub	sp, sp, #8
+ 367              		.cfi_def_cfa_offset 16
+ 368 0004 00AF     		add	r7, sp, #0
+ 369              		.cfi_def_cfa_register 7
+ 500:Generated_Source\PSoC4/UART_Pi_UART.c ****         uint32 rxData = 0u;
+ 370              		.loc 1 500 0
+ 371 0006 0023     		movs	r3, #0
+ 372 0008 7B60     		str	r3, [r7, #4]
+ 501:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 502:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Reads data only if there is data to read */
+ 503:Generated_Source\PSoC4/UART_Pi_UART.c ****         if (0u != UART_Pi_SpiUartGetRxBufferSize())
+ 373              		.loc 1 503 0
+ 374 000a FFF7FEFF 		bl	UART_Pi_SpiUartGetRxBufferSize
+ 375 000e 031E     		subs	r3, r0, #0
+ 376 0010 03D0     		beq	.L17
+ 504:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 505:Generated_Source\PSoC4/UART_Pi_UART.c ****             rxData = UART_Pi_SpiUartReadRxData();
+ 377              		.loc 1 505 0
+ 378 0012 FFF7FEFF 		bl	UART_Pi_SpiUartReadRxData
+ 379 0016 0300     		movs	r3, r0
+ 380 0018 7B60     		str	r3, [r7, #4]
+ 381              	.L17:
+ 506:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 507:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 508:Generated_Source\PSoC4/UART_Pi_UART.c ****         if (UART_Pi_CHECK_INTR_RX(UART_Pi_INTR_RX_ERR))
+ 382              		.loc 1 508 0
+ 383 001a 084B     		ldr	r3, .L20
+ 384 001c 1A68     		ldr	r2, [r3]
+ 385 001e D823     		movs	r3, #216
+ 386 0020 9B00     		lsls	r3, r3, #2
+ 387 0022 1340     		ands	r3, r2
+ 388 0024 05D0     		beq	.L18
+ 509:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 510:Generated_Source\PSoC4/UART_Pi_UART.c ****             rxData = 0u; /* Error occurred: returns zero */
+ 389              		.loc 1 510 0
+ 390 0026 0023     		movs	r3, #0
+ 391 0028 7B60     		str	r3, [r7, #4]
+ 511:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_ClearRxInterruptSource(UART_Pi_INTR_RX_ERR);
+ 392              		.loc 1 511 0
+ 393 002a 044B     		ldr	r3, .L20
+ 394 002c D822     		movs	r2, #216
+ 395 002e 9200     		lsls	r2, r2, #2
+ 396 0030 1A60     		str	r2, [r3]
+ 397              	.L18:
+ 512:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 513:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 514:Generated_Source\PSoC4/UART_Pi_UART.c ****         return (rxData);
+ 398              		.loc 1 514 0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 17
+
+
+ 399 0032 7B68     		ldr	r3, [r7, #4]
+ 515:Generated_Source\PSoC4/UART_Pi_UART.c ****     }
+ 400              		.loc 1 515 0
+ 401 0034 1800     		movs	r0, r3
+ 402 0036 BD46     		mov	sp, r7
+ 403 0038 02B0     		add	sp, sp, #8
+ 404              		@ sp needed
+ 405 003a 80BD     		pop	{r7, pc}
+ 406              	.L21:
+ 407              		.align	2
+ 408              	.L20:
+ 409 003c C00F0740 		.word	1074204608
+ 410              		.cfi_endproc
+ 411              	.LFE5:
+ 412              		.size	UART_Pi_UartGetChar, .-UART_Pi_UartGetChar
+ 413              		.section	.text.UART_Pi_UartGetByte,"ax",%progbits
+ 414              		.align	2
+ 415              		.global	UART_Pi_UartGetByte
+ 416              		.code	16
+ 417              		.thumb_func
+ 418              		.type	UART_Pi_UartGetByte, %function
+ 419              	UART_Pi_UartGetByte:
+ 420              	.LFB6:
+ 516:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 517:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 518:Generated_Source\PSoC4/UART_Pi_UART.c ****     /*******************************************************************************
+ 519:Generated_Source\PSoC4/UART_Pi_UART.c ****     * Function Name: UART_Pi_UartGetByte
+ 520:Generated_Source\PSoC4/UART_Pi_UART.c ****     ****************************************************************************//**
+ 521:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 522:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  Retrieves the next data element from the receive buffer, returns the
+ 523:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  received byte and error condition.
+ 524:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   - The RX software buffer is disabled: returns the data element retrieved
+ 525:Generated_Source\PSoC4/UART_Pi_UART.c ****     *     from the RX FIFO. Undefined data will be returned if the RX FIFO is
+ 526:Generated_Source\PSoC4/UART_Pi_UART.c ****     *     empty.
+ 527:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   - The RX software buffer is enabled: returns data element from the
+ 528:Generated_Source\PSoC4/UART_Pi_UART.c ****     *     software receive buffer.
+ 529:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 530:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  \return
+ 531:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   Bits 7-0 contain the next data element from the receive buffer and
+ 532:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   other bits contain the error condition.
+ 533:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   - UART_Pi_UART_RX_OVERFLOW - Attempt to write to a full
+ 534:Generated_Source\PSoC4/UART_Pi_UART.c ****     *     receiver FIFO.
+ 535:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   - UART_Pi_UART_RX_UNDERFLOW    Attempt to read from an empty
+ 536:Generated_Source\PSoC4/UART_Pi_UART.c ****     *     receiver FIFO.
+ 537:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   - UART_Pi_UART_RX_FRAME_ERROR - UART framing error detected.
+ 538:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   - UART_Pi_UART_RX_PARITY_ERROR - UART parity error detected.
+ 539:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 540:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  \sideeffect
+ 541:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   The errors bits may not correspond with reading characters due to
+ 542:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   RX FIFO and software buffer usage.
+ 543:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   RX software buffer is enabled: The internal software buffer overflow
+ 544:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   is not treated as an error condition.
+ 545:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   Check UART_Pi_rxBufferOverflow to capture that error condition.
+ 546:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 547:Generated_Source\PSoC4/UART_Pi_UART.c ****     *******************************************************************************/
+ 548:Generated_Source\PSoC4/UART_Pi_UART.c ****     uint32 UART_Pi_UartGetByte(void)
+ 549:Generated_Source\PSoC4/UART_Pi_UART.c ****     {
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 18
+
+
+ 421              		.loc 1 549 0
+ 422              		.cfi_startproc
+ 423              		@ args = 0, pretend = 0, frame = 8
+ 424              		@ frame_needed = 1, uses_anonymous_args = 0
+ 425 0000 80B5     		push	{r7, lr}
+ 426              		.cfi_def_cfa_offset 8
+ 427              		.cfi_offset 7, -8
+ 428              		.cfi_offset 14, -4
+ 429 0002 82B0     		sub	sp, sp, #8
+ 430              		.cfi_def_cfa_offset 16
+ 431 0004 00AF     		add	r7, sp, #0
+ 432              		.cfi_def_cfa_register 7
+ 550:Generated_Source\PSoC4/UART_Pi_UART.c ****         uint32 rxData;
+ 551:Generated_Source\PSoC4/UART_Pi_UART.c ****         uint32 tmpStatus;
+ 552:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 553:Generated_Source\PSoC4/UART_Pi_UART.c ****         #if (UART_Pi_CHECK_RX_SW_BUFFER)
+ 554:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 555:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_DisableInt();
+ 556:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 557:Generated_Source\PSoC4/UART_Pi_UART.c ****         #endif
+ 558:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 559:Generated_Source\PSoC4/UART_Pi_UART.c ****         if (0u != UART_Pi_SpiUartGetRxBufferSize())
+ 433              		.loc 1 559 0
+ 434 0006 FFF7FEFF 		bl	UART_Pi_SpiUartGetRxBufferSize
+ 435 000a 031E     		subs	r3, r0, #0
+ 436 000c 04D0     		beq	.L23
+ 560:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 561:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Enables interrupt to receive more bytes: at least one byte is in
+ 562:Generated_Source\PSoC4/UART_Pi_UART.c ****             * buffer.
+ 563:Generated_Source\PSoC4/UART_Pi_UART.c ****             */
+ 564:Generated_Source\PSoC4/UART_Pi_UART.c ****             #if (UART_Pi_CHECK_RX_SW_BUFFER)
+ 565:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 566:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_EnableInt();
+ 567:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ 568:Generated_Source\PSoC4/UART_Pi_UART.c ****             #endif
+ 569:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 570:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Get received byte */
+ 571:Generated_Source\PSoC4/UART_Pi_UART.c ****             rxData = UART_Pi_SpiUartReadRxData();
+ 437              		.loc 1 571 0
+ 438 000e FFF7FEFF 		bl	UART_Pi_SpiUartReadRxData
+ 439 0012 0300     		movs	r3, r0
+ 440 0014 7B60     		str	r3, [r7, #4]
+ 441 0016 02E0     		b	.L24
+ 442              	.L23:
+ 572:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 573:Generated_Source\PSoC4/UART_Pi_UART.c ****         else
+ 574:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 575:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Reads a byte directly from RX FIFO: underflow is raised in the
+ 576:Generated_Source\PSoC4/UART_Pi_UART.c ****             * case of empty. Otherwise the first received byte will be read.
+ 577:Generated_Source\PSoC4/UART_Pi_UART.c ****             */
+ 578:Generated_Source\PSoC4/UART_Pi_UART.c ****             rxData = UART_Pi_RX_FIFO_RD_REG;
+ 443              		.loc 1 578 0
+ 444 0018 0B4B     		ldr	r3, .L26
+ 445 001a 1B68     		ldr	r3, [r3]
+ 446 001c 7B60     		str	r3, [r7, #4]
+ 447              	.L24:
+ 579:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 19
+
+
+ 580:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 581:Generated_Source\PSoC4/UART_Pi_UART.c ****             /* Enables interrupt to receive more bytes. */
+ 582:Generated_Source\PSoC4/UART_Pi_UART.c ****             #if (UART_Pi_CHECK_RX_SW_BUFFER)
+ 583:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 584:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 585:Generated_Source\PSoC4/UART_Pi_UART.c ****                 /* The byte has been read from RX FIFO. Clear RX interrupt to
+ 586:Generated_Source\PSoC4/UART_Pi_UART.c ****                 * not involve interrupt handler when RX FIFO is empty.
+ 587:Generated_Source\PSoC4/UART_Pi_UART.c ****                 */
+ 588:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_ClearRxInterruptSource(UART_Pi_INTR_RX_NOT_EMPTY);
+ 589:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 590:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_EnableInt();
+ 591:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ 592:Generated_Source\PSoC4/UART_Pi_UART.c ****             #endif
+ 593:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 594:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 595:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Get and clear RX error mask */
+ 596:Generated_Source\PSoC4/UART_Pi_UART.c ****         tmpStatus = (UART_Pi_GetRxInterruptSource() & UART_Pi_INTR_RX_ERR);
+ 448              		.loc 1 596 0
+ 449 001e 0B4B     		ldr	r3, .L26+4
+ 450 0020 1A68     		ldr	r2, [r3]
+ 451 0022 D823     		movs	r3, #216
+ 452 0024 9B00     		lsls	r3, r3, #2
+ 453 0026 1340     		ands	r3, r2
+ 454 0028 3B60     		str	r3, [r7]
+ 597:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_ClearRxInterruptSource(UART_Pi_INTR_RX_ERR);
+ 455              		.loc 1 597 0
+ 456 002a 084B     		ldr	r3, .L26+4
+ 457 002c D822     		movs	r2, #216
+ 458 002e 9200     		lsls	r2, r2, #2
+ 459 0030 1A60     		str	r2, [r3]
+ 598:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 599:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Puts together data and error status:
+ 600:Generated_Source\PSoC4/UART_Pi_UART.c ****         * MP mode and accept address: 9th bit is set to notify mark.
+ 601:Generated_Source\PSoC4/UART_Pi_UART.c ****         */
+ 602:Generated_Source\PSoC4/UART_Pi_UART.c ****         rxData |= ((uint32) (tmpStatus << 8u));
+ 460              		.loc 1 602 0
+ 461 0032 3B68     		ldr	r3, [r7]
+ 462 0034 1B02     		lsls	r3, r3, #8
+ 463 0036 7A68     		ldr	r2, [r7, #4]
+ 464 0038 1343     		orrs	r3, r2
+ 465 003a 7B60     		str	r3, [r7, #4]
+ 603:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 604:Generated_Source\PSoC4/UART_Pi_UART.c ****         return (rxData);
+ 466              		.loc 1 604 0
+ 467 003c 7B68     		ldr	r3, [r7, #4]
+ 605:Generated_Source\PSoC4/UART_Pi_UART.c ****     }
+ 468              		.loc 1 605 0
+ 469 003e 1800     		movs	r0, r3
+ 470 0040 BD46     		mov	sp, r7
+ 471 0042 02B0     		add	sp, sp, #8
+ 472              		@ sp needed
+ 473 0044 80BD     		pop	{r7, pc}
+ 474              	.L27:
+ 475 0046 C046     		.align	2
+ 476              	.L26:
+ 477 0048 40030740 		.word	1074201408
+ 478 004c C00F0740 		.word	1074204608
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 20
+
+
+ 479              		.cfi_endproc
+ 480              	.LFE6:
+ 481              		.size	UART_Pi_UartGetByte, .-UART_Pi_UartGetByte
+ 482              		.section	.text.UART_Pi_UartPutString,"ax",%progbits
+ 483              		.align	2
+ 484              		.global	UART_Pi_UartPutString
+ 485              		.code	16
+ 486              		.thumb_func
+ 487              		.type	UART_Pi_UartPutString, %function
+ 488              	UART_Pi_UartPutString:
+ 489              	.LFB7:
+ 606:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 607:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 608:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1)
+ 609:Generated_Source\PSoC4/UART_Pi_UART.c ****         /*******************************************************************************
+ 610:Generated_Source\PSoC4/UART_Pi_UART.c ****         * Function Name: UART_Pi_UartSetRtsPolarity
+ 611:Generated_Source\PSoC4/UART_Pi_UART.c ****         ****************************************************************************//**
+ 612:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 613:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  Sets active polarity of RTS output signal.
+ 614:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  Only available for PSoC 4100 BLE / PSoC 4200 BLE / PSoC 4100M / PSoC 4200M /
+ 615:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  PSoC 4200L / PSoC 4000S / PSoC 4100S / PSoC Analog Coprocessor devices.
+ 616:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 617:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  \param polarity: Active polarity of RTS output signal.
+ 618:Generated_Source\PSoC4/UART_Pi_UART.c ****         *   - UART_Pi_UART_RTS_ACTIVE_LOW  - RTS signal is active low.
+ 619:Generated_Source\PSoC4/UART_Pi_UART.c ****         *   - UART_Pi_UART_RTS_ACTIVE_HIGH - RTS signal is active high.
+ 620:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 621:Generated_Source\PSoC4/UART_Pi_UART.c ****         *******************************************************************************/
+ 622:Generated_Source\PSoC4/UART_Pi_UART.c ****         void UART_Pi_UartSetRtsPolarity(uint32 polarity)
+ 623:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 624:Generated_Source\PSoC4/UART_Pi_UART.c ****             if(0u != polarity)
+ 625:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 626:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_UART_FLOW_CTRL_REG |= (uint32)  UART_Pi_UART_FLOW_CTRL_RTS_POLARITY;
+ 627:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ 628:Generated_Source\PSoC4/UART_Pi_UART.c ****             else
+ 629:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 630:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_UART_FLOW_CTRL_REG &= (uint32) ~UART_Pi_UART_FLOW_CTRL_RTS_POLARITY;
+ 631:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ 632:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 633:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 634:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 635:Generated_Source\PSoC4/UART_Pi_UART.c ****         /*******************************************************************************
+ 636:Generated_Source\PSoC4/UART_Pi_UART.c ****         * Function Name: UART_Pi_UartSetRtsFifoLevel
+ 637:Generated_Source\PSoC4/UART_Pi_UART.c ****         ****************************************************************************//**
+ 638:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 639:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  Sets level in the RX FIFO for RTS signal activation.
+ 640:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  While the RX FIFO has fewer entries than the RX FIFO level the RTS signal
+ 641:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  remains active, otherwise the RTS signal becomes inactive.
+ 642:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  Only available for PSoC 4100 BLE / PSoC 4200 BLE / PSoC 4100M / PSoC 4200M /
+ 643:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  PSoC 4200L / PSoC 4000S / PSoC 4100S / PSoC Analog Coprocessor devices.
+ 644:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 645:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  \param level: Level in the RX FIFO for RTS signal activation.
+ 646:Generated_Source\PSoC4/UART_Pi_UART.c ****         *   The range of valid level values is between 0 and RX FIFO depth - 1.
+ 647:Generated_Source\PSoC4/UART_Pi_UART.c ****         *   Setting level value to 0 disables RTS signal activation.
+ 648:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 649:Generated_Source\PSoC4/UART_Pi_UART.c ****         *******************************************************************************/
+ 650:Generated_Source\PSoC4/UART_Pi_UART.c ****         void UART_Pi_UartSetRtsFifoLevel(uint32 level)
+ 651:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 21
+
+
+ 652:Generated_Source\PSoC4/UART_Pi_UART.c ****             uint32 uartFlowCtrl;
+ 653:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 654:Generated_Source\PSoC4/UART_Pi_UART.c ****             uartFlowCtrl = UART_Pi_UART_FLOW_CTRL_REG;
+ 655:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 656:Generated_Source\PSoC4/UART_Pi_UART.c ****             uartFlowCtrl &= ((uint32) ~UART_Pi_UART_FLOW_CTRL_TRIGGER_LEVEL_MASK); /* Clear level m
+ 657:Generated_Source\PSoC4/UART_Pi_UART.c ****             uartFlowCtrl |= ((uint32) (UART_Pi_UART_FLOW_CTRL_TRIGGER_LEVEL_MASK & level));
+ 658:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 659:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_UART_FLOW_CTRL_REG = uartFlowCtrl;
+ 660:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 661:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1) */
+ 662:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 663:Generated_Source\PSoC4/UART_Pi_UART.c **** #endif /* (UART_Pi_UART_RX_DIRECTION) */
+ 664:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 665:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 666:Generated_Source\PSoC4/UART_Pi_UART.c **** #if(UART_Pi_UART_TX_DIRECTION)
+ 667:Generated_Source\PSoC4/UART_Pi_UART.c ****     /*******************************************************************************
+ 668:Generated_Source\PSoC4/UART_Pi_UART.c ****     * Function Name: UART_Pi_UartPutString
+ 669:Generated_Source\PSoC4/UART_Pi_UART.c ****     ****************************************************************************//**
+ 670:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 671:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  Places a NULL terminated string in the transmit buffer to be sent at the
+ 672:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  next available bus time.
+ 673:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  This function is blocking and waits until there is a space available to put
+ 674:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  requested data in transmit buffer.
+ 675:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 676:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  \param string: pointer to the null terminated string array to be placed in the
+ 677:Generated_Source\PSoC4/UART_Pi_UART.c ****     *   transmit buffer.
+ 678:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 679:Generated_Source\PSoC4/UART_Pi_UART.c ****     *******************************************************************************/
+ 680:Generated_Source\PSoC4/UART_Pi_UART.c ****     void UART_Pi_UartPutString(const char8 string[])
+ 681:Generated_Source\PSoC4/UART_Pi_UART.c ****     {
+ 490              		.loc 1 681 0
+ 491              		.cfi_startproc
+ 492              		@ args = 0, pretend = 0, frame = 16
+ 493              		@ frame_needed = 1, uses_anonymous_args = 0
+ 494 0000 80B5     		push	{r7, lr}
+ 495              		.cfi_def_cfa_offset 8
+ 496              		.cfi_offset 7, -8
+ 497              		.cfi_offset 14, -4
+ 498 0002 84B0     		sub	sp, sp, #16
+ 499              		.cfi_def_cfa_offset 24
+ 500 0004 00AF     		add	r7, sp, #0
+ 501              		.cfi_def_cfa_register 7
+ 502 0006 7860     		str	r0, [r7, #4]
+ 682:Generated_Source\PSoC4/UART_Pi_UART.c ****         uint32 bufIndex;
+ 683:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 684:Generated_Source\PSoC4/UART_Pi_UART.c ****         bufIndex = 0u;
+ 503              		.loc 1 684 0
+ 504 0008 0023     		movs	r3, #0
+ 505 000a FB60     		str	r3, [r7, #12]
+ 685:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 686:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Blocks the control flow until all data has been sent */
+ 687:Generated_Source\PSoC4/UART_Pi_UART.c ****         while(string[bufIndex] != ((char8) 0))
+ 506              		.loc 1 687 0
+ 507 000c 09E0     		b	.L29
+ 508              	.L30:
+ 688:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 689:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_UartPutChar((uint32) string[bufIndex]);
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 22
+
+
+ 509              		.loc 1 689 0
+ 510 000e 7A68     		ldr	r2, [r7, #4]
+ 511 0010 FB68     		ldr	r3, [r7, #12]
+ 512 0012 D318     		adds	r3, r2, r3
+ 513 0014 1B78     		ldrb	r3, [r3]
+ 514 0016 1800     		movs	r0, r3
+ 515 0018 FFF7FEFF 		bl	UART_Pi_SpiUartWriteTxData
+ 690:Generated_Source\PSoC4/UART_Pi_UART.c ****             bufIndex++;
+ 516              		.loc 1 690 0
+ 517 001c FB68     		ldr	r3, [r7, #12]
+ 518 001e 0133     		adds	r3, r3, #1
+ 519 0020 FB60     		str	r3, [r7, #12]
+ 520              	.L29:
+ 687:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 521              		.loc 1 687 0
+ 522 0022 7A68     		ldr	r2, [r7, #4]
+ 523 0024 FB68     		ldr	r3, [r7, #12]
+ 524 0026 D318     		adds	r3, r2, r3
+ 525 0028 1B78     		ldrb	r3, [r3]
+ 526 002a 002B     		cmp	r3, #0
+ 527 002c EFD1     		bne	.L30
+ 691:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 692:Generated_Source\PSoC4/UART_Pi_UART.c ****     }
+ 528              		.loc 1 692 0
+ 529 002e C046     		nop
+ 530 0030 BD46     		mov	sp, r7
+ 531 0032 04B0     		add	sp, sp, #16
+ 532              		@ sp needed
+ 533 0034 80BD     		pop	{r7, pc}
+ 534              		.cfi_endproc
+ 535              	.LFE7:
+ 536              		.size	UART_Pi_UartPutString, .-UART_Pi_UartPutString
+ 537 0036 C046     		.section	.text.UART_Pi_UartPutCRLF,"ax",%progbits
+ 538              		.align	2
+ 539              		.global	UART_Pi_UartPutCRLF
+ 540              		.code	16
+ 541              		.thumb_func
+ 542              		.type	UART_Pi_UartPutCRLF, %function
+ 543              	UART_Pi_UartPutCRLF:
+ 544              	.LFB8:
+ 693:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 694:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 695:Generated_Source\PSoC4/UART_Pi_UART.c ****     /*******************************************************************************
+ 696:Generated_Source\PSoC4/UART_Pi_UART.c ****     * Function Name: UART_Pi_UartPutCRLF
+ 697:Generated_Source\PSoC4/UART_Pi_UART.c ****     ****************************************************************************//**
+ 698:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 699:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  Places byte of data followed by a carriage return (0x0D) and line feed
+ 700:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  (0x0A) in the transmit buffer.
+ 701:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  This function is blocking and waits until there is a space available to put
+ 702:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  all requested data in transmit buffer.
+ 703:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 704:Generated_Source\PSoC4/UART_Pi_UART.c ****     *  \param txDataByte: the data to be transmitted.
+ 705:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 706:Generated_Source\PSoC4/UART_Pi_UART.c ****     *******************************************************************************/
+ 707:Generated_Source\PSoC4/UART_Pi_UART.c ****     void UART_Pi_UartPutCRLF(uint32 txDataByte)
+ 708:Generated_Source\PSoC4/UART_Pi_UART.c ****     {
+ 545              		.loc 1 708 0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 23
+
+
+ 546              		.cfi_startproc
+ 547              		@ args = 0, pretend = 0, frame = 8
+ 548              		@ frame_needed = 1, uses_anonymous_args = 0
+ 549 0000 80B5     		push	{r7, lr}
+ 550              		.cfi_def_cfa_offset 8
+ 551              		.cfi_offset 7, -8
+ 552              		.cfi_offset 14, -4
+ 553 0002 82B0     		sub	sp, sp, #8
+ 554              		.cfi_def_cfa_offset 16
+ 555 0004 00AF     		add	r7, sp, #0
+ 556              		.cfi_def_cfa_register 7
+ 557 0006 7860     		str	r0, [r7, #4]
+ 709:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UartPutChar(txDataByte);  /* Blocks control flow until all data has been sent */
+ 558              		.loc 1 709 0
+ 559 0008 7B68     		ldr	r3, [r7, #4]
+ 560 000a 1800     		movs	r0, r3
+ 561 000c FFF7FEFF 		bl	UART_Pi_SpiUartWriteTxData
+ 710:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UartPutChar(0x0Du);       /* Blocks control flow until all data has been sent */
+ 562              		.loc 1 710 0
+ 563 0010 0D20     		movs	r0, #13
+ 564 0012 FFF7FEFF 		bl	UART_Pi_SpiUartWriteTxData
+ 711:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_UartPutChar(0x0Au);       /* Blocks control flow until all data has been sent */
+ 565              		.loc 1 711 0
+ 566 0016 0A20     		movs	r0, #10
+ 567 0018 FFF7FEFF 		bl	UART_Pi_SpiUartWriteTxData
+ 712:Generated_Source\PSoC4/UART_Pi_UART.c ****     }
+ 568              		.loc 1 712 0
+ 569 001c C046     		nop
+ 570 001e BD46     		mov	sp, r7
+ 571 0020 02B0     		add	sp, sp, #8
+ 572              		@ sp needed
+ 573 0022 80BD     		pop	{r7, pc}
+ 574              		.cfi_endproc
+ 575              	.LFE8:
+ 576              		.size	UART_Pi_UartPutCRLF, .-UART_Pi_UartPutCRLF
+ 577              		.section	.text.UART_Pi_UartSendBreakBlocking,"ax",%progbits
+ 578              		.align	2
+ 579              		.global	UART_Pi_UartSendBreakBlocking
+ 580              		.code	16
+ 581              		.thumb_func
+ 582              		.type	UART_Pi_UartSendBreakBlocking, %function
+ 583              	UART_Pi_UartSendBreakBlocking:
+ 584              	.LFB9:
+ 713:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 714:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 715:Generated_Source\PSoC4/UART_Pi_UART.c ****     #if !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1)
+ 716:Generated_Source\PSoC4/UART_Pi_UART.c ****         /*******************************************************************************
+ 717:Generated_Source\PSoC4/UART_Pi_UART.c ****         * Function Name: UART_PiSCB_UartEnableCts
+ 718:Generated_Source\PSoC4/UART_Pi_UART.c ****         ****************************************************************************//**
+ 719:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 720:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  Enables usage of CTS input signal by the UART transmitter.
+ 721:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  Only available for PSoC 4100 BLE / PSoC 4200 BLE / PSoC 4100M / PSoC 4200M /
+ 722:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  PSoC 4200L / PSoC 4000S / PSoC 4100S / PSoC Analog Coprocessor devices.
+ 723:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 724:Generated_Source\PSoC4/UART_Pi_UART.c ****         *******************************************************************************/
+ 725:Generated_Source\PSoC4/UART_Pi_UART.c ****         void UART_Pi_UartEnableCts(void)
+ 726:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 24
+
+
+ 727:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_UART_FLOW_CTRL_REG |= (uint32)  UART_Pi_UART_FLOW_CTRL_CTS_ENABLE;
+ 728:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 729:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 730:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 731:Generated_Source\PSoC4/UART_Pi_UART.c ****         /*******************************************************************************
+ 732:Generated_Source\PSoC4/UART_Pi_UART.c ****         * Function Name: UART_Pi_UartDisableCts
+ 733:Generated_Source\PSoC4/UART_Pi_UART.c ****         ****************************************************************************//**
+ 734:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 735:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  Disables usage of CTS input signal by the UART transmitter.
+ 736:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  Only available for PSoC 4100 BLE / PSoC 4200 BLE / PSoC 4100M / PSoC 4200M /
+ 737:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  PSoC 4200L / PSoC 4000S / PSoC 4100S / PSoC Analog Coprocessor devices.
+ 738:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 739:Generated_Source\PSoC4/UART_Pi_UART.c ****         *******************************************************************************/
+ 740:Generated_Source\PSoC4/UART_Pi_UART.c ****         void UART_Pi_UartDisableCts(void)
+ 741:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 742:Generated_Source\PSoC4/UART_Pi_UART.c ****             UART_Pi_UART_FLOW_CTRL_REG &= (uint32) ~UART_Pi_UART_FLOW_CTRL_CTS_ENABLE;
+ 743:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 744:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 745:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 746:Generated_Source\PSoC4/UART_Pi_UART.c ****         /*******************************************************************************
+ 747:Generated_Source\PSoC4/UART_Pi_UART.c ****         * Function Name: UART_Pi_UartSetCtsPolarity
+ 748:Generated_Source\PSoC4/UART_Pi_UART.c ****         ****************************************************************************//**
+ 749:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 750:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  Sets active polarity of CTS input signal.
+ 751:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  Only available for PSoC 4100 BLE / PSoC 4200 BLE / PSoC 4100M / PSoC 4200M /
+ 752:Generated_Source\PSoC4/UART_Pi_UART.c ****         *  PSoC 4200L / PSoC 4000S / PSoC 4100S / PSoC Analog Coprocessor devices.
+ 753:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 754:Generated_Source\PSoC4/UART_Pi_UART.c ****         * \param
+ 755:Generated_Source\PSoC4/UART_Pi_UART.c ****         * polarity: Active polarity of CTS output signal.
+ 756:Generated_Source\PSoC4/UART_Pi_UART.c ****         *   - UART_Pi_UART_CTS_ACTIVE_LOW  - CTS signal is active low.
+ 757:Generated_Source\PSoC4/UART_Pi_UART.c ****         *   - UART_Pi_UART_CTS_ACTIVE_HIGH - CTS signal is active high.
+ 758:Generated_Source\PSoC4/UART_Pi_UART.c ****         *
+ 759:Generated_Source\PSoC4/UART_Pi_UART.c ****         *******************************************************************************/
+ 760:Generated_Source\PSoC4/UART_Pi_UART.c ****         void UART_Pi_UartSetCtsPolarity(uint32 polarity)
+ 761:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 762:Generated_Source\PSoC4/UART_Pi_UART.c ****             if (0u != polarity)
+ 763:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 764:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_UART_FLOW_CTRL_REG |= (uint32)  UART_Pi_UART_FLOW_CTRL_CTS_POLARITY;
+ 765:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ 766:Generated_Source\PSoC4/UART_Pi_UART.c ****             else
+ 767:Generated_Source\PSoC4/UART_Pi_UART.c ****             {
+ 768:Generated_Source\PSoC4/UART_Pi_UART.c ****                 UART_Pi_UART_FLOW_CTRL_REG &= (uint32) ~UART_Pi_UART_FLOW_CTRL_CTS_POLARITY;
+ 769:Generated_Source\PSoC4/UART_Pi_UART.c ****             }
+ 770:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 771:Generated_Source\PSoC4/UART_Pi_UART.c ****     #endif /* !(UART_Pi_CY_SCBIP_V0 || UART_Pi_CY_SCBIP_V1) */
+ 772:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 773:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 774:Generated_Source\PSoC4/UART_Pi_UART.c ****     /*******************************************************************************
+ 775:Generated_Source\PSoC4/UART_Pi_UART.c ****     * Function Name: UART_Pi_UartSendBreakBlocking
+ 776:Generated_Source\PSoC4/UART_Pi_UART.c ****     ****************************************************************************//**
+ 777:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 778:Generated_Source\PSoC4/UART_Pi_UART.c ****     * Sends a break condition (logic low) of specified width on UART TX line.
+ 779:Generated_Source\PSoC4/UART_Pi_UART.c ****     * Blocks until break is completed. Only call this function when UART TX FIFO
+ 780:Generated_Source\PSoC4/UART_Pi_UART.c ****     * and shifter are empty.
+ 781:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 782:Generated_Source\PSoC4/UART_Pi_UART.c ****     * \param breakWidth
+ 783:Generated_Source\PSoC4/UART_Pi_UART.c ****     * Width of break condition. Valid range is 4 to 16 bits.
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 25
+
+
+ 784:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 785:Generated_Source\PSoC4/UART_Pi_UART.c ****     * \note
+ 786:Generated_Source\PSoC4/UART_Pi_UART.c ****     * Before sending break all UART TX interrupt sources are disabled. The state
+ 787:Generated_Source\PSoC4/UART_Pi_UART.c ****     * of UART TX interrupt sources is restored before function returns.
+ 788:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 789:Generated_Source\PSoC4/UART_Pi_UART.c ****     * \sideeffect
+ 790:Generated_Source\PSoC4/UART_Pi_UART.c ****     * If this function is called while there is data in the TX FIFO or shifter that
+ 791:Generated_Source\PSoC4/UART_Pi_UART.c ****     * data will be shifted out in packets the size of breakWidth.
+ 792:Generated_Source\PSoC4/UART_Pi_UART.c ****     *
+ 793:Generated_Source\PSoC4/UART_Pi_UART.c ****     *******************************************************************************/
+ 794:Generated_Source\PSoC4/UART_Pi_UART.c ****     void UART_Pi_UartSendBreakBlocking(uint32 breakWidth)
+ 795:Generated_Source\PSoC4/UART_Pi_UART.c ****     {
+ 585              		.loc 1 795 0
+ 586              		.cfi_startproc
+ 587              		@ args = 0, pretend = 0, frame = 16
+ 588              		@ frame_needed = 1, uses_anonymous_args = 0
+ 589 0000 80B5     		push	{r7, lr}
+ 590              		.cfi_def_cfa_offset 8
+ 591              		.cfi_offset 7, -8
+ 592              		.cfi_offset 14, -4
+ 593 0002 84B0     		sub	sp, sp, #16
+ 594              		.cfi_def_cfa_offset 24
+ 595 0004 00AF     		add	r7, sp, #0
+ 596              		.cfi_def_cfa_register 7
+ 597 0006 7860     		str	r0, [r7, #4]
+ 796:Generated_Source\PSoC4/UART_Pi_UART.c ****         uint32 txCtrlReg;
+ 797:Generated_Source\PSoC4/UART_Pi_UART.c ****         uint32 txIntrReg;
+ 798:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 799:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Disable all UART TX interrupt source and clear UART TX Done history */
+ 800:Generated_Source\PSoC4/UART_Pi_UART.c ****         txIntrReg = UART_Pi_GetTxInterruptMode();
+ 598              		.loc 1 800 0
+ 599 0008 174B     		ldr	r3, .L34
+ 600 000a 1B68     		ldr	r3, [r3]
+ 601 000c FB60     		str	r3, [r7, #12]
+ 801:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_SetTxInterruptMode(0u);
+ 602              		.loc 1 801 0
+ 603 000e 164B     		ldr	r3, .L34
+ 604 0010 0022     		movs	r2, #0
+ 605 0012 1A60     		str	r2, [r3]
+ 802:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_ClearTxInterruptSource(UART_Pi_INTR_TX_UART_DONE);
+ 606              		.loc 1 802 0
+ 607 0014 154B     		ldr	r3, .L34+4
+ 608 0016 8022     		movs	r2, #128
+ 609 0018 9200     		lsls	r2, r2, #2
+ 610 001a 1A60     		str	r2, [r3]
+ 803:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 804:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Store TX CTRL configuration */
+ 805:Generated_Source\PSoC4/UART_Pi_UART.c ****         txCtrlReg = UART_Pi_TX_CTRL_REG;
+ 611              		.loc 1 805 0
+ 612 001c 144B     		ldr	r3, .L34+8
+ 613 001e 1B68     		ldr	r3, [r3]
+ 614 0020 BB60     		str	r3, [r7, #8]
+ 806:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 807:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Set break width */
+ 808:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_TX_CTRL_REG = (UART_Pi_TX_CTRL_REG & (uint32) ~UART_Pi_TX_CTRL_DATA_WIDTH_MASK) |
+ 615              		.loc 1 808 0
+ 616 0022 134B     		ldr	r3, .L34+8
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 26
+
+
+ 617 0024 124A     		ldr	r2, .L34+8
+ 618 0026 1268     		ldr	r2, [r2]
+ 619 0028 0F21     		movs	r1, #15
+ 620 002a 8A43     		bics	r2, r1
+ 621 002c 1100     		movs	r1, r2
+ 809:Generated_Source\PSoC4/UART_Pi_UART.c ****                                         UART_Pi_GET_TX_CTRL_DATA_WIDTH(breakWidth);
+ 622              		.loc 1 809 0
+ 623 002e 7A68     		ldr	r2, [r7, #4]
+ 624 0030 013A     		subs	r2, r2, #1
+ 625 0032 0F20     		movs	r0, #15
+ 626 0034 0240     		ands	r2, r0
+ 808:Generated_Source\PSoC4/UART_Pi_UART.c ****                                         UART_Pi_GET_TX_CTRL_DATA_WIDTH(breakWidth);
+ 627              		.loc 1 808 0
+ 628 0036 0A43     		orrs	r2, r1
+ 629 0038 1A60     		str	r2, [r3]
+ 810:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 811:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Generate break */
+ 812:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_TX_FIFO_WR_REG = 0u;
+ 630              		.loc 1 812 0
+ 631 003a 0E4B     		ldr	r3, .L34+12
+ 632 003c 0022     		movs	r2, #0
+ 633 003e 1A60     		str	r2, [r3]
+ 813:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 814:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Wait for break completion */
+ 815:Generated_Source\PSoC4/UART_Pi_UART.c ****         while (0u == (UART_Pi_GetTxInterruptSource() & UART_Pi_INTR_TX_UART_DONE))
+ 634              		.loc 1 815 0
+ 635 0040 C046     		nop
+ 636              	.L33:
+ 637              		.loc 1 815 0 is_stmt 0 discriminator 1
+ 638 0042 0A4B     		ldr	r3, .L34+4
+ 639 0044 1A68     		ldr	r2, [r3]
+ 640 0046 8023     		movs	r3, #128
+ 641 0048 9B00     		lsls	r3, r3, #2
+ 642 004a 1340     		ands	r3, r2
+ 643 004c F9D0     		beq	.L33
+ 816:Generated_Source\PSoC4/UART_Pi_UART.c ****         {
+ 817:Generated_Source\PSoC4/UART_Pi_UART.c ****         }
+ 818:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 819:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Clear all UART TX interrupt sources to  */
+ 820:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_ClearTxInterruptSource(UART_Pi_INTR_TX_ALL);
+ 644              		.loc 1 820 0 is_stmt 1
+ 645 004e 074B     		ldr	r3, .L34+4
+ 646 0050 094A     		ldr	r2, .L34+16
+ 647 0052 1A60     		str	r2, [r3]
+ 821:Generated_Source\PSoC4/UART_Pi_UART.c **** 
+ 822:Generated_Source\PSoC4/UART_Pi_UART.c ****         /* Restore TX interrupt sources and data width */
+ 823:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_TX_CTRL_REG = txCtrlReg;
+ 648              		.loc 1 823 0
+ 649 0054 064B     		ldr	r3, .L34+8
+ 650 0056 BA68     		ldr	r2, [r7, #8]
+ 651 0058 1A60     		str	r2, [r3]
+ 824:Generated_Source\PSoC4/UART_Pi_UART.c ****         UART_Pi_SetTxInterruptMode(txIntrReg);
+ 652              		.loc 1 824 0
+ 653 005a 034B     		ldr	r3, .L34
+ 654 005c FA68     		ldr	r2, [r7, #12]
+ 655 005e 1A60     		str	r2, [r3]
+ 825:Generated_Source\PSoC4/UART_Pi_UART.c ****     }
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 27
+
+
+ 656              		.loc 1 825 0
+ 657 0060 C046     		nop
+ 658 0062 BD46     		mov	sp, r7
+ 659 0064 04B0     		add	sp, sp, #16
+ 660              		@ sp needed
+ 661 0066 80BD     		pop	{r7, pc}
+ 662              	.L35:
+ 663              		.align	2
+ 664              	.L34:
+ 665 0068 880F0740 		.word	1074204552
+ 666 006c 800F0740 		.word	1074204544
+ 667 0070 00020740 		.word	1074201088
+ 668 0074 40020740 		.word	1074201152
+ 669 0078 F3070000 		.word	2035
+ 670              		.cfi_endproc
+ 671              	.LFE9:
+ 672              		.size	UART_Pi_UartSendBreakBlocking, .-UART_Pi_UartSendBreakBlocking
+ 673              		.text
+ 674              	.Letext0:
+ 675              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 676              		.file 3 "Generated_Source\\PSoC4\\UART_Pi_PVT.h"
+ 677              		.section	.debug_info,"",%progbits
+ 678              	.Ldebug_info0:
+ 679 0000 83020000 		.4byte	0x283
+ 680 0004 0400     		.2byte	0x4
+ 681 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 682 000a 04       		.byte	0x4
+ 683 000b 01       		.uleb128 0x1
+ 684 000c 47010000 		.4byte	.LASF40
+ 685 0010 0C       		.byte	0xc
+ 686 0011 D3000000 		.4byte	.LASF41
+ 687 0015 3B000000 		.4byte	.LASF42
+ 688 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 689 001d 00000000 		.4byte	0
+ 690 0021 00000000 		.4byte	.Ldebug_line0
+ 691 0025 02       		.uleb128 0x2
+ 692 0026 01       		.byte	0x1
+ 693 0027 06       		.byte	0x6
+ 694 0028 13030000 		.4byte	.LASF0
+ 695 002c 02       		.uleb128 0x2
+ 696 002d 01       		.byte	0x1
+ 697 002e 08       		.byte	0x8
+ 698 002f 1B010000 		.4byte	.LASF1
+ 699 0033 02       		.uleb128 0x2
+ 700 0034 02       		.byte	0x2
+ 701 0035 05       		.byte	0x5
+ 702 0036 B7020000 		.4byte	.LASF2
+ 703 003a 02       		.uleb128 0x2
+ 704 003b 02       		.byte	0x2
+ 705 003c 07       		.byte	0x7
+ 706 003d C0000000 		.4byte	.LASF3
+ 707 0041 02       		.uleb128 0x2
+ 708 0042 04       		.byte	0x4
+ 709 0043 05       		.byte	0x5
+ 710 0044 EB020000 		.4byte	.LASF4
+ 711 0048 02       		.uleb128 0x2
+ 712 0049 04       		.byte	0x4
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 28
+
+
+ 713 004a 07       		.byte	0x7
+ 714 004b 2F010000 		.4byte	.LASF5
+ 715 004f 02       		.uleb128 0x2
+ 716 0050 08       		.byte	0x8
+ 717 0051 05       		.byte	0x5
+ 718 0052 00000000 		.4byte	.LASF6
+ 719 0056 02       		.uleb128 0x2
+ 720 0057 08       		.byte	0x8
+ 721 0058 07       		.byte	0x7
+ 722 0059 54020000 		.4byte	.LASF7
+ 723 005d 03       		.uleb128 0x3
+ 724 005e 04       		.byte	0x4
+ 725 005f 05       		.byte	0x5
+ 726 0060 696E7400 		.ascii	"int\000"
+ 727 0064 02       		.uleb128 0x2
+ 728 0065 04       		.byte	0x4
+ 729 0066 07       		.byte	0x7
+ 730 0067 3F020000 		.4byte	.LASF8
+ 731 006b 04       		.uleb128 0x4
+ 732 006c 41010000 		.4byte	.LASF9
+ 733 0070 02       		.byte	0x2
+ 734 0071 E401     		.2byte	0x1e4
+ 735 0073 2C000000 		.4byte	0x2c
+ 736 0077 04       		.uleb128 0x4
+ 737 0078 31020000 		.4byte	.LASF10
+ 738 007c 02       		.byte	0x2
+ 739 007d E501     		.2byte	0x1e5
+ 740 007f 3A000000 		.4byte	0x3a
+ 741 0083 04       		.uleb128 0x4
+ 742 0084 38020000 		.4byte	.LASF11
+ 743 0088 02       		.byte	0x2
+ 744 0089 E601     		.2byte	0x1e6
+ 745 008b 48000000 		.4byte	0x48
+ 746 008f 02       		.uleb128 0x2
+ 747 0090 04       		.byte	0x4
+ 748 0091 04       		.byte	0x4
+ 749 0092 0B010000 		.4byte	.LASF12
+ 750 0096 02       		.uleb128 0x2
+ 751 0097 08       		.byte	0x8
+ 752 0098 04       		.byte	0x4
+ 753 0099 FC010000 		.4byte	.LASF13
+ 754 009d 04       		.uleb128 0x4
+ 755 009e 29010000 		.4byte	.LASF14
+ 756 00a2 02       		.byte	0x2
+ 757 00a3 F501     		.2byte	0x1f5
+ 758 00a5 A9000000 		.4byte	0xa9
+ 759 00a9 02       		.uleb128 0x2
+ 760 00aa 01       		.byte	0x1
+ 761 00ab 08       		.byte	0x8
+ 762 00ac 88020000 		.4byte	.LASF15
+ 763 00b0 04       		.uleb128 0x4
+ 764 00b1 0E000000 		.4byte	.LASF16
+ 765 00b5 02       		.byte	0x2
+ 766 00b6 9002     		.2byte	0x290
+ 767 00b8 BC000000 		.4byte	0xbc
+ 768 00bc 05       		.uleb128 0x5
+ 769 00bd 83000000 		.4byte	0x83
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 29
+
+
+ 770 00c1 02       		.uleb128 0x2
+ 771 00c2 08       		.byte	0x8
+ 772 00c3 04       		.byte	0x4
+ 773 00c4 07030000 		.4byte	.LASF17
+ 774 00c8 02       		.uleb128 0x2
+ 775 00c9 04       		.byte	0x4
+ 776 00ca 07       		.byte	0x7
+ 777 00cb 74020000 		.4byte	.LASF18
+ 778 00cf 06       		.uleb128 0x6
+ 779 00d0 20020000 		.4byte	.LASF19
+ 780 00d4 01       		.byte	0x1
+ 781 00d5 F7       		.byte	0xf7
+ 782 00d6 00000000 		.4byte	.LFB0
+ 783 00da D8000000 		.4byte	.LFE0-.LFB0
+ 784 00de 01       		.uleb128 0x1
+ 785 00df 9C       		.byte	0x9c
+ 786 00e0 07       		.uleb128 0x7
+ 787 00e1 A9000000 		.4byte	.LASF20
+ 788 00e5 01       		.byte	0x1
+ 789 00e6 3D01     		.2byte	0x13d
+ 790 00e8 00000000 		.4byte	.LFB1
+ 791 00ec 30000000 		.4byte	.LFE1-.LFB1
+ 792 00f0 01       		.uleb128 0x1
+ 793 00f1 9C       		.byte	0x9c
+ 794 00f2 07       		.uleb128 0x7
+ 795 00f3 C1020000 		.4byte	.LASF21
+ 796 00f7 01       		.byte	0x1
+ 797 00f8 7101     		.2byte	0x171
+ 798 00fa 00000000 		.4byte	.LFB2
+ 799 00fe 34000000 		.4byte	.LFE2-.LFB2
+ 800 0102 01       		.uleb128 0x1
+ 801 0103 9C       		.byte	0x9c
+ 802 0104 08       		.uleb128 0x8
+ 803 0105 D2020000 		.4byte	.LASF22
+ 804 0109 01       		.byte	0x1
+ 805 010a B101     		.2byte	0x1b1
+ 806 010c 00000000 		.4byte	.LFB3
+ 807 0110 34000000 		.4byte	.LFE3-.LFB3
+ 808 0114 01       		.uleb128 0x1
+ 809 0115 9C       		.byte	0x9c
+ 810 0116 39010000 		.4byte	0x139
+ 811 011a 09       		.uleb128 0x9
+ 812 011b 4C020000 		.4byte	.LASF24
+ 813 011f 01       		.byte	0x1
+ 814 0120 B101     		.2byte	0x1b1
+ 815 0122 83000000 		.4byte	0x83
+ 816 0126 02       		.uleb128 0x2
+ 817 0127 91       		.byte	0x91
+ 818 0128 6C       		.sleb128 -20
+ 819 0129 0A       		.uleb128 0xa
+ 820 012a FE020000 		.4byte	.LASF26
+ 821 012e 01       		.byte	0x1
+ 822 012f B301     		.2byte	0x1b3
+ 823 0131 83000000 		.4byte	0x83
+ 824 0135 02       		.uleb128 0x2
+ 825 0136 91       		.byte	0x91
+ 826 0137 74       		.sleb128 -12
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 30
+
+
+ 827 0138 00       		.byte	0
+ 828 0139 08       		.uleb128 0x8
+ 829 013a 03020000 		.4byte	.LASF23
+ 830 013e 01       		.byte	0x1
+ 831 013f CA01     		.2byte	0x1ca
+ 832 0141 00000000 		.4byte	.LFB4
+ 833 0145 38000000 		.4byte	.LFE4-.LFB4
+ 834 0149 01       		.uleb128 0x1
+ 835 014a 9C       		.byte	0x9c
+ 836 014b 6E010000 		.4byte	0x16e
+ 837 014f 09       		.uleb128 0x9
+ 838 0150 DC010000 		.4byte	.LASF25
+ 839 0154 01       		.byte	0x1
+ 840 0155 CA01     		.2byte	0x1ca
+ 841 0157 83000000 		.4byte	0x83
+ 842 015b 02       		.uleb128 0x2
+ 843 015c 91       		.byte	0x91
+ 844 015d 6C       		.sleb128 -20
+ 845 015e 0A       		.uleb128 0xa
+ 846 015f FE020000 		.4byte	.LASF26
+ 847 0163 01       		.byte	0x1
+ 848 0164 CC01     		.2byte	0x1cc
+ 849 0166 83000000 		.4byte	0x83
+ 850 016a 02       		.uleb128 0x2
+ 851 016b 91       		.byte	0x91
+ 852 016c 74       		.sleb128 -12
+ 853 016d 00       		.byte	0
+ 854 016e 0B       		.uleb128 0xb
+ 855 016f E8010000 		.4byte	.LASF28
+ 856 0173 01       		.byte	0x1
+ 857 0174 F201     		.2byte	0x1f2
+ 858 0176 83000000 		.4byte	0x83
+ 859 017a 00000000 		.4byte	.LFB5
+ 860 017e 40000000 		.4byte	.LFE5-.LFB5
+ 861 0182 01       		.uleb128 0x1
+ 862 0183 9C       		.byte	0x9c
+ 863 0184 98010000 		.4byte	0x198
+ 864 0188 0A       		.uleb128 0xa
+ 865 0189 D5010000 		.4byte	.LASF27
+ 866 018d 01       		.byte	0x1
+ 867 018e F401     		.2byte	0x1f4
+ 868 0190 83000000 		.4byte	0x83
+ 869 0194 02       		.uleb128 0x2
+ 870 0195 91       		.byte	0x91
+ 871 0196 74       		.sleb128 -12
+ 872 0197 00       		.byte	0
+ 873 0198 0B       		.uleb128 0xb
+ 874 0199 14000000 		.4byte	.LASF29
+ 875 019d 01       		.byte	0x1
+ 876 019e 2402     		.2byte	0x224
+ 877 01a0 83000000 		.4byte	0x83
+ 878 01a4 00000000 		.4byte	.LFB6
+ 879 01a8 50000000 		.4byte	.LFE6-.LFB6
+ 880 01ac 01       		.uleb128 0x1
+ 881 01ad 9C       		.byte	0x9c
+ 882 01ae D1010000 		.4byte	0x1d1
+ 883 01b2 0A       		.uleb128 0xa
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 31
+
+
+ 884 01b3 D5010000 		.4byte	.LASF27
+ 885 01b7 01       		.byte	0x1
+ 886 01b8 2602     		.2byte	0x226
+ 887 01ba 83000000 		.4byte	0x83
+ 888 01be 02       		.uleb128 0x2
+ 889 01bf 91       		.byte	0x91
+ 890 01c0 74       		.sleb128 -12
+ 891 01c1 0A       		.uleb128 0xa
+ 892 01c2 F4020000 		.4byte	.LASF30
+ 893 01c6 01       		.byte	0x1
+ 894 01c7 2702     		.2byte	0x227
+ 895 01c9 83000000 		.4byte	0x83
+ 896 01cd 02       		.uleb128 0x2
+ 897 01ce 91       		.byte	0x91
+ 898 01cf 70       		.sleb128 -16
+ 899 01d0 00       		.byte	0
+ 900 01d1 0C       		.uleb128 0xc
+ 901 01d2 A1020000 		.4byte	.LASF31
+ 902 01d6 01       		.byte	0x1
+ 903 01d7 A802     		.2byte	0x2a8
+ 904 01d9 00000000 		.4byte	.LFB7
+ 905 01dd 36000000 		.4byte	.LFE7-.LFB7
+ 906 01e1 01       		.uleb128 0x1
+ 907 01e2 9C       		.byte	0x9c
+ 908 01e3 06020000 		.4byte	0x206
+ 909 01e7 09       		.uleb128 0x9
+ 910 01e8 F9000000 		.4byte	.LASF32
+ 911 01ec 01       		.byte	0x1
+ 912 01ed A802     		.2byte	0x2a8
+ 913 01ef 06020000 		.4byte	0x206
+ 914 01f3 02       		.uleb128 0x2
+ 915 01f4 91       		.byte	0x91
+ 916 01f5 6C       		.sleb128 -20
+ 917 01f6 0A       		.uleb128 0xa
+ 918 01f7 6B020000 		.4byte	.LASF33
+ 919 01fb 01       		.byte	0x1
+ 920 01fc AA02     		.2byte	0x2aa
+ 921 01fe 83000000 		.4byte	0x83
+ 922 0202 02       		.uleb128 0x2
+ 923 0203 91       		.byte	0x91
+ 924 0204 74       		.sleb128 -12
+ 925 0205 00       		.byte	0
+ 926 0206 0D       		.uleb128 0xd
+ 927 0207 04       		.byte	0x4
+ 928 0208 0C020000 		.4byte	0x20c
+ 929 020c 0E       		.uleb128 0xe
+ 930 020d 9D000000 		.4byte	0x9d
+ 931 0211 0C       		.uleb128 0xc
+ 932 0212 8D020000 		.4byte	.LASF34
+ 933 0216 01       		.byte	0x1
+ 934 0217 C302     		.2byte	0x2c3
+ 935 0219 00000000 		.4byte	.LFB8
+ 936 021d 24000000 		.4byte	.LFE8-.LFB8
+ 937 0221 01       		.uleb128 0x1
+ 938 0222 9C       		.byte	0x9c
+ 939 0223 37020000 		.4byte	0x237
+ 940 0227 09       		.uleb128 0x9
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 32
+
+
+ 941 0228 7D020000 		.4byte	.LASF35
+ 942 022c 01       		.byte	0x1
+ 943 022d C302     		.2byte	0x2c3
+ 944 022f 83000000 		.4byte	0x83
+ 945 0233 02       		.uleb128 0x2
+ 946 0234 91       		.byte	0x91
+ 947 0235 74       		.sleb128 -12
+ 948 0236 00       		.byte	0
+ 949 0237 08       		.uleb128 0x8
+ 950 0238 29030000 		.4byte	.LASF36
+ 951 023c 01       		.byte	0x1
+ 952 023d 1A03     		.2byte	0x31a
+ 953 023f 00000000 		.4byte	.LFB9
+ 954 0243 7C000000 		.4byte	.LFE9-.LFB9
+ 955 0247 01       		.uleb128 0x1
+ 956 0248 9C       		.byte	0x9c
+ 957 0249 7B020000 		.4byte	0x27b
+ 958 024d 09       		.uleb128 0x9
+ 959 024e 00010000 		.4byte	.LASF37
+ 960 0252 01       		.byte	0x1
+ 961 0253 1A03     		.2byte	0x31a
+ 962 0255 83000000 		.4byte	0x83
+ 963 0259 02       		.uleb128 0x2
+ 964 025a 91       		.byte	0x91
+ 965 025b 6C       		.sleb128 -20
+ 966 025c 0A       		.uleb128 0xa
+ 967 025d 1F030000 		.4byte	.LASF38
+ 968 0261 01       		.byte	0x1
+ 969 0262 1C03     		.2byte	0x31c
+ 970 0264 83000000 		.4byte	0x83
+ 971 0268 02       		.uleb128 0x2
+ 972 0269 91       		.byte	0x91
+ 973 026a 70       		.sleb128 -16
+ 974 026b 0A       		.uleb128 0xa
+ 975 026c 11010000 		.4byte	.LASF39
+ 976 0270 01       		.byte	0x1
+ 977 0271 1D03     		.2byte	0x31d
+ 978 0273 83000000 		.4byte	0x83
+ 979 0277 02       		.uleb128 0x2
+ 980 0278 91       		.byte	0x91
+ 981 0279 74       		.sleb128 -12
+ 982 027a 00       		.byte	0
+ 983 027b 0F       		.uleb128 0xf
+ 984 027c 28000000 		.4byte	.LASF43
+ 985 0280 03       		.byte	0x3
+ 986 0281 5B       		.byte	0x5b
+ 987 0282 77000000 		.4byte	0x77
+ 988 0286 00       		.byte	0
+ 989              		.section	.debug_abbrev,"",%progbits
+ 990              	.Ldebug_abbrev0:
+ 991 0000 01       		.uleb128 0x1
+ 992 0001 11       		.uleb128 0x11
+ 993 0002 01       		.byte	0x1
+ 994 0003 25       		.uleb128 0x25
+ 995 0004 0E       		.uleb128 0xe
+ 996 0005 13       		.uleb128 0x13
+ 997 0006 0B       		.uleb128 0xb
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 33
+
+
+ 998 0007 03       		.uleb128 0x3
+ 999 0008 0E       		.uleb128 0xe
+ 1000 0009 1B       		.uleb128 0x1b
+ 1001 000a 0E       		.uleb128 0xe
+ 1002 000b 55       		.uleb128 0x55
+ 1003 000c 17       		.uleb128 0x17
+ 1004 000d 11       		.uleb128 0x11
+ 1005 000e 01       		.uleb128 0x1
+ 1006 000f 10       		.uleb128 0x10
+ 1007 0010 17       		.uleb128 0x17
+ 1008 0011 00       		.byte	0
+ 1009 0012 00       		.byte	0
+ 1010 0013 02       		.uleb128 0x2
+ 1011 0014 24       		.uleb128 0x24
+ 1012 0015 00       		.byte	0
+ 1013 0016 0B       		.uleb128 0xb
+ 1014 0017 0B       		.uleb128 0xb
+ 1015 0018 3E       		.uleb128 0x3e
+ 1016 0019 0B       		.uleb128 0xb
+ 1017 001a 03       		.uleb128 0x3
+ 1018 001b 0E       		.uleb128 0xe
+ 1019 001c 00       		.byte	0
+ 1020 001d 00       		.byte	0
+ 1021 001e 03       		.uleb128 0x3
+ 1022 001f 24       		.uleb128 0x24
+ 1023 0020 00       		.byte	0
+ 1024 0021 0B       		.uleb128 0xb
+ 1025 0022 0B       		.uleb128 0xb
+ 1026 0023 3E       		.uleb128 0x3e
+ 1027 0024 0B       		.uleb128 0xb
+ 1028 0025 03       		.uleb128 0x3
+ 1029 0026 08       		.uleb128 0x8
+ 1030 0027 00       		.byte	0
+ 1031 0028 00       		.byte	0
+ 1032 0029 04       		.uleb128 0x4
+ 1033 002a 16       		.uleb128 0x16
+ 1034 002b 00       		.byte	0
+ 1035 002c 03       		.uleb128 0x3
+ 1036 002d 0E       		.uleb128 0xe
+ 1037 002e 3A       		.uleb128 0x3a
+ 1038 002f 0B       		.uleb128 0xb
+ 1039 0030 3B       		.uleb128 0x3b
+ 1040 0031 05       		.uleb128 0x5
+ 1041 0032 49       		.uleb128 0x49
+ 1042 0033 13       		.uleb128 0x13
+ 1043 0034 00       		.byte	0
+ 1044 0035 00       		.byte	0
+ 1045 0036 05       		.uleb128 0x5
+ 1046 0037 35       		.uleb128 0x35
+ 1047 0038 00       		.byte	0
+ 1048 0039 49       		.uleb128 0x49
+ 1049 003a 13       		.uleb128 0x13
+ 1050 003b 00       		.byte	0
+ 1051 003c 00       		.byte	0
+ 1052 003d 06       		.uleb128 0x6
+ 1053 003e 2E       		.uleb128 0x2e
+ 1054 003f 00       		.byte	0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 34
+
+
+ 1055 0040 3F       		.uleb128 0x3f
+ 1056 0041 19       		.uleb128 0x19
+ 1057 0042 03       		.uleb128 0x3
+ 1058 0043 0E       		.uleb128 0xe
+ 1059 0044 3A       		.uleb128 0x3a
+ 1060 0045 0B       		.uleb128 0xb
+ 1061 0046 3B       		.uleb128 0x3b
+ 1062 0047 0B       		.uleb128 0xb
+ 1063 0048 27       		.uleb128 0x27
+ 1064 0049 19       		.uleb128 0x19
+ 1065 004a 11       		.uleb128 0x11
+ 1066 004b 01       		.uleb128 0x1
+ 1067 004c 12       		.uleb128 0x12
+ 1068 004d 06       		.uleb128 0x6
+ 1069 004e 40       		.uleb128 0x40
+ 1070 004f 18       		.uleb128 0x18
+ 1071 0050 9642     		.uleb128 0x2116
+ 1072 0052 19       		.uleb128 0x19
+ 1073 0053 00       		.byte	0
+ 1074 0054 00       		.byte	0
+ 1075 0055 07       		.uleb128 0x7
+ 1076 0056 2E       		.uleb128 0x2e
+ 1077 0057 00       		.byte	0
+ 1078 0058 3F       		.uleb128 0x3f
+ 1079 0059 19       		.uleb128 0x19
+ 1080 005a 03       		.uleb128 0x3
+ 1081 005b 0E       		.uleb128 0xe
+ 1082 005c 3A       		.uleb128 0x3a
+ 1083 005d 0B       		.uleb128 0xb
+ 1084 005e 3B       		.uleb128 0x3b
+ 1085 005f 05       		.uleb128 0x5
+ 1086 0060 27       		.uleb128 0x27
+ 1087 0061 19       		.uleb128 0x19
+ 1088 0062 11       		.uleb128 0x11
+ 1089 0063 01       		.uleb128 0x1
+ 1090 0064 12       		.uleb128 0x12
+ 1091 0065 06       		.uleb128 0x6
+ 1092 0066 40       		.uleb128 0x40
+ 1093 0067 18       		.uleb128 0x18
+ 1094 0068 9742     		.uleb128 0x2117
+ 1095 006a 19       		.uleb128 0x19
+ 1096 006b 00       		.byte	0
+ 1097 006c 00       		.byte	0
+ 1098 006d 08       		.uleb128 0x8
+ 1099 006e 2E       		.uleb128 0x2e
+ 1100 006f 01       		.byte	0x1
+ 1101 0070 3F       		.uleb128 0x3f
+ 1102 0071 19       		.uleb128 0x19
+ 1103 0072 03       		.uleb128 0x3
+ 1104 0073 0E       		.uleb128 0xe
+ 1105 0074 3A       		.uleb128 0x3a
+ 1106 0075 0B       		.uleb128 0xb
+ 1107 0076 3B       		.uleb128 0x3b
+ 1108 0077 05       		.uleb128 0x5
+ 1109 0078 27       		.uleb128 0x27
+ 1110 0079 19       		.uleb128 0x19
+ 1111 007a 11       		.uleb128 0x11
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 35
+
+
+ 1112 007b 01       		.uleb128 0x1
+ 1113 007c 12       		.uleb128 0x12
+ 1114 007d 06       		.uleb128 0x6
+ 1115 007e 40       		.uleb128 0x40
+ 1116 007f 18       		.uleb128 0x18
+ 1117 0080 9742     		.uleb128 0x2117
+ 1118 0082 19       		.uleb128 0x19
+ 1119 0083 01       		.uleb128 0x1
+ 1120 0084 13       		.uleb128 0x13
+ 1121 0085 00       		.byte	0
+ 1122 0086 00       		.byte	0
+ 1123 0087 09       		.uleb128 0x9
+ 1124 0088 05       		.uleb128 0x5
+ 1125 0089 00       		.byte	0
+ 1126 008a 03       		.uleb128 0x3
+ 1127 008b 0E       		.uleb128 0xe
+ 1128 008c 3A       		.uleb128 0x3a
+ 1129 008d 0B       		.uleb128 0xb
+ 1130 008e 3B       		.uleb128 0x3b
+ 1131 008f 05       		.uleb128 0x5
+ 1132 0090 49       		.uleb128 0x49
+ 1133 0091 13       		.uleb128 0x13
+ 1134 0092 02       		.uleb128 0x2
+ 1135 0093 18       		.uleb128 0x18
+ 1136 0094 00       		.byte	0
+ 1137 0095 00       		.byte	0
+ 1138 0096 0A       		.uleb128 0xa
+ 1139 0097 34       		.uleb128 0x34
+ 1140 0098 00       		.byte	0
+ 1141 0099 03       		.uleb128 0x3
+ 1142 009a 0E       		.uleb128 0xe
+ 1143 009b 3A       		.uleb128 0x3a
+ 1144 009c 0B       		.uleb128 0xb
+ 1145 009d 3B       		.uleb128 0x3b
+ 1146 009e 05       		.uleb128 0x5
+ 1147 009f 49       		.uleb128 0x49
+ 1148 00a0 13       		.uleb128 0x13
+ 1149 00a1 02       		.uleb128 0x2
+ 1150 00a2 18       		.uleb128 0x18
+ 1151 00a3 00       		.byte	0
+ 1152 00a4 00       		.byte	0
+ 1153 00a5 0B       		.uleb128 0xb
+ 1154 00a6 2E       		.uleb128 0x2e
+ 1155 00a7 01       		.byte	0x1
+ 1156 00a8 3F       		.uleb128 0x3f
+ 1157 00a9 19       		.uleb128 0x19
+ 1158 00aa 03       		.uleb128 0x3
+ 1159 00ab 0E       		.uleb128 0xe
+ 1160 00ac 3A       		.uleb128 0x3a
+ 1161 00ad 0B       		.uleb128 0xb
+ 1162 00ae 3B       		.uleb128 0x3b
+ 1163 00af 05       		.uleb128 0x5
+ 1164 00b0 27       		.uleb128 0x27
+ 1165 00b1 19       		.uleb128 0x19
+ 1166 00b2 49       		.uleb128 0x49
+ 1167 00b3 13       		.uleb128 0x13
+ 1168 00b4 11       		.uleb128 0x11
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 36
+
+
+ 1169 00b5 01       		.uleb128 0x1
+ 1170 00b6 12       		.uleb128 0x12
+ 1171 00b7 06       		.uleb128 0x6
+ 1172 00b8 40       		.uleb128 0x40
+ 1173 00b9 18       		.uleb128 0x18
+ 1174 00ba 9642     		.uleb128 0x2116
+ 1175 00bc 19       		.uleb128 0x19
+ 1176 00bd 01       		.uleb128 0x1
+ 1177 00be 13       		.uleb128 0x13
+ 1178 00bf 00       		.byte	0
+ 1179 00c0 00       		.byte	0
+ 1180 00c1 0C       		.uleb128 0xc
+ 1181 00c2 2E       		.uleb128 0x2e
+ 1182 00c3 01       		.byte	0x1
+ 1183 00c4 3F       		.uleb128 0x3f
+ 1184 00c5 19       		.uleb128 0x19
+ 1185 00c6 03       		.uleb128 0x3
+ 1186 00c7 0E       		.uleb128 0xe
+ 1187 00c8 3A       		.uleb128 0x3a
+ 1188 00c9 0B       		.uleb128 0xb
+ 1189 00ca 3B       		.uleb128 0x3b
+ 1190 00cb 05       		.uleb128 0x5
+ 1191 00cc 27       		.uleb128 0x27
+ 1192 00cd 19       		.uleb128 0x19
+ 1193 00ce 11       		.uleb128 0x11
+ 1194 00cf 01       		.uleb128 0x1
+ 1195 00d0 12       		.uleb128 0x12
+ 1196 00d1 06       		.uleb128 0x6
+ 1197 00d2 40       		.uleb128 0x40
+ 1198 00d3 18       		.uleb128 0x18
+ 1199 00d4 9642     		.uleb128 0x2116
+ 1200 00d6 19       		.uleb128 0x19
+ 1201 00d7 01       		.uleb128 0x1
+ 1202 00d8 13       		.uleb128 0x13
+ 1203 00d9 00       		.byte	0
+ 1204 00da 00       		.byte	0
+ 1205 00db 0D       		.uleb128 0xd
+ 1206 00dc 0F       		.uleb128 0xf
+ 1207 00dd 00       		.byte	0
+ 1208 00de 0B       		.uleb128 0xb
+ 1209 00df 0B       		.uleb128 0xb
+ 1210 00e0 49       		.uleb128 0x49
+ 1211 00e1 13       		.uleb128 0x13
+ 1212 00e2 00       		.byte	0
+ 1213 00e3 00       		.byte	0
+ 1214 00e4 0E       		.uleb128 0xe
+ 1215 00e5 26       		.uleb128 0x26
+ 1216 00e6 00       		.byte	0
+ 1217 00e7 49       		.uleb128 0x49
+ 1218 00e8 13       		.uleb128 0x13
+ 1219 00e9 00       		.byte	0
+ 1220 00ea 00       		.byte	0
+ 1221 00eb 0F       		.uleb128 0xf
+ 1222 00ec 34       		.uleb128 0x34
+ 1223 00ed 00       		.byte	0
+ 1224 00ee 03       		.uleb128 0x3
+ 1225 00ef 0E       		.uleb128 0xe
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 37
+
+
+ 1226 00f0 3A       		.uleb128 0x3a
+ 1227 00f1 0B       		.uleb128 0xb
+ 1228 00f2 3B       		.uleb128 0x3b
+ 1229 00f3 0B       		.uleb128 0xb
+ 1230 00f4 49       		.uleb128 0x49
+ 1231 00f5 13       		.uleb128 0x13
+ 1232 00f6 3F       		.uleb128 0x3f
+ 1233 00f7 19       		.uleb128 0x19
+ 1234 00f8 3C       		.uleb128 0x3c
+ 1235 00f9 19       		.uleb128 0x19
+ 1236 00fa 00       		.byte	0
+ 1237 00fb 00       		.byte	0
+ 1238 00fc 00       		.byte	0
+ 1239              		.section	.debug_aranges,"",%progbits
+ 1240 0000 64000000 		.4byte	0x64
+ 1241 0004 0200     		.2byte	0x2
+ 1242 0006 00000000 		.4byte	.Ldebug_info0
+ 1243 000a 04       		.byte	0x4
+ 1244 000b 00       		.byte	0
+ 1245 000c 0000     		.2byte	0
+ 1246 000e 0000     		.2byte	0
+ 1247 0010 00000000 		.4byte	.LFB0
+ 1248 0014 D8000000 		.4byte	.LFE0-.LFB0
+ 1249 0018 00000000 		.4byte	.LFB1
+ 1250 001c 30000000 		.4byte	.LFE1-.LFB1
+ 1251 0020 00000000 		.4byte	.LFB2
+ 1252 0024 34000000 		.4byte	.LFE2-.LFB2
+ 1253 0028 00000000 		.4byte	.LFB3
+ 1254 002c 34000000 		.4byte	.LFE3-.LFB3
+ 1255 0030 00000000 		.4byte	.LFB4
+ 1256 0034 38000000 		.4byte	.LFE4-.LFB4
+ 1257 0038 00000000 		.4byte	.LFB5
+ 1258 003c 40000000 		.4byte	.LFE5-.LFB5
+ 1259 0040 00000000 		.4byte	.LFB6
+ 1260 0044 50000000 		.4byte	.LFE6-.LFB6
+ 1261 0048 00000000 		.4byte	.LFB7
+ 1262 004c 36000000 		.4byte	.LFE7-.LFB7
+ 1263 0050 00000000 		.4byte	.LFB8
+ 1264 0054 24000000 		.4byte	.LFE8-.LFB8
+ 1265 0058 00000000 		.4byte	.LFB9
+ 1266 005c 7C000000 		.4byte	.LFE9-.LFB9
+ 1267 0060 00000000 		.4byte	0
+ 1268 0064 00000000 		.4byte	0
+ 1269              		.section	.debug_ranges,"",%progbits
+ 1270              	.Ldebug_ranges0:
+ 1271 0000 00000000 		.4byte	.LFB0
+ 1272 0004 D8000000 		.4byte	.LFE0
+ 1273 0008 00000000 		.4byte	.LFB1
+ 1274 000c 30000000 		.4byte	.LFE1
+ 1275 0010 00000000 		.4byte	.LFB2
+ 1276 0014 34000000 		.4byte	.LFE2
+ 1277 0018 00000000 		.4byte	.LFB3
+ 1278 001c 34000000 		.4byte	.LFE3
+ 1279 0020 00000000 		.4byte	.LFB4
+ 1280 0024 38000000 		.4byte	.LFE4
+ 1281 0028 00000000 		.4byte	.LFB5
+ 1282 002c 40000000 		.4byte	.LFE5
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 38
+
+
+ 1283 0030 00000000 		.4byte	.LFB6
+ 1284 0034 50000000 		.4byte	.LFE6
+ 1285 0038 00000000 		.4byte	.LFB7
+ 1286 003c 36000000 		.4byte	.LFE7
+ 1287 0040 00000000 		.4byte	.LFB8
+ 1288 0044 24000000 		.4byte	.LFE8
+ 1289 0048 00000000 		.4byte	.LFB9
+ 1290 004c 7C000000 		.4byte	.LFE9
+ 1291 0050 00000000 		.4byte	0
+ 1292 0054 00000000 		.4byte	0
+ 1293              		.section	.debug_line,"",%progbits
+ 1294              	.Ldebug_line0:
+ 1295 0000 64010000 		.section	.debug_str,"MS",%progbits,1
+ 1295      02005A00 
+ 1295      00000201 
+ 1295      FB0E0D00 
+ 1295      01010101 
+ 1296              	.LASF6:
+ 1297 0000 6C6F6E67 		.ascii	"long long int\000"
+ 1297      206C6F6E 
+ 1297      6720696E 
+ 1297      7400
+ 1298              	.LASF16:
+ 1299 000e 72656733 		.ascii	"reg32\000"
+ 1299      3200
+ 1300              	.LASF29:
+ 1301 0014 55415254 		.ascii	"UART_Pi_UartGetByte\000"
+ 1301      5F50695F 
+ 1301      55617274 
+ 1301      47657442 
+ 1301      79746500 
+ 1302              	.LASF43:
+ 1303 0028 55415254 		.ascii	"UART_Pi_IntrTxMask\000"
+ 1303      5F50695F 
+ 1303      496E7472 
+ 1303      54784D61 
+ 1303      736B00
+ 1304              	.LASF42:
+ 1305 003b 433A5C55 		.ascii	"C:\\Users\\Andres Elizondo\\Documents\\PSoC Creator"
+ 1305      73657273 
+ 1305      5C416E64 
+ 1305      72657320 
+ 1305      456C697A 
+ 1306 006a 5C53656E 		.ascii	"\\Sensored BLDC Motor Control\\Sensored BLDC Motor "
+ 1306      736F7265 
+ 1306      6420424C 
+ 1306      4443204D 
+ 1306      6F746F72 
+ 1307 009b 436F6E74 		.ascii	"Control.cydsn\000"
+ 1307      726F6C2E 
+ 1307      63796473 
+ 1307      6E00
+ 1308              	.LASF20:
+ 1309 00a9 55415254 		.ascii	"UART_Pi_UartPostEnable\000"
+ 1309      5F50695F 
+ 1309      55617274 
+ 1309      506F7374 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 39
+
+
+ 1309      456E6162 
+ 1310              	.LASF3:
+ 1311 00c0 73686F72 		.ascii	"short unsigned int\000"
+ 1311      7420756E 
+ 1311      7369676E 
+ 1311      65642069 
+ 1311      6E7400
+ 1312              	.LASF41:
+ 1313 00d3 47656E65 		.ascii	"Generated_Source\\PSoC4\\UART_Pi_UART.c\000"
+ 1313      72617465 
+ 1313      645F536F 
+ 1313      75726365 
+ 1313      5C50536F 
+ 1314              	.LASF32:
+ 1315 00f9 73747269 		.ascii	"string\000"
+ 1315      6E6700
+ 1316              	.LASF37:
+ 1317 0100 62726561 		.ascii	"breakWidth\000"
+ 1317      6B576964 
+ 1317      746800
+ 1318              	.LASF12:
+ 1319 010b 666C6F61 		.ascii	"float\000"
+ 1319      7400
+ 1320              	.LASF39:
+ 1321 0111 7478496E 		.ascii	"txIntrReg\000"
+ 1321      74725265 
+ 1321      6700
+ 1322              	.LASF1:
+ 1323 011b 756E7369 		.ascii	"unsigned char\000"
+ 1323      676E6564 
+ 1323      20636861 
+ 1323      7200
+ 1324              	.LASF14:
+ 1325 0129 63686172 		.ascii	"char8\000"
+ 1325      3800
+ 1326              	.LASF5:
+ 1327 012f 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1327      20756E73 
+ 1327      69676E65 
+ 1327      6420696E 
+ 1327      7400
+ 1328              	.LASF9:
+ 1329 0141 75696E74 		.ascii	"uint8\000"
+ 1329      3800
+ 1330              	.LASF40:
+ 1331 0147 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1331      43313120 
+ 1331      352E342E 
+ 1331      31203230 
+ 1331      31363036 
+ 1332 017a 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0 -mthumb -g -O"
+ 1332      20726576 
+ 1332      6973696F 
+ 1332      6E203233 
+ 1332      37373135 
+ 1333 01ad 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1333      66756E63 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 40
+
+
+ 1333      74696F6E 
+ 1333      2D736563 
+ 1333      74696F6E 
+ 1334              	.LASF27:
+ 1335 01d5 72784461 		.ascii	"rxData\000"
+ 1335      746100
+ 1336              	.LASF25:
+ 1337 01dc 61646472 		.ascii	"addressMask\000"
+ 1337      6573734D 
+ 1337      61736B00 
+ 1338              	.LASF28:
+ 1339 01e8 55415254 		.ascii	"UART_Pi_UartGetChar\000"
+ 1339      5F50695F 
+ 1339      55617274 
+ 1339      47657443 
+ 1339      68617200 
+ 1340              	.LASF13:
+ 1341 01fc 646F7562 		.ascii	"double\000"
+ 1341      6C6500
+ 1342              	.LASF23:
+ 1343 0203 55415254 		.ascii	"UART_Pi_UartSetRxAddressMask\000"
+ 1343      5F50695F 
+ 1343      55617274 
+ 1343      53657452 
+ 1343      78416464 
+ 1344              	.LASF19:
+ 1345 0220 55415254 		.ascii	"UART_Pi_UartInit\000"
+ 1345      5F50695F 
+ 1345      55617274 
+ 1345      496E6974 
+ 1345      00
+ 1346              	.LASF10:
+ 1347 0231 75696E74 		.ascii	"uint16\000"
+ 1347      313600
+ 1348              	.LASF11:
+ 1349 0238 75696E74 		.ascii	"uint32\000"
+ 1349      333200
+ 1350              	.LASF8:
+ 1351 023f 756E7369 		.ascii	"unsigned int\000"
+ 1351      676E6564 
+ 1351      20696E74 
+ 1351      00
+ 1352              	.LASF24:
+ 1353 024c 61646472 		.ascii	"address\000"
+ 1353      65737300 
+ 1354              	.LASF7:
+ 1355 0254 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1355      206C6F6E 
+ 1355      6720756E 
+ 1355      7369676E 
+ 1355      65642069 
+ 1356              	.LASF33:
+ 1357 026b 62756649 		.ascii	"bufIndex\000"
+ 1357      6E646578 
+ 1357      00
+ 1358              	.LASF18:
+ 1359 0274 73697A65 		.ascii	"sizetype\000"
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 41
+
+
+ 1359      74797065 
+ 1359      00
+ 1360              	.LASF35:
+ 1361 027d 74784461 		.ascii	"txDataByte\000"
+ 1361      74614279 
+ 1361      746500
+ 1362              	.LASF15:
+ 1363 0288 63686172 		.ascii	"char\000"
+ 1363      00
+ 1364              	.LASF34:
+ 1365 028d 55415254 		.ascii	"UART_Pi_UartPutCRLF\000"
+ 1365      5F50695F 
+ 1365      55617274 
+ 1365      50757443 
+ 1365      524C4600 
+ 1366              	.LASF31:
+ 1367 02a1 55415254 		.ascii	"UART_Pi_UartPutString\000"
+ 1367      5F50695F 
+ 1367      55617274 
+ 1367      50757453 
+ 1367      7472696E 
+ 1368              	.LASF2:
+ 1369 02b7 73686F72 		.ascii	"short int\000"
+ 1369      7420696E 
+ 1369      7400
+ 1370              	.LASF21:
+ 1371 02c1 55415254 		.ascii	"UART_Pi_UartStop\000"
+ 1371      5F50695F 
+ 1371      55617274 
+ 1371      53746F70 
+ 1371      00
+ 1372              	.LASF22:
+ 1373 02d2 55415254 		.ascii	"UART_Pi_UartSetRxAddress\000"
+ 1373      5F50695F 
+ 1373      55617274 
+ 1373      53657452 
+ 1373      78416464 
+ 1374              	.LASF4:
+ 1375 02eb 6C6F6E67 		.ascii	"long int\000"
+ 1375      20696E74 
+ 1375      00
+ 1376              	.LASF30:
+ 1377 02f4 746D7053 		.ascii	"tmpStatus\000"
+ 1377      74617475 
+ 1377      7300
+ 1378              	.LASF26:
+ 1379 02fe 6D617463 		.ascii	"matchReg\000"
+ 1379      68526567 
+ 1379      00
+ 1380              	.LASF17:
+ 1381 0307 6C6F6E67 		.ascii	"long double\000"
+ 1381      20646F75 
+ 1381      626C6500 
+ 1382              	.LASF0:
+ 1383 0313 7369676E 		.ascii	"signed char\000"
+ 1383      65642063 
+ 1383      68617200 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccmr0GAP.s 			page 42
+
+
+ 1384              	.LASF38:
+ 1385 031f 74784374 		.ascii	"txCtrlReg\000"
+ 1385      726C5265 
+ 1385      6700
+ 1386              	.LASF36:
+ 1387 0329 55415254 		.ascii	"UART_Pi_UartSendBreakBlocking\000"
+ 1387      5F50695F 
+ 1387      55617274 
+ 1387      53656E64 
+ 1387      42726561 
+ 1388              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

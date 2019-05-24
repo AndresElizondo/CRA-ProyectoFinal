@@ -1,0 +1,572 @@
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccCdCdCz.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"LPComp_OC_PM.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.LPComp_OC_SaveConfig,"ax",%progbits
+  20              		.align	2
+  21              		.global	LPComp_OC_SaveConfig
+  22              		.code	16
+  23              		.thumb_func
+  24              		.type	LPComp_OC_SaveConfig, %function
+  25              	LPComp_OC_SaveConfig:
+  26              	.LFB0:
+  27              		.file 1 "Generated_Source\\PSoC4\\LPComp_OC_PM.c"
+   1:Generated_Source\PSoC4/LPComp_OC_PM.c **** /*******************************************************************************
+   2:Generated_Source\PSoC4/LPComp_OC_PM.c **** * File Name: LPComp_OC.c
+   3:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Version 2.20
+   4:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+   5:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Description:
+   6:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  This file provides the power management source code APIs for the
+   7:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  Analog Low Power Comparator component.
+   8:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+   9:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Note:
+  10:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  None
+  11:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  12:Generated_Source\PSoC4/LPComp_OC_PM.c **** ********************************************************************************
+  13:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Copyright 2013-2016, Cypress Semiconductor Corporation.  All rights reserved.
+  14:Generated_Source\PSoC4/LPComp_OC_PM.c **** * You may use this file only in accordance with the license, terms, conditions,
+  15:Generated_Source\PSoC4/LPComp_OC_PM.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  16:Generated_Source\PSoC4/LPComp_OC_PM.c **** * the software package with which this file was provided.
+  17:Generated_Source\PSoC4/LPComp_OC_PM.c **** *******************************************************************************/
+  18:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  19:Generated_Source\PSoC4/LPComp_OC_PM.c **** #include "LPComp_OC.h"
+  20:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  21:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  22:Generated_Source\PSoC4/LPComp_OC_PM.c **** /*******************************************************************************
+  23:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Function Name: LPComp_OC_SaveConfig
+  24:Generated_Source\PSoC4/LPComp_OC_PM.c **** ********************************************************************************
+  25:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  26:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Summary:
+  27:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  Empty function. Included for consistency with other components.
+  28:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  29:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Parameters:
+  30:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  None
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccCdCdCz.s 			page 2
+
+
+  31:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  32:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Return:
+  33:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  None
+  34:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  35:Generated_Source\PSoC4/LPComp_OC_PM.c **** *******************************************************************************/
+  36:Generated_Source\PSoC4/LPComp_OC_PM.c **** void LPComp_OC_SaveConfig(void)
+  37:Generated_Source\PSoC4/LPComp_OC_PM.c **** {
+  28              		.loc 1 37 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32 0000 80B5     		push	{r7, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 7, -8
+  35              		.cfi_offset 14, -4
+  36 0002 00AF     		add	r7, sp, #0
+  37              		.cfi_def_cfa_register 7
+  38:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  39:Generated_Source\PSoC4/LPComp_OC_PM.c **** }
+  38              		.loc 1 39 0
+  39 0004 C046     		nop
+  40 0006 BD46     		mov	sp, r7
+  41              		@ sp needed
+  42 0008 80BD     		pop	{r7, pc}
+  43              		.cfi_endproc
+  44              	.LFE0:
+  45              		.size	LPComp_OC_SaveConfig, .-LPComp_OC_SaveConfig
+  46 000a C046     		.section	.text.LPComp_OC_RestoreConfig,"ax",%progbits
+  47              		.align	2
+  48              		.global	LPComp_OC_RestoreConfig
+  49              		.code	16
+  50              		.thumb_func
+  51              		.type	LPComp_OC_RestoreConfig, %function
+  52              	LPComp_OC_RestoreConfig:
+  53              	.LFB1:
+  40:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  41:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  42:Generated_Source\PSoC4/LPComp_OC_PM.c **** /*******************************************************************************
+  43:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Function Name: LPComp_OC_RestoreConfig
+  44:Generated_Source\PSoC4/LPComp_OC_PM.c **** ********************************************************************************
+  45:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  46:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Summary:
+  47:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  Empty function. Included for consistency with other components.
+  48:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  49:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Parameters:
+  50:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  None
+  51:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  52:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Return:
+  53:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  None
+  54:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  55:Generated_Source\PSoC4/LPComp_OC_PM.c **** ********************************************************************************/
+  56:Generated_Source\PSoC4/LPComp_OC_PM.c **** void LPComp_OC_RestoreConfig(void)
+  57:Generated_Source\PSoC4/LPComp_OC_PM.c **** {
+  54              		.loc 1 57 0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 0
+  57              		@ frame_needed = 1, uses_anonymous_args = 0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccCdCdCz.s 			page 3
+
+
+  58 0000 80B5     		push	{r7, lr}
+  59              		.cfi_def_cfa_offset 8
+  60              		.cfi_offset 7, -8
+  61              		.cfi_offset 14, -4
+  62 0002 00AF     		add	r7, sp, #0
+  63              		.cfi_def_cfa_register 7
+  58:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  59:Generated_Source\PSoC4/LPComp_OC_PM.c **** }
+  64              		.loc 1 59 0
+  65 0004 C046     		nop
+  66 0006 BD46     		mov	sp, r7
+  67              		@ sp needed
+  68 0008 80BD     		pop	{r7, pc}
+  69              		.cfi_endproc
+  70              	.LFE1:
+  71              		.size	LPComp_OC_RestoreConfig, .-LPComp_OC_RestoreConfig
+  72              		.section	.text.LPComp_OC_Sleep,"ax",%progbits
+  73              		.align	2
+  74              		.global	LPComp_OC_Sleep
+  75              		.code	16
+  76              		.thumb_func
+  77              		.type	LPComp_OC_Sleep, %function
+  78              	LPComp_OC_Sleep:
+  79              	.LFB2:
+  60:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  61:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  62:Generated_Source\PSoC4/LPComp_OC_PM.c **** /*******************************************************************************
+  63:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Function Name: LPComp_OC_Sleep
+  64:Generated_Source\PSoC4/LPComp_OC_PM.c **** ********************************************************************************
+  65:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  66:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Summary:
+  67:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  Empty function. Included for consistency with other components.
+  68:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  69:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Parameters:
+  70:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  None
+  71:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  72:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Return:
+  73:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  None
+  74:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  75:Generated_Source\PSoC4/LPComp_OC_PM.c **** *******************************************************************************/
+  76:Generated_Source\PSoC4/LPComp_OC_PM.c **** void LPComp_OC_Sleep(void)
+  77:Generated_Source\PSoC4/LPComp_OC_PM.c **** {
+  80              		.loc 1 77 0
+  81              		.cfi_startproc
+  82              		@ args = 0, pretend = 0, frame = 0
+  83              		@ frame_needed = 1, uses_anonymous_args = 0
+  84 0000 80B5     		push	{r7, lr}
+  85              		.cfi_def_cfa_offset 8
+  86              		.cfi_offset 7, -8
+  87              		.cfi_offset 14, -4
+  88 0002 00AF     		add	r7, sp, #0
+  89              		.cfi_def_cfa_register 7
+  78:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  79:Generated_Source\PSoC4/LPComp_OC_PM.c **** }
+  90              		.loc 1 79 0
+  91 0004 C046     		nop
+  92 0006 BD46     		mov	sp, r7
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccCdCdCz.s 			page 4
+
+
+  93              		@ sp needed
+  94 0008 80BD     		pop	{r7, pc}
+  95              		.cfi_endproc
+  96              	.LFE2:
+  97              		.size	LPComp_OC_Sleep, .-LPComp_OC_Sleep
+  98              		.section	.text.LPComp_OC_Wakeup,"ax",%progbits
+  99              		.align	2
+ 100              		.global	LPComp_OC_Wakeup
+ 101              		.code	16
+ 102              		.thumb_func
+ 103              		.type	LPComp_OC_Wakeup, %function
+ 104              	LPComp_OC_Wakeup:
+ 105              	.LFB3:
+  80:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  81:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  82:Generated_Source\PSoC4/LPComp_OC_PM.c **** /*******************************************************************************
+  83:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Function Name: LPComp_OC_Wakeup
+  84:Generated_Source\PSoC4/LPComp_OC_PM.c **** ********************************************************************************
+  85:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  86:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Summary:
+  87:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  Empty function. Included for consistency with other components.
+  88:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  89:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Parameters:
+  90:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  None
+  91:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  92:Generated_Source\PSoC4/LPComp_OC_PM.c **** * Return:
+  93:Generated_Source\PSoC4/LPComp_OC_PM.c **** *  None
+  94:Generated_Source\PSoC4/LPComp_OC_PM.c **** *
+  95:Generated_Source\PSoC4/LPComp_OC_PM.c **** *******************************************************************************/
+  96:Generated_Source\PSoC4/LPComp_OC_PM.c **** void LPComp_OC_Wakeup(void)
+  97:Generated_Source\PSoC4/LPComp_OC_PM.c **** {
+ 106              		.loc 1 97 0
+ 107              		.cfi_startproc
+ 108              		@ args = 0, pretend = 0, frame = 0
+ 109              		@ frame_needed = 1, uses_anonymous_args = 0
+ 110 0000 80B5     		push	{r7, lr}
+ 111              		.cfi_def_cfa_offset 8
+ 112              		.cfi_offset 7, -8
+ 113              		.cfi_offset 14, -4
+ 114 0002 00AF     		add	r7, sp, #0
+ 115              		.cfi_def_cfa_register 7
+  98:Generated_Source\PSoC4/LPComp_OC_PM.c **** 
+  99:Generated_Source\PSoC4/LPComp_OC_PM.c **** }
+ 116              		.loc 1 99 0
+ 117 0004 C046     		nop
+ 118 0006 BD46     		mov	sp, r7
+ 119              		@ sp needed
+ 120 0008 80BD     		pop	{r7, pc}
+ 121              		.cfi_endproc
+ 122              	.LFE3:
+ 123              		.size	LPComp_OC_Wakeup, .-LPComp_OC_Wakeup
+ 124              		.text
+ 125              	.Letext0:
+ 126              		.section	.debug_info,"",%progbits
+ 127              	.Ldebug_info0:
+ 128 0000 C1000000 		.4byte	0xc1
+ 129 0004 0400     		.2byte	0x4
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccCdCdCz.s 			page 5
+
+
+ 130 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 131 000a 04       		.byte	0x4
+ 132 000b 01       		.uleb128 0x1
+ 133 000c B7000000 		.4byte	.LASF16
+ 134 0010 0C       		.byte	0xc
+ 135 0011 45010000 		.4byte	.LASF17
+ 136 0015 00000000 		.4byte	.LASF18
+ 137 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 138 001d 00000000 		.4byte	0
+ 139 0021 00000000 		.4byte	.Ldebug_line0
+ 140 0025 02       		.uleb128 0x2
+ 141 0026 01       		.byte	0x1
+ 142 0027 06       		.byte	0x6
+ 143 0028 FA010000 		.4byte	.LASF0
+ 144 002c 02       		.uleb128 0x2
+ 145 002d 01       		.byte	0x1
+ 146 002e 08       		.byte	0x8
+ 147 002f 74000000 		.4byte	.LASF1
+ 148 0033 02       		.uleb128 0x2
+ 149 0034 02       		.byte	0x2
+ 150 0035 05       		.byte	0x5
+ 151 0036 D6010000 		.4byte	.LASF2
+ 152 003a 02       		.uleb128 0x2
+ 153 003b 02       		.byte	0x2
+ 154 003c 07       		.byte	0x7
+ 155 003d 94000000 		.4byte	.LASF3
+ 156 0041 02       		.uleb128 0x2
+ 157 0042 04       		.byte	0x4
+ 158 0043 05       		.byte	0x5
+ 159 0044 F1010000 		.4byte	.LASF4
+ 160 0048 02       		.uleb128 0x2
+ 161 0049 04       		.byte	0x4
+ 162 004a 07       		.byte	0x7
+ 163 004b 82000000 		.4byte	.LASF5
+ 164 004f 02       		.uleb128 0x2
+ 165 0050 08       		.byte	0x8
+ 166 0051 05       		.byte	0x5
+ 167 0052 C3010000 		.4byte	.LASF6
+ 168 0056 02       		.uleb128 0x2
+ 169 0057 08       		.byte	0x8
+ 170 0058 07       		.byte	0x7
+ 171 0059 AC010000 		.4byte	.LASF7
+ 172 005d 03       		.uleb128 0x3
+ 173 005e 04       		.byte	0x4
+ 174 005f 05       		.byte	0x5
+ 175 0060 696E7400 		.ascii	"int\000"
+ 176 0064 02       		.uleb128 0x2
+ 177 0065 04       		.byte	0x4
+ 178 0066 07       		.byte	0x7
+ 179 0067 8A010000 		.4byte	.LASF8
+ 180 006b 02       		.uleb128 0x2
+ 181 006c 04       		.byte	0x4
+ 182 006d 04       		.byte	0x4
+ 183 006e 6E000000 		.4byte	.LASF9
+ 184 0072 02       		.uleb128 0x2
+ 185 0073 08       		.byte	0x8
+ 186 0074 04       		.byte	0x4
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccCdCdCz.s 			page 6
+
+
+ 187 0075 6B010000 		.4byte	.LASF10
+ 188 0079 02       		.uleb128 0x2
+ 189 007a 01       		.byte	0x1
+ 190 007b 08       		.byte	0x8
+ 191 007c D1010000 		.4byte	.LASF11
+ 192 0080 04       		.uleb128 0x4
+ 193 0081 97010000 		.4byte	.LASF12
+ 194 0085 01       		.byte	0x1
+ 195 0086 24       		.byte	0x24
+ 196 0087 00000000 		.4byte	.LFB0
+ 197 008b 0A000000 		.4byte	.LFE0-.LFB0
+ 198 008f 01       		.uleb128 0x1
+ 199 0090 9C       		.byte	0x9c
+ 200 0091 04       		.uleb128 0x4
+ 201 0092 72010000 		.4byte	.LASF13
+ 202 0096 01       		.byte	0x1
+ 203 0097 38       		.byte	0x38
+ 204 0098 00000000 		.4byte	.LFB1
+ 205 009c 0A000000 		.4byte	.LFE1-.LFB1
+ 206 00a0 01       		.uleb128 0x1
+ 207 00a1 9C       		.byte	0x9c
+ 208 00a2 04       		.uleb128 0x4
+ 209 00a3 A7000000 		.4byte	.LASF14
+ 210 00a7 01       		.byte	0x1
+ 211 00a8 4C       		.byte	0x4c
+ 212 00a9 00000000 		.4byte	.LFB2
+ 213 00ad 0A000000 		.4byte	.LFE2-.LFB2
+ 214 00b1 01       		.uleb128 0x1
+ 215 00b2 9C       		.byte	0x9c
+ 216 00b3 04       		.uleb128 0x4
+ 217 00b4 E0010000 		.4byte	.LASF15
+ 218 00b8 01       		.byte	0x1
+ 219 00b9 60       		.byte	0x60
+ 220 00ba 00000000 		.4byte	.LFB3
+ 221 00be 0A000000 		.4byte	.LFE3-.LFB3
+ 222 00c2 01       		.uleb128 0x1
+ 223 00c3 9C       		.byte	0x9c
+ 224 00c4 00       		.byte	0
+ 225              		.section	.debug_abbrev,"",%progbits
+ 226              	.Ldebug_abbrev0:
+ 227 0000 01       		.uleb128 0x1
+ 228 0001 11       		.uleb128 0x11
+ 229 0002 01       		.byte	0x1
+ 230 0003 25       		.uleb128 0x25
+ 231 0004 0E       		.uleb128 0xe
+ 232 0005 13       		.uleb128 0x13
+ 233 0006 0B       		.uleb128 0xb
+ 234 0007 03       		.uleb128 0x3
+ 235 0008 0E       		.uleb128 0xe
+ 236 0009 1B       		.uleb128 0x1b
+ 237 000a 0E       		.uleb128 0xe
+ 238 000b 55       		.uleb128 0x55
+ 239 000c 17       		.uleb128 0x17
+ 240 000d 11       		.uleb128 0x11
+ 241 000e 01       		.uleb128 0x1
+ 242 000f 10       		.uleb128 0x10
+ 243 0010 17       		.uleb128 0x17
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccCdCdCz.s 			page 7
+
+
+ 244 0011 00       		.byte	0
+ 245 0012 00       		.byte	0
+ 246 0013 02       		.uleb128 0x2
+ 247 0014 24       		.uleb128 0x24
+ 248 0015 00       		.byte	0
+ 249 0016 0B       		.uleb128 0xb
+ 250 0017 0B       		.uleb128 0xb
+ 251 0018 3E       		.uleb128 0x3e
+ 252 0019 0B       		.uleb128 0xb
+ 253 001a 03       		.uleb128 0x3
+ 254 001b 0E       		.uleb128 0xe
+ 255 001c 00       		.byte	0
+ 256 001d 00       		.byte	0
+ 257 001e 03       		.uleb128 0x3
+ 258 001f 24       		.uleb128 0x24
+ 259 0020 00       		.byte	0
+ 260 0021 0B       		.uleb128 0xb
+ 261 0022 0B       		.uleb128 0xb
+ 262 0023 3E       		.uleb128 0x3e
+ 263 0024 0B       		.uleb128 0xb
+ 264 0025 03       		.uleb128 0x3
+ 265 0026 08       		.uleb128 0x8
+ 266 0027 00       		.byte	0
+ 267 0028 00       		.byte	0
+ 268 0029 04       		.uleb128 0x4
+ 269 002a 2E       		.uleb128 0x2e
+ 270 002b 00       		.byte	0
+ 271 002c 3F       		.uleb128 0x3f
+ 272 002d 19       		.uleb128 0x19
+ 273 002e 03       		.uleb128 0x3
+ 274 002f 0E       		.uleb128 0xe
+ 275 0030 3A       		.uleb128 0x3a
+ 276 0031 0B       		.uleb128 0xb
+ 277 0032 3B       		.uleb128 0x3b
+ 278 0033 0B       		.uleb128 0xb
+ 279 0034 27       		.uleb128 0x27
+ 280 0035 19       		.uleb128 0x19
+ 281 0036 11       		.uleb128 0x11
+ 282 0037 01       		.uleb128 0x1
+ 283 0038 12       		.uleb128 0x12
+ 284 0039 06       		.uleb128 0x6
+ 285 003a 40       		.uleb128 0x40
+ 286 003b 18       		.uleb128 0x18
+ 287 003c 9742     		.uleb128 0x2117
+ 288 003e 19       		.uleb128 0x19
+ 289 003f 00       		.byte	0
+ 290 0040 00       		.byte	0
+ 291 0041 00       		.byte	0
+ 292              		.section	.debug_aranges,"",%progbits
+ 293 0000 34000000 		.4byte	0x34
+ 294 0004 0200     		.2byte	0x2
+ 295 0006 00000000 		.4byte	.Ldebug_info0
+ 296 000a 04       		.byte	0x4
+ 297 000b 00       		.byte	0
+ 298 000c 0000     		.2byte	0
+ 299 000e 0000     		.2byte	0
+ 300 0010 00000000 		.4byte	.LFB0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccCdCdCz.s 			page 8
+
+
+ 301 0014 0A000000 		.4byte	.LFE0-.LFB0
+ 302 0018 00000000 		.4byte	.LFB1
+ 303 001c 0A000000 		.4byte	.LFE1-.LFB1
+ 304 0020 00000000 		.4byte	.LFB2
+ 305 0024 0A000000 		.4byte	.LFE2-.LFB2
+ 306 0028 00000000 		.4byte	.LFB3
+ 307 002c 0A000000 		.4byte	.LFE3-.LFB3
+ 308 0030 00000000 		.4byte	0
+ 309 0034 00000000 		.4byte	0
+ 310              		.section	.debug_ranges,"",%progbits
+ 311              	.Ldebug_ranges0:
+ 312 0000 00000000 		.4byte	.LFB0
+ 313 0004 0A000000 		.4byte	.LFE0
+ 314 0008 00000000 		.4byte	.LFB1
+ 315 000c 0A000000 		.4byte	.LFE1
+ 316 0010 00000000 		.4byte	.LFB2
+ 317 0014 0A000000 		.4byte	.LFE2
+ 318 0018 00000000 		.4byte	.LFB3
+ 319 001c 0A000000 		.4byte	.LFE3
+ 320 0020 00000000 		.4byte	0
+ 321 0024 00000000 		.4byte	0
+ 322              		.section	.debug_line,"",%progbits
+ 323              	.Ldebug_line0:
+ 324 0000 84000000 		.section	.debug_str,"MS",%progbits,1
+ 324      02003C00 
+ 324      00000201 
+ 324      FB0E0D00 
+ 324      01010101 
+ 325              	.LASF18:
+ 326 0000 433A5C55 		.ascii	"C:\\Users\\Andres Elizondo\\Documents\\PSoC Creator"
+ 326      73657273 
+ 326      5C416E64 
+ 326      72657320 
+ 326      456C697A 
+ 327 002f 5C53656E 		.ascii	"\\Sensored BLDC Motor Control\\Sensored BLDC Motor "
+ 327      736F7265 
+ 327      6420424C 
+ 327      4443204D 
+ 327      6F746F72 
+ 328 0060 436F6E74 		.ascii	"Control.cydsn\000"
+ 328      726F6C2E 
+ 328      63796473 
+ 328      6E00
+ 329              	.LASF9:
+ 330 006e 666C6F61 		.ascii	"float\000"
+ 330      7400
+ 331              	.LASF1:
+ 332 0074 756E7369 		.ascii	"unsigned char\000"
+ 332      676E6564 
+ 332      20636861 
+ 332      7200
+ 333              	.LASF5:
+ 334 0082 6C6F6E67 		.ascii	"long unsigned int\000"
+ 334      20756E73 
+ 334      69676E65 
+ 334      6420696E 
+ 334      7400
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccCdCdCz.s 			page 9
+
+
+ 335              	.LASF3:
+ 336 0094 73686F72 		.ascii	"short unsigned int\000"
+ 336      7420756E 
+ 336      7369676E 
+ 336      65642069 
+ 336      6E7400
+ 337              	.LASF14:
+ 338 00a7 4C50436F 		.ascii	"LPComp_OC_Sleep\000"
+ 338      6D705F4F 
+ 338      435F536C 
+ 338      65657000 
+ 339              	.LASF16:
+ 340 00b7 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 340      43313120 
+ 340      352E342E 
+ 340      31203230 
+ 340      31363036 
+ 341 00ea 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0 -mthumb -g -O"
+ 341      20726576 
+ 341      6973696F 
+ 341      6E203233 
+ 341      37373135 
+ 342 011d 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 342      66756E63 
+ 342      74696F6E 
+ 342      2D736563 
+ 342      74696F6E 
+ 343              	.LASF17:
+ 344 0145 47656E65 		.ascii	"Generated_Source\\PSoC4\\LPComp_OC_PM.c\000"
+ 344      72617465 
+ 344      645F536F 
+ 344      75726365 
+ 344      5C50536F 
+ 345              	.LASF10:
+ 346 016b 646F7562 		.ascii	"double\000"
+ 346      6C6500
+ 347              	.LASF13:
+ 348 0172 4C50436F 		.ascii	"LPComp_OC_RestoreConfig\000"
+ 348      6D705F4F 
+ 348      435F5265 
+ 348      73746F72 
+ 348      65436F6E 
+ 349              	.LASF8:
+ 350 018a 756E7369 		.ascii	"unsigned int\000"
+ 350      676E6564 
+ 350      20696E74 
+ 350      00
+ 351              	.LASF12:
+ 352 0197 4C50436F 		.ascii	"LPComp_OC_SaveConfig\000"
+ 352      6D705F4F 
+ 352      435F5361 
+ 352      7665436F 
+ 352      6E666967 
+ 353              	.LASF7:
+ 354 01ac 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 354      206C6F6E 
+ 354      6720756E 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccCdCdCz.s 			page 10
+
+
+ 354      7369676E 
+ 354      65642069 
+ 355              	.LASF6:
+ 356 01c3 6C6F6E67 		.ascii	"long long int\000"
+ 356      206C6F6E 
+ 356      6720696E 
+ 356      7400
+ 357              	.LASF11:
+ 358 01d1 63686172 		.ascii	"char\000"
+ 358      00
+ 359              	.LASF2:
+ 360 01d6 73686F72 		.ascii	"short int\000"
+ 360      7420696E 
+ 360      7400
+ 361              	.LASF15:
+ 362 01e0 4C50436F 		.ascii	"LPComp_OC_Wakeup\000"
+ 362      6D705F4F 
+ 362      435F5761 
+ 362      6B657570 
+ 362      00
+ 363              	.LASF4:
+ 364 01f1 6C6F6E67 		.ascii	"long int\000"
+ 364      20696E74 
+ 364      00
+ 365              	.LASF0:
+ 366 01fa 7369676E 		.ascii	"signed char\000"
+ 366      65642063 
+ 366      68617200 
+ 367              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

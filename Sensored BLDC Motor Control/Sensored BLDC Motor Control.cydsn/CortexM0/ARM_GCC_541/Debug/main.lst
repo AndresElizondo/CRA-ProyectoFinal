@@ -1,0 +1,1999 @@
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.comm	rxBuffer,8,4
+  20              		.comm	txBuffer,8,4
+  21              		.global	isDataAvailable
+  22              		.bss
+  23              		.type	isDataAvailable, %object
+  24              		.size	isDataAvailable, 1
+  25              	isDataAvailable:
+  26 0000 00       		.space	1
+  27              		.global	numeroDeFallas
+  28              		.type	numeroDeFallas, %object
+  29              		.size	numeroDeFallas, 1
+  30              	numeroDeFallas:
+  31 0001 00       		.space	1
+  32              		.global	radioCurva
+  33 0002 0000     		.align	2
+  34              		.type	radioCurva, %object
+  35              		.size	radioCurva, 4
+  36              	radioCurva:
+  37 0004 00000000 		.space	4
+  38              		.global	offset
+  39              		.align	2
+  40              		.type	offset, %object
+  41              		.size	offset, 4
+  42              	offset:
+  43 0008 00000000 		.space	4
+  44              		.global	vueltaIzquierda
+  45              		.data
+  46              		.type	vueltaIzquierda, %object
+  47              		.size	vueltaIzquierda, 1
+  48              	vueltaIzquierda:
+  49 0000 01       		.byte	1
+  50              		.global	anguloGiro
+  51              		.bss
+  52              		.align	2
+  53              		.type	anguloGiro, %object
+  54              		.size	anguloGiro, 4
+  55              	anguloGiro:
+  56 000c 00000000 		.space	4
+  57              		.global	porcentajeRPM
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 2
+
+
+  58              		.align	2
+  59              		.type	porcentajeRPM, %object
+  60              		.size	porcentajeRPM, 4
+  61              	porcentajeRPM:
+  62 0010 00000000 		.space	4
+  63              		.section	.text.IRSHandler,"ax",%progbits
+  64              		.align	2
+  65              		.global	IRSHandler
+  66              		.code	16
+  67              		.thumb_func
+  68              		.type	IRSHandler, %function
+  69              	IRSHandler:
+  70              	.LFB32:
+  71              		.file 1 "main.c"
+   1:main.c        **** /*******************************************************************************
+   2:main.c        **** * Project Name		: Sensored BLDC Motor Control
+   3:main.c        **** * File Name			: main.c
+   4:main.c        **** * Version			: 1.0
+   5:main.c        **** * Device Used		: CY8C4245AXI-483     
+   6:main.c        **** * Software Used		: PSoC Creator 4.2
+   7:main.c        **** * Compiler Used		: ARM GCC 5.4.1 
+   8:main.c        **** * Related Hardware  : CY8CKIT-042 PSoC 4 Pioneer Kit + CY8CKIT-037 PSoC 4
+   9:main.c        **** *                     Motor Control Evaluation Kit
+  10:main.c        **** ******************************************************************************
+  11:main.c        **** * Copyright (2018), Cypress Semiconductor Corporation. All rights reserved.
+  12:main.c        **** *******************************************************************************
+  13:main.c        **** * This software, including source code, documentation and related materials
+  14:main.c        **** * (“Software”), is owned by Cypress Semiconductor Corporation or one of its
+  15:main.c        **** * subsidiaries (“Cypress”) and is protected by and subject to worldwide patent
+  16:main.c        **** * protection (United States and foreign), United States copyright laws and
+  17:main.c        **** * international treaty provisions. Therefore, you may use this Software only
+  18:main.c        **** * as provided in the license agreement accompanying the software package from
+  19:main.c        **** * which you obtained this Software (“EULA”).
+  20:main.c        **** *
+  21:main.c        **** * If no EULA applies, Cypress hereby grants you a personal, nonexclusive,
+  22:main.c        **** * non-transferable license to copy, modify, and compile the Software source
+  23:main.c        **** * code solely for use in connection with Cypress’s integrated circuit products.
+  24:main.c        **** * Any reproduction, modification, translation, compilation, or representation
+  25:main.c        **** * of this Software except as specified above is prohibited without the express
+  26:main.c        **** * written permission of Cypress.
+  27:main.c        **** *
+  28:main.c        **** * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND, 
+  29:main.c        **** * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED 
+  30:main.c        **** * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Cypress 
+  31:main.c        **** * reserves the right to make changes to the Software without notice. Cypress 
+  32:main.c        **** * does not assume any liability arising out of the application or use of the 
+  33:main.c        **** * Software or any product or circuit described in the Software. Cypress does 
+  34:main.c        **** * not authorize its products for use in any products where a malfunction or 
+  35:main.c        **** * failure of the Cypress product may reasonably be expected to result in 
+  36:main.c        **** * significant property damage, injury or death (“High Risk Product”). By 
+  37:main.c        **** * including Cypress’s product in a High Risk Product, the manufacturer of such 
+  38:main.c        **** * system or application assumes all risk of such use and in doing so agrees to 
+  39:main.c        **** * indemnify Cypress against all liability.
+  40:main.c        **** *******************************************************************************/
+  41:main.c        **** #include <math.h>
+  42:main.c        **** #include <project.h>
+  43:main.c        **** #include "motor.h"
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 3
+
+
+  44:main.c        **** #include "speed.h"
+  45:main.c        **** #include "userinterface.h"
+  46:main.c        **** #include "getvalue.h"
+  47:main.c        **** 
+  48:main.c        **** // Datos fijos del problema
+  49:main.c        **** #define largoCarro (0.4)
+  50:main.c        **** #define MaxRPM 1200
+  51:main.c        **** #define reduccionRPM 4.5
+  52:main.c        **** #define circumferenciaLlanta (3.1416*10.2)
+  53:main.c        **** #define velocidadMax 0.5
+  54:main.c        **** 
+  55:main.c        **** // Parametros definidos para la comunicacion con PiCamera
+  56:main.c        **** #define rxBufferSize (8u)
+  57:main.c        **** #define rxPacketSize (8u)
+  58:main.c        **** #define maxNumeroDeFallasAntesDeParar (75)
+  59:main.c        **** uint8 rxBuffer[rxPacketSize];
+  60:main.c        **** uint8 txBuffer[rxPacketSize];
+  61:main.c        **** uint8 isDataAvailable = 0;
+  62:main.c        **** uint8 numeroDeFallas = 0;
+  63:main.c        **** 
+  64:main.c        **** // Datos recibidos del PiCamera
+  65:main.c        **** float radioCurva = 0;
+  66:main.c        **** float offset = 0;
+  67:main.c        **** uint8 vueltaIzquierda = TRUE;
+  68:main.c        **** 
+  69:main.c        **** // Datos calculados con base a datos de PiCamera
+  70:main.c        **** float anguloGiro = 0.0;
+  71:main.c        **** float porcentajeRPM = 0.0;
+  72:main.c        **** 
+  73:main.c        **** //uint16 indiceActual = 0;
+  74:main.c        **** //uint8 numVecesRepetidas = 1;
+  75:main.c        **** //uint16 numVelocidades = MAX_SPEED_REF_ADC_VALUE - MIN_SPEED_REF_ADC_VALUE;
+  76:main.c        **** 
+  77:main.c        **** void IRSHandler(){
+  72              		.loc 1 77 0
+  73              		.cfi_startproc
+  74              		@ args = 0, pretend = 0, frame = 8
+  75              		@ frame_needed = 1, uses_anonymous_args = 0
+  76 0000 80B5     		push	{r7, lr}
+  77              		.cfi_def_cfa_offset 8
+  78              		.cfi_offset 7, -8
+  79              		.cfi_offset 14, -4
+  80 0002 82B0     		sub	sp, sp, #8
+  81              		.cfi_def_cfa_offset 16
+  82 0004 00AF     		add	r7, sp, #0
+  83              		.cfi_def_cfa_register 7
+  78:main.c        ****     
+  79:main.c        ****     /* Waits for the end of the data transfer */
+  80:main.c        ****     while (rxPacketSize != UART_Pi_SpiUartGetRxBufferSize());
+  84              		.loc 1 80 0
+  85 0006 C046     		nop
+  86              	.L2:
+  87              		.loc 1 80 0 is_stmt 0 discriminator 1
+  88 0008 FFF7FEFF 		bl	UART_Pi_SpiUartGetRxBufferSize
+  89 000c 0300     		movs	r3, r0
+  90 000e 082B     		cmp	r3, #8
+  91 0010 FAD1     		bne	.L2
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 4
+
+
+  81:main.c        ****     
+  82:main.c        ****     uint8 i = 0;
+  92              		.loc 1 82 0 is_stmt 1
+  93 0012 FB1D     		adds	r3, r7, #7
+  94 0014 0022     		movs	r2, #0
+  95 0016 1A70     		strb	r2, [r3]
+  83:main.c        ****     while (0u != UART_Pi_SpiUartGetRxBufferSize()){
+  96              		.loc 1 83 0
+  97 0018 0EE0     		b	.L3
+  98              	.L4:
+  99              	.LBB2:
+  84:main.c        ****         uint32 readData = UART_Pi_UartGetByte();
+ 100              		.loc 1 84 0
+ 101 001a FFF7FEFF 		bl	UART_Pi_UartGetByte
+ 102 001e 0300     		movs	r3, r0
+ 103 0020 3B60     		str	r3, [r7]
+  85:main.c        ****         rxBuffer[i] = (uint8) (readData & 0xFF);
+ 104              		.loc 1 85 0
+ 105 0022 FB1D     		adds	r3, r7, #7
+ 106 0024 1B78     		ldrb	r3, [r3]
+ 107 0026 3A68     		ldr	r2, [r7]
+ 108 0028 D1B2     		uxtb	r1, r2
+ 109 002a 0B4A     		ldr	r2, .L5
+ 110 002c D154     		strb	r1, [r2, r3]
+  86:main.c        ****         i++;
+ 111              		.loc 1 86 0
+ 112 002e FB1D     		adds	r3, r7, #7
+ 113 0030 1A78     		ldrb	r2, [r3]
+ 114 0032 FB1D     		adds	r3, r7, #7
+ 115 0034 0132     		adds	r2, r2, #1
+ 116 0036 1A70     		strb	r2, [r3]
+ 117              	.L3:
+ 118              	.LBE2:
+  83:main.c        ****         uint32 readData = UART_Pi_UartGetByte();
+ 119              		.loc 1 83 0
+ 120 0038 FFF7FEFF 		bl	UART_Pi_SpiUartGetRxBufferSize
+ 121 003c 031E     		subs	r3, r0, #0
+ 122 003e ECD1     		bne	.L4
+  87:main.c        ****     }
+  88:main.c        ****     
+  89:main.c        ****     /* Clears out the Rx buffer */
+  90:main.c        ****     UART_Pi_SpiUartClearRxBuffer();
+ 123              		.loc 1 90 0
+ 124 0040 FFF7FEFF 		bl	UART_Pi_SpiUartClearRxBuffer
+  91:main.c        ****     
+  92:main.c        ****     /* Clears the interrupt source */
+  93:main.c        ****     UART_Pi_ClearRxInterruptSource(UART_Pi_INTR_RX_NOT_EMPTY);
+ 125              		.loc 1 93 0
+ 126 0044 054B     		ldr	r3, .L5+4
+ 127 0046 0422     		movs	r2, #4
+ 128 0048 1A60     		str	r2, [r3]
+  94:main.c        ****     
+  95:main.c        ****     /* Tell the program that new data is available */
+  96:main.c        ****     isDataAvailable = 1;
+ 129              		.loc 1 96 0
+ 130 004a 054B     		ldr	r3, .L5+8
+ 131 004c 0122     		movs	r2, #1
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 5
+
+
+ 132 004e 1A70     		strb	r2, [r3]
+  97:main.c        **** }
+ 133              		.loc 1 97 0
+ 134 0050 C046     		nop
+ 135 0052 BD46     		mov	sp, r7
+ 136 0054 02B0     		add	sp, sp, #8
+ 137              		@ sp needed
+ 138 0056 80BD     		pop	{r7, pc}
+ 139              	.L6:
+ 140              		.align	2
+ 141              	.L5:
+ 142 0058 00000000 		.word	rxBuffer
+ 143 005c C00F0740 		.word	1074204608
+ 144 0060 00000000 		.word	isDataAvailable
+ 145              		.cfi_endproc
+ 146              	.LFE32:
+ 147              		.size	IRSHandler, .-IRSHandler
+ 148              		.global	__aeabi_fdiv
+ 149              		.global	__aeabi_fsub
+ 150              		.global	__aeabi_f2d
+ 151              		.global	__aeabi_ddiv
+ 152              		.global	__aeabi_d2f
+ 153              		.global	__aeabi_dmul
+ 154              		.global	__aeabi_dadd
+ 155              		.section	.text.interpretaDatos,"ax",%progbits
+ 156              		.align	2
+ 157              		.global	interpretaDatos
+ 158              		.code	16
+ 159              		.thumb_func
+ 160              		.type	interpretaDatos, %function
+ 161              	interpretaDatos:
+ 162              	.LFB33:
+  98:main.c        **** 
+  99:main.c        **** void interpretaDatos(){
+ 163              		.loc 1 99 0
+ 164              		.cfi_startproc
+ 165              		@ args = 0, pretend = 0, frame = 0
+ 166              		@ frame_needed = 1, uses_anonymous_args = 0
+ 167 0000 B0B5     		push	{r4, r5, r7, lr}
+ 168              		.cfi_def_cfa_offset 16
+ 169              		.cfi_offset 4, -16
+ 170              		.cfi_offset 5, -12
+ 171              		.cfi_offset 7, -8
+ 172              		.cfi_offset 14, -4
+ 173 0002 00AF     		add	r7, sp, #0
+ 174              		.cfi_def_cfa_register 7
+ 100:main.c        ****     radioCurva = *((float *) rxBuffer)/100;
+ 175              		.loc 1 100 0
+ 176 0004 2D4B     		ldr	r3, .L8
+ 177 0006 1B68     		ldr	r3, [r3]
+ 178 0008 2D49     		ldr	r1, .L8+4
+ 179 000a 181C     		adds	r0, r3, #0
+ 180 000c FFF7FEFF 		bl	__aeabi_fdiv
+ 181 0010 031C     		adds	r3, r0, #0
+ 182 0012 1A1C     		adds	r2, r3, #0
+ 183 0014 2B4B     		ldr	r3, .L8+8
+ 184 0016 1A60     		str	r2, [r3]
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 6
+
+
+ 101:main.c        ****     offset = *((float *) rxBuffer+5)/100;
+ 185              		.loc 1 101 0
+ 186 0018 2B4B     		ldr	r3, .L8+12
+ 187 001a 1B68     		ldr	r3, [r3]
+ 188 001c 2849     		ldr	r1, .L8+4
+ 189 001e 181C     		adds	r0, r3, #0
+ 190 0020 FFF7FEFF 		bl	__aeabi_fdiv
+ 191 0024 031C     		adds	r3, r0, #0
+ 192 0026 1A1C     		adds	r2, r3, #0
+ 193 0028 284B     		ldr	r3, .L8+16
+ 194 002a 1A60     		str	r2, [r3]
+ 102:main.c        ****     vueltaIzquierda = *((uint8 *) rxBuffer+7);
+ 195              		.loc 1 102 0
+ 196 002c 234B     		ldr	r3, .L8
+ 197 002e DA79     		ldrb	r2, [r3, #7]
+ 198 0030 274B     		ldr	r3, .L8+20
+ 199 0032 1A70     		strb	r2, [r3]
+ 103:main.c        ****     
+ 104:main.c        ****     anguloGiro = (double) tanh( (double) (largoCarro/(radioCurva-offset)) );
+ 200              		.loc 1 104 0
+ 201 0034 234B     		ldr	r3, .L8+8
+ 202 0036 1A68     		ldr	r2, [r3]
+ 203 0038 244B     		ldr	r3, .L8+16
+ 204 003a 1B68     		ldr	r3, [r3]
+ 205 003c 191C     		adds	r1, r3, #0
+ 206 003e 101C     		adds	r0, r2, #0
+ 207 0040 FFF7FEFF 		bl	__aeabi_fsub
+ 208 0044 031C     		adds	r3, r0, #0
+ 209 0046 181C     		adds	r0, r3, #0
+ 210 0048 FFF7FEFF 		bl	__aeabi_f2d
+ 211 004c 0300     		movs	r3, r0
+ 212 004e 0C00     		movs	r4, r1
+ 213 0050 1A00     		movs	r2, r3
+ 214 0052 2300     		movs	r3, r4
+ 215 0054 1F48     		ldr	r0, .L8+24
+ 216 0056 2049     		ldr	r1, .L8+28
+ 217 0058 FFF7FEFF 		bl	__aeabi_ddiv
+ 218 005c 0300     		movs	r3, r0
+ 219 005e 0C00     		movs	r4, r1
+ 220 0060 1800     		movs	r0, r3
+ 221 0062 2100     		movs	r1, r4
+ 222 0064 FFF7FEFF 		bl	tanh
+ 223 0068 0300     		movs	r3, r0
+ 224 006a 0C00     		movs	r4, r1
+ 225 006c 1800     		movs	r0, r3
+ 226 006e 2100     		movs	r1, r4
+ 227 0070 FFF7FEFF 		bl	__aeabi_d2f
+ 228 0074 021C     		adds	r2, r0, #0
+ 229 0076 194B     		ldr	r3, .L8+32
+ 230 0078 1A60     		str	r2, [r3]
+ 105:main.c        ****     porcentajeRPM = -1.8 * anguloGiro + 100; // Funcion que describe un comportamiento de [0°->100
+ 231              		.loc 1 105 0
+ 232 007a 184B     		ldr	r3, .L8+32
+ 233 007c 1B68     		ldr	r3, [r3]
+ 234 007e 181C     		adds	r0, r3, #0
+ 235 0080 FFF7FEFF 		bl	__aeabi_f2d
+ 236 0084 164A     		ldr	r2, .L8+36
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 7
+
+
+ 237 0086 174B     		ldr	r3, .L8+40
+ 238 0088 FFF7FEFF 		bl	__aeabi_dmul
+ 239 008c 0300     		movs	r3, r0
+ 240 008e 0C00     		movs	r4, r1
+ 241 0090 1800     		movs	r0, r3
+ 242 0092 2100     		movs	r1, r4
+ 243 0094 0022     		movs	r2, #0
+ 244 0096 144B     		ldr	r3, .L8+44
+ 245 0098 FFF7FEFF 		bl	__aeabi_dadd
+ 246 009c 0300     		movs	r3, r0
+ 247 009e 0C00     		movs	r4, r1
+ 248 00a0 1800     		movs	r0, r3
+ 249 00a2 2100     		movs	r1, r4
+ 250 00a4 FFF7FEFF 		bl	__aeabi_d2f
+ 251 00a8 021C     		adds	r2, r0, #0
+ 252 00aa 104B     		ldr	r3, .L8+48
+ 253 00ac 1A60     		str	r2, [r3]
+ 106:main.c        ****     
+ 107:main.c        ****     numeroDeFallas = 0;
+ 254              		.loc 1 107 0
+ 255 00ae 104B     		ldr	r3, .L8+52
+ 256 00b0 0022     		movs	r2, #0
+ 257 00b2 1A70     		strb	r2, [r3]
+ 108:main.c        **** }
+ 258              		.loc 1 108 0
+ 259 00b4 C046     		nop
+ 260 00b6 BD46     		mov	sp, r7
+ 261              		@ sp needed
+ 262 00b8 B0BD     		pop	{r4, r5, r7, pc}
+ 263              	.L9:
+ 264 00ba C046     		.align	2
+ 265              	.L8:
+ 266 00bc 00000000 		.word	rxBuffer
+ 267 00c0 0000C842 		.word	1120403456
+ 268 00c4 00000000 		.word	radioCurva
+ 269 00c8 14000000 		.word	rxBuffer+20
+ 270 00cc 00000000 		.word	offset
+ 271 00d0 00000000 		.word	vueltaIzquierda
+ 272 00d4 9A999999 		.word	-1717986918
+ 273 00d8 9999D93F 		.word	1071225241
+ 274 00dc 00000000 		.word	anguloGiro
+ 275 00e0 CDCCCCCC 		.word	-858993459
+ 276 00e4 CCCCFCBF 		.word	-1073951540
+ 277 00e8 00005940 		.word	1079574528
+ 278 00ec 00000000 		.word	porcentajeRPM
+ 279 00f0 00000000 		.word	numeroDeFallas
+ 280              		.cfi_endproc
+ 281              	.LFE33:
+ 282              		.size	interpretaDatos, .-interpretaDatos
+ 283              		.global	__aeabi_fmul
+ 284              		.global	__aeabi_f2uiz
+ 285              		.global	__aeabi_uidiv
+ 286              		.section	.text.main,"ax",%progbits
+ 287              		.align	2
+ 288              		.global	main
+ 289              		.code	16
+ 290              		.thumb_func
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 8
+
+
+ 291              		.type	main, %function
+ 292              	main:
+ 293              	.LFB34:
+ 109:main.c        **** 
+ 110:main.c        **** int main()
+ 111:main.c        **** {
+ 294              		.loc 1 111 0
+ 295              		.cfi_startproc
+ 296              		@ args = 0, pretend = 0, frame = 16
+ 297              		@ frame_needed = 1, uses_anonymous_args = 0
+ 298 0000 90B5     		push	{r4, r7, lr}
+ 299              		.cfi_def_cfa_offset 12
+ 300              		.cfi_offset 4, -12
+ 301              		.cfi_offset 7, -8
+ 302              		.cfi_offset 14, -4
+ 303 0002 85B0     		sub	sp, sp, #20
+ 304              		.cfi_def_cfa_offset 32
+ 305 0004 00AF     		add	r7, sp, #0
+ 306              		.cfi_def_cfa_register 7
+ 112:main.c        ****     uint8 HallReader =0;    
+ 307              		.loc 1 112 0
+ 308 0006 0D23     		movs	r3, #13
+ 309 0008 FB18     		adds	r3, r7, r3
+ 310 000a 0022     		movs	r2, #0
+ 311 000c 1A70     		strb	r2, [r3]
+ 113:main.c        **** 	uint16 pwmCntLocal = 0;
+ 312              		.loc 1 113 0
+ 313 000e 0E23     		movs	r3, #14
+ 314 0010 FB18     		adds	r3, r7, r3
+ 315 0012 0022     		movs	r2, #0
+ 316 0014 1A80     		strh	r2, [r3]
+ 114:main.c        ****     
+ 115:main.c        ****     /* initialize communication with PiCamera*/
+ 116:main.c        ****     UART_Pi_SetCustomInterruptHandler(&IRSHandler);
+ 317              		.loc 1 116 0
+ 318 0016 7C4B     		ldr	r3, .L22
+ 319 0018 1800     		movs	r0, r3
+ 320 001a FFF7FEFF 		bl	UART_Pi_SetCustomInterruptHandler
+ 117:main.c        ****     UART_Pi_EnableInt();
+ 321              		.loc 1 117 0
+ 322 001e 0B20     		movs	r0, #11
+ 323 0020 FFF7FEFF 		bl	CyIntEnable
+ 118:main.c        ****     UART_Pi_Start();
+ 324              		.loc 1 118 0
+ 325 0024 FFF7FEFF 		bl	UART_Pi_Start
+ 119:main.c        ****     
+ 120:main.c        ****     /* initialize parameters in UI FW */
+ 121:main.c        ****     Init_UI_FW();    
+ 326              		.loc 1 121 0
+ 327 0028 FFF7FEFF 		bl	Init_UI_FW
+ 122:main.c        ****     /* disable global interrupt */ 
+ 123:main.c        **** 	CyGlobalIntDisable;	
+ 328              		.loc 1 123 0
+ 329              		.syntax divided
+ 330              	@ 123 "main.c" 1
+ 331 002c 72B6     		CPSID   i
+ 332              	@ 0 "" 2
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 9
+
+
+ 124:main.c        ****     /* initialize system hardware components */	
+ 125:main.c        ****     Init_HW();   	
+ 333              		.loc 1 125 0
+ 334              		.thumb
+ 335              		.syntax unified
+ 336 002e FFF7FEFF 		bl	Init_HW
+ 126:main.c        ****     
+ 127:main.c        ****     /*Enable Global interrupt*/
+ 128:main.c        **** 	CyGlobalIntEnable;
+ 337              		.loc 1 128 0
+ 338              		.syntax divided
+ 339              	@ 128 "main.c" 1
+ 340 0032 62B6     		CPSIE   i
+ 341              	@ 0 "" 2
+ 129:main.c        ****     /* initialize UI hardware components */ 
+ 130:main.c        **** 	Init_UI_HW();
+ 342              		.loc 1 130 0
+ 343              		.thumb
+ 344              		.syntax unified
+ 345 0034 FFF7FEFF 		bl	Init_UI_HW
+ 131:main.c        ****     
+ 132:main.c        ****     /* stop motor as default */
+ 133:main.c        **** 	UI_Cmd.run =  FALSE;     
+ 346              		.loc 1 133 0
+ 347 0038 744B     		ldr	r3, .L22+4
+ 348 003a 0022     		movs	r2, #0
+ 349 003c 1A70     		strb	r2, [r3]
+ 134:main.c        ****     /* Set Motor Direction */
+ 135:main.c        ****     /* CLOCK_WISE = 0x01, and COUNTER_CLOCK_WISE = 0x00 */  
+ 136:main.c        ****     CtrlReg_Dir_Write(UI_Data.Dir);
+ 350              		.loc 1 136 0
+ 351 003e 744B     		ldr	r3, .L22+8
+ 352 0040 1B78     		ldrb	r3, [r3]
+ 353 0042 1800     		movs	r0, r3
+ 354 0044 FFF7FEFF 		bl	CtrlReg_Dir_Write
+ 355              	.L21:
+ 137:main.c        ****     
+ 138:main.c        ****     for(;;)
+ 139:main.c        ****     {
+ 140:main.c        ****         /* Scan sensors and handle event */
+ 141:main.c        **** 	    ButtonProcess();
+ 356              		.loc 1 141 0
+ 357 0048 FFF7FEFF 		bl	ButtonProcess
+ 142:main.c        **** 		
+ 143:main.c        ****         /* Measure bus voltage */
+ 144:main.c        ****         VoltageCheck();	
+ 358              		.loc 1 144 0
+ 359 004c FFF7FEFF 		bl	VoltageCheck
+ 145:main.c        **** 		
+ 146:main.c        ****         // Si la camara no ha mandado datos en un rato, es mejor parar
+ 147:main.c        ****         if (numeroDeFallas >= maxNumeroDeFallasAntesDeParar){
+ 360              		.loc 1 147 0
+ 361 0050 704B     		ldr	r3, .L22+12
+ 362 0052 1B78     		ldrb	r3, [r3]
+ 363 0054 4A2B     		cmp	r3, #74
+ 364 0056 0ED9     		bls	.L11
+ 148:main.c        ****             UI_Cmd.run = FALSE;
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 10
+
+
+ 365              		.loc 1 148 0
+ 366 0058 6C4B     		ldr	r3, .L22+4
+ 367 005a 0022     		movs	r2, #0
+ 368 005c 1A70     		strb	r2, [r3]
+ 149:main.c        ****             stateSys = STATUS_STOP;
+ 369              		.loc 1 149 0
+ 370 005e 6E4B     		ldr	r3, .L22+16
+ 371 0060 0222     		movs	r2, #2
+ 372 0062 1A70     		strb	r2, [r3]
+ 150:main.c        ****             
+ 151:main.c        ****             // Calcula la velocidad
+ 152:main.c        ****             UI_Data.speedRpmRef = (uint16) UINT16_MAX;
+ 373              		.loc 1 152 0
+ 374 0064 6A4B     		ldr	r3, .L22+8
+ 375 0066 0122     		movs	r2, #1
+ 376 0068 5242     		rsbs	r2, r2, #0
+ 377 006a 9A80     		strh	r2, [r3, #4]
+ 153:main.c        ****             speedRef = UINT16_MAX;
+ 378              		.loc 1 153 0
+ 379 006c 6B4B     		ldr	r3, .L22+20
+ 380 006e 0122     		movs	r2, #1
+ 381 0070 5242     		rsbs	r2, r2, #0
+ 382 0072 1A80     		strh	r2, [r3]
+ 383 0074 22E0     		b	.L12
+ 384              	.L11:
+ 154:main.c        ****         }else if( stateSys == STATUS_STOP){
+ 385              		.loc 1 154 0
+ 386 0076 684B     		ldr	r3, .L22+16
+ 387 0078 1B78     		ldrb	r3, [r3]
+ 388 007a 022B     		cmp	r3, #2
+ 389 007c 1ED1     		bne	.L12
+ 155:main.c        ****             stateSys = STATUS_RUN;
+ 390              		.loc 1 155 0
+ 391 007e 664B     		ldr	r3, .L22+16
+ 392 0080 0122     		movs	r2, #1
+ 393 0082 1A70     		strb	r2, [r3]
+ 156:main.c        ****             UI_Cmd.run = TRUE;
+ 394              		.loc 1 156 0
+ 395 0084 614B     		ldr	r3, .L22+4
+ 396 0086 0122     		movs	r2, #1
+ 397 0088 1A70     		strb	r2, [r3]
+ 157:main.c        ****             
+ 158:main.c        ****             // Calcula la velocidad
+ 159:main.c        ****             UI_Data.speedRpmRef = (uint16) (MaxRPM * porcentajeRPM);
+ 398              		.loc 1 159 0
+ 399 008a 654B     		ldr	r3, .L22+24
+ 400 008c 1B68     		ldr	r3, [r3]
+ 401 008e 6549     		ldr	r1, .L22+28
+ 402 0090 181C     		adds	r0, r3, #0
+ 403 0092 FFF7FEFF 		bl	__aeabi_fmul
+ 404 0096 031C     		adds	r3, r0, #0
+ 405 0098 181C     		adds	r0, r3, #0
+ 406 009a FFF7FEFF 		bl	__aeabi_f2uiz
+ 407 009e 0300     		movs	r3, r0
+ 408 00a0 9AB2     		uxth	r2, r3
+ 409 00a2 5B4B     		ldr	r3, .L22+8
+ 410 00a4 9A80     		strh	r2, [r3, #4]
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 11
+
+
+ 160:main.c        ****             speedRef = (60*FREQ_CAPTURE_CLK)/(uint32)(MOTOR_POLE_PAIRS*UI_Data.speedRpmRef);
+ 411              		.loc 1 160 0
+ 412 00a6 5A4B     		ldr	r3, .L22+8
+ 413 00a8 9B88     		ldrh	r3, [r3, #4]
+ 414 00aa 9B00     		lsls	r3, r3, #2
+ 415 00ac 1900     		movs	r1, r3
+ 416 00ae 5E48     		ldr	r0, .L22+32
+ 417 00b0 FFF7FEFF 		bl	__aeabi_uidiv
+ 418 00b4 0300     		movs	r3, r0
+ 419 00b6 9AB2     		uxth	r2, r3
+ 420 00b8 584B     		ldr	r3, .L22+20
+ 421 00ba 1A80     		strh	r2, [r3]
+ 422              	.L12:
+ 161:main.c        ****         }
+ 162:main.c        ****         
+ 163:main.c        ****         /*Stop motor by disabling PWM output */
+ 164:main.c        **** 		if(UI_Cmd.run == FALSE)
+ 423              		.loc 1 164 0
+ 424 00bc 534B     		ldr	r3, .L22+4
+ 425 00be 1B78     		ldrb	r3, [r3]
+ 426 00c0 002B     		cmp	r3, #0
+ 427 00c2 14D1     		bne	.L13
+ 165:main.c        ****         {
+ 166:main.c        **** 			/* Turning off LED when motor stopping */
+ 167:main.c        **** 			STATUS_LED_Write(1);			
+ 428              		.loc 1 167 0
+ 429 00c4 0120     		movs	r0, #1
+ 430 00c6 FFF7FEFF 		bl	STATUS_LED_Write
+ 168:main.c        ****         	CtrlReg_PWMOut_Write(0x00);  
+ 431              		.loc 1 168 0
+ 432 00ca 0020     		movs	r0, #0
+ 433 00cc FFF7FEFF 		bl	CtrlReg_PWMOut_Write
+ 169:main.c        **** 			PWM_Drive_WriteCompare(PWM_Drive_ReadPeriod()>>16);
+ 434              		.loc 1 169 0
+ 435 00d0 FFF7FEFF 		bl	PWM_Drive_ReadPeriod
+ 436 00d4 0300     		movs	r3, r0
+ 437 00d6 1B0C     		lsrs	r3, r3, #16
+ 438 00d8 1800     		movs	r0, r3
+ 439 00da FFF7FEFF 		bl	PWM_Drive_WriteCompare
+ 170:main.c        ****             
+ 171:main.c        ****         	piOut = INIT_PIOUT;
+ 440              		.loc 1 171 0
+ 441 00de 534B     		ldr	r3, .L22+36
+ 442 00e0 A022     		movs	r2, #160
+ 443 00e2 D202     		lsls	r2, r2, #11
+ 444 00e4 1A60     		str	r2, [r3]
+ 172:main.c        ****         	HallReader = TRUE;
+ 445              		.loc 1 172 0
+ 446 00e6 0D23     		movs	r3, #13
+ 447 00e8 FB18     		adds	r3, r7, r3
+ 448 00ea 0122     		movs	r2, #1
+ 449 00ec 1A70     		strb	r2, [r3]
+ 450              	.L13:
+ 173:main.c        ****         } 
+ 174:main.c        **** 		
+ 175:main.c        **** 		/* Error Protection: Disable PWM and shining LED at 1Hz */
+ 176:main.c        **** 		if(errorState != 0)
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 12
+
+
+ 451              		.loc 1 176 0
+ 452 00ee 504B     		ldr	r3, .L22+40
+ 453 00f0 1B78     		ldrb	r3, [r3]
+ 454 00f2 002B     		cmp	r3, #0
+ 455 00f4 1CD0     		beq	.L14
+ 177:main.c        **** 		{
+ 178:main.c        **** 			CtrlReg_PWMOut_Write(0x00);
+ 456              		.loc 1 178 0
+ 457 00f6 0020     		movs	r0, #0
+ 458 00f8 FFF7FEFF 		bl	CtrlReg_PWMOut_Write
+ 179:main.c        ****             
+ 180:main.c        **** 			STATUS_LED_Write(~(STATUS_LED_Read()));
+ 459              		.loc 1 180 0
+ 460 00fc FFF7FEFF 		bl	STATUS_LED_Read
+ 461 0100 0300     		movs	r3, r0
+ 462 0102 DB43     		mvns	r3, r3
+ 463 0104 DBB2     		uxtb	r3, r3
+ 464 0106 1800     		movs	r0, r3
+ 465 0108 FFF7FEFF 		bl	STATUS_LED_Write
+ 181:main.c        **** 			CyDelay(500);
+ 466              		.loc 1 181 0
+ 467 010c FA23     		movs	r3, #250
+ 468 010e 5B00     		lsls	r3, r3, #1
+ 469 0110 1800     		movs	r0, r3
+ 470 0112 FFF7FEFF 		bl	CyDelay
+ 182:main.c        **** 			STATUS_LED_Write(~(STATUS_LED_Read()));
+ 471              		.loc 1 182 0
+ 472 0116 FFF7FEFF 		bl	STATUS_LED_Read
+ 473 011a 0300     		movs	r3, r0
+ 474 011c DB43     		mvns	r3, r3
+ 475 011e DBB2     		uxtb	r3, r3
+ 476 0120 1800     		movs	r0, r3
+ 477 0122 FFF7FEFF 		bl	STATUS_LED_Write
+ 183:main.c        **** 			CyDelay(500);
+ 478              		.loc 1 183 0
+ 479 0126 FA23     		movs	r3, #250
+ 480 0128 5B00     		lsls	r3, r3, #1
+ 481 012a 1800     		movs	r0, r3
+ 482 012c FFF7FEFF 		bl	CyDelay
+ 483              	.L14:
+ 184:main.c        **** 		}		
+ 185:main.c        ****         
+ 186:main.c        **** 		/* Motor Running */
+ 187:main.c        ****         if(UI_Cmd.run == TRUE && errorState == 0)
+ 484              		.loc 1 187 0
+ 485 0130 364B     		ldr	r3, .L22+4
+ 486 0132 1B78     		ldrb	r3, [r3]
+ 487 0134 012B     		cmp	r3, #1
+ 488 0136 87D1     		bne	.L21
+ 489              		.loc 1 187 0 is_stmt 0 discriminator 1
+ 490 0138 3D4B     		ldr	r3, .L22+40
+ 491 013a 1B78     		ldrb	r3, [r3]
+ 492 013c 002B     		cmp	r3, #0
+ 493 013e 83D1     		bne	.L21
+ 188:main.c        ****         {
+ 189:main.c        **** 			/* Lighting LED when motor running */
+ 190:main.c        **** 			STATUS_LED_Write(0);
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 13
+
+
+ 494              		.loc 1 190 0 is_stmt 1
+ 495 0140 0020     		movs	r0, #0
+ 496 0142 FFF7FEFF 		bl	STATUS_LED_Write
+ 191:main.c        **** 			
+ 192:main.c        ****             /* only send out UART data when motor is running */
+ 193:main.c        **** 		    BCPPoll();
+ 497              		.loc 1 193 0
+ 498 0146 FFF7FEFF 		bl	BCPPoll
+ 194:main.c        ****             
+ 195:main.c        ****             CtrlReg_PWMOut_Write(0x03);  
+ 499              		.loc 1 195 0
+ 500 014a 0320     		movs	r0, #3
+ 501 014c FFF7FEFF 		bl	CtrlReg_PWMOut_Write
+ 196:main.c        ****             
+ 197:main.c        ****             pwmCntLocal = pwmCnt;
+ 502              		.loc 1 197 0
+ 503 0150 0E23     		movs	r3, #14
+ 504 0152 FB18     		adds	r3, r7, r3
+ 505 0154 374A     		ldr	r2, .L22+44
+ 506 0156 1288     		ldrh	r2, [r2]
+ 507 0158 1A80     		strh	r2, [r3]
+ 198:main.c        ****             
+ 199:main.c        ****             /* Update every 12.5mS*/
+ 200:main.c        ****            	if((pwmCntLocal & 0xff) == 0xff) 
+ 508              		.loc 1 200 0
+ 509 015a 0E23     		movs	r3, #14
+ 510 015c FB18     		adds	r3, r7, r3
+ 511 015e 1B88     		ldrh	r3, [r3]
+ 512 0160 FF22     		movs	r2, #255
+ 513 0162 1340     		ands	r3, r2
+ 514 0164 FF2B     		cmp	r3, #255
+ 515 0166 2CD1     		bne	.L16
+ 201:main.c        ****     	    {
+ 202:main.c        **** 				pwmCntLocal++;
+ 516              		.loc 1 202 0
+ 517 0168 0E23     		movs	r3, #14
+ 518 016a FB18     		adds	r3, r7, r3
+ 519 016c 1A88     		ldrh	r2, [r3]
+ 520 016e 0E23     		movs	r3, #14
+ 521 0170 FB18     		adds	r3, r7, r3
+ 522 0172 0132     		adds	r2, r2, #1
+ 523 0174 1A80     		strh	r2, [r3]
+ 203:main.c        ****                 
+ 204:main.c        ****                 // Check for new data from PiCamera
+ 205:main.c        ****                 if (isDataAvailable){
+ 524              		.loc 1 205 0
+ 525 0176 304B     		ldr	r3, .L22+48
+ 526 0178 1B78     		ldrb	r3, [r3]
+ 527 017a 002B     		cmp	r3, #0
+ 528 017c 05D0     		beq	.L17
+ 206:main.c        ****                     interpretaDatos();
+ 529              		.loc 1 206 0
+ 530 017e FFF7FEFF 		bl	interpretaDatos
+ 207:main.c        ****                     isDataAvailable=0;
+ 531              		.loc 1 207 0
+ 532 0182 2D4B     		ldr	r3, .L22+48
+ 533 0184 0022     		movs	r2, #0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 14
+
+
+ 534 0186 1A70     		strb	r2, [r3]
+ 535 0188 05E0     		b	.L18
+ 536              	.L17:
+ 208:main.c        ****                 }else{
+ 209:main.c        ****                     numeroDeFallas++;
+ 537              		.loc 1 209 0
+ 538 018a 224B     		ldr	r3, .L22+12
+ 539 018c 1B78     		ldrb	r3, [r3]
+ 540 018e 0133     		adds	r3, r3, #1
+ 541 0190 DAB2     		uxtb	r2, r3
+ 542 0192 204B     		ldr	r3, .L22+12
+ 543 0194 1A70     		strb	r2, [r3]
+ 544              	.L18:
+ 210:main.c        ****                 }
+ 211:main.c        ****                 
+ 212:main.c        ****                 /* Calculate motor speed reference, unit is RPM*/
+ 213:main.c        **** 				//UI_Data.speedRpmRef = MIN_SPEED_REF_ADC_VALUE + indiceActual; //velocidadesDefinidas[indiceAc
+ 214:main.c        ****                 //numVecesRepetidas = (numVecesRepetidas + 1)%2;
+ 215:main.c        ****                 //indiceActual = (indiceActual + numVecesRepetidas/1)%numVelocidades;
+ 216:main.c        ****     			
+ 217:main.c        ****                 if(UI_Cmd.run == TRUE)
+ 545              		.loc 1 217 0
+ 546 0196 1D4B     		ldr	r3, .L22+4
+ 547 0198 1B78     		ldrb	r3, [r3]
+ 548 019a 012B     		cmp	r3, #1
+ 549 019c 01D1     		bne	.L19
+ 218:main.c        ****                 {
+ 219:main.c        ****                 /*Speed close loop control */            
+ 220:main.c        ****                 	SpeedPID();  
+ 550              		.loc 1 220 0
+ 551 019e FFF7FEFF 		bl	SpeedPID
+ 552              	.L19:
+ 221:main.c        ****                 }	 
+ 222:main.c        ****     			
+ 223:main.c        ****                 /* Hall Error Detection*/
+ 224:main.c        ****                 HallReader  = Hall_Error_Read();
+ 553              		.loc 1 224 0
+ 554 01a2 0D23     		movs	r3, #13
+ 555 01a4 FC18     		adds	r4, r7, r3
+ 556 01a6 FFF7FEFF 		bl	Hall_Error_Read
+ 557 01aa 0300     		movs	r3, r0
+ 558 01ac 2370     		strb	r3, [r4]
+ 225:main.c        ****                 if(HallReader == TRUE)
+ 559              		.loc 1 225 0
+ 560 01ae 0D23     		movs	r3, #13
+ 561 01b0 FB18     		adds	r3, r7, r3
+ 562 01b2 1B78     		ldrb	r3, [r3]
+ 563 01b4 012B     		cmp	r3, #1
+ 564 01b6 04D1     		bne	.L16
+ 226:main.c        ****                 {               
+ 227:main.c        ****     				errorState = hallError;
+ 565              		.loc 1 227 0
+ 566 01b8 1D4B     		ldr	r3, .L22+40
+ 567 01ba 0222     		movs	r2, #2
+ 568 01bc 1A70     		strb	r2, [r3]
+ 228:main.c        ****                 	UpdateStatusError();
+ 569              		.loc 1 228 0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 15
+
+
+ 570 01be FFF7FEFF 		bl	UpdateStatusError
+ 571              	.L16:
+ 229:main.c        ****                 }			
+ 230:main.c        ****     		}
+ 231:main.c        ****             /* Calculate the real time motor speed every 2000 PWM period, unit: RPM*/
+ 232:main.c        ****             if(pwmCntLocal >= 2000) 
+ 572              		.loc 1 232 0
+ 573 01c2 0E23     		movs	r3, #14
+ 574 01c4 FB18     		adds	r3, r7, r3
+ 575 01c6 1B88     		ldrh	r3, [r3]
+ 576 01c8 1C4A     		ldr	r2, .L22+52
+ 577 01ca 9342     		cmp	r3, r2
+ 578 01cc 15D9     		bls	.L20
+ 579              	.LBB3:
+ 233:main.c        ****             {
+ 234:main.c        ****                 uint32 tmp1 = 0;
+ 580              		.loc 1 234 0
+ 581 01ce 0023     		movs	r3, #0
+ 582 01d0 BB60     		str	r3, [r7, #8]
+ 235:main.c        ****                 uint32 tmp2 = 0;
+ 583              		.loc 1 235 0
+ 584 01d2 0023     		movs	r3, #0
+ 585 01d4 7B60     		str	r3, [r7, #4]
+ 236:main.c        **** 				pwmCntLocal = 0;
+ 586              		.loc 1 236 0
+ 587 01d6 0E23     		movs	r3, #14
+ 588 01d8 FB18     		adds	r3, r7, r3
+ 589 01da 0022     		movs	r2, #0
+ 590 01dc 1A80     		strh	r2, [r3]
+ 237:main.c        ****                 tmp1 = (60*FREQ_CAPTURE_CLK);
+ 591              		.loc 1 237 0
+ 592 01de 124B     		ldr	r3, .L22+32
+ 593 01e0 BB60     		str	r3, [r7, #8]
+ 238:main.c        ****                 tmp2 = (MOTOR_POLE_PAIRS*speedCur);            
+ 594              		.loc 1 238 0
+ 595 01e2 174B     		ldr	r3, .L22+56
+ 596 01e4 1B88     		ldrh	r3, [r3]
+ 597 01e6 9B00     		lsls	r3, r3, #2
+ 598 01e8 7B60     		str	r3, [r7, #4]
+ 239:main.c        ****                 UI_Data.speedRpm = (tmp1/tmp2);      
+ 599              		.loc 1 239 0
+ 600 01ea 7968     		ldr	r1, [r7, #4]
+ 601 01ec B868     		ldr	r0, [r7, #8]
+ 602 01ee FFF7FEFF 		bl	__aeabi_uidiv
+ 603 01f2 0300     		movs	r3, r0
+ 604 01f4 9AB2     		uxth	r2, r3
+ 605 01f6 064B     		ldr	r3, .L22+8
+ 606 01f8 5A80     		strh	r2, [r3, #2]
+ 607              	.L20:
+ 608              	.LBE3:
+ 240:main.c        ****             }
+ 241:main.c        ****             
+ 242:main.c        ****             pwmCnt = pwmCntLocal;
+ 609              		.loc 1 242 0
+ 610 01fa 0E4B     		ldr	r3, .L22+44
+ 611 01fc 0E22     		movs	r2, #14
+ 612 01fe BA18     		adds	r2, r7, r2
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 16
+
+
+ 613 0200 1288     		ldrh	r2, [r2]
+ 614 0202 1A80     		strh	r2, [r3]
+ 243:main.c        ****         }	
+ 244:main.c        ****     }
+ 615              		.loc 1 244 0
+ 616 0204 20E7     		b	.L21
+ 617              	.L23:
+ 618 0206 C046     		.align	2
+ 619              	.L22:
+ 620 0208 00000000 		.word	IRSHandler
+ 621 020c 00000000 		.word	UI_Cmd
+ 622 0210 00000000 		.word	UI_Data
+ 623 0214 00000000 		.word	numeroDeFallas
+ 624 0218 00000000 		.word	stateSys
+ 625 021c 00000000 		.word	speedRef
+ 626 0220 00000000 		.word	porcentajeRPM
+ 627 0224 00009644 		.word	1150681088
+ 628 0228 808D5B00 		.word	6000000
+ 629 022c 00000000 		.word	piOut
+ 630 0230 00000000 		.word	errorState
+ 631 0234 00000000 		.word	pwmCnt
+ 632 0238 00000000 		.word	isDataAvailable
+ 633 023c CF070000 		.word	1999
+ 634 0240 00000000 		.word	speedCur
+ 635              		.cfi_endproc
+ 636              	.LFE34:
+ 637              		.size	main, .-main
+ 638              		.text
+ 639              	.Letext0:
+ 640              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 641              		.file 3 "motor.h"
+ 642              		.file 4 "userinterface.h"
+ 643              		.file 5 "speed.h"
+ 644              		.section	.debug_info,"",%progbits
+ 645              	.Ldebug_info0:
+ 646 0000 40030000 		.4byte	0x340
+ 647 0004 0400     		.2byte	0x4
+ 648 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 649 000a 04       		.byte	0x4
+ 650 000b 01       		.uleb128 0x1
+ 651 000c 69010000 		.4byte	.LASF54
+ 652 0010 0C       		.byte	0xc
+ 653 0011 D9020000 		.4byte	.LASF55
+ 654 0015 41000000 		.4byte	.LASF56
+ 655 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 656 001d 00000000 		.4byte	0
+ 657 0021 00000000 		.4byte	.Ldebug_line0
+ 658 0025 02       		.uleb128 0x2
+ 659 0026 04       		.byte	0x4
+ 660 0027 05       		.byte	0x5
+ 661 0028 696E7400 		.ascii	"int\000"
+ 662 002c 03       		.uleb128 0x3
+ 663 002d 04       		.byte	0x4
+ 664 002e 07       		.byte	0x7
+ 665 002f 55020000 		.4byte	.LASF0
+ 666 0033 03       		.uleb128 0x3
+ 667 0034 08       		.byte	0x8
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 17
+
+
+ 668 0035 05       		.byte	0x5
+ 669 0036 33000000 		.4byte	.LASF1
+ 670 003a 03       		.uleb128 0x3
+ 671 003b 08       		.byte	0x8
+ 672 003c 04       		.byte	0x4
+ 673 003d 03020000 		.4byte	.LASF2
+ 674 0041 03       		.uleb128 0x3
+ 675 0042 01       		.byte	0x1
+ 676 0043 06       		.byte	0x6
+ 677 0044 32020000 		.4byte	.LASF3
+ 678 0048 03       		.uleb128 0x3
+ 679 0049 01       		.byte	0x1
+ 680 004a 08       		.byte	0x8
+ 681 004b 18020000 		.4byte	.LASF4
+ 682 004f 03       		.uleb128 0x3
+ 683 0050 02       		.byte	0x2
+ 684 0051 05       		.byte	0x5
+ 685 0052 18000000 		.4byte	.LASF5
+ 686 0056 03       		.uleb128 0x3
+ 687 0057 02       		.byte	0x2
+ 688 0058 07       		.byte	0x7
+ 689 0059 82020000 		.4byte	.LASF6
+ 690 005d 03       		.uleb128 0x3
+ 691 005e 04       		.byte	0x4
+ 692 005f 05       		.byte	0x5
+ 693 0060 49010000 		.4byte	.LASF7
+ 694 0064 03       		.uleb128 0x3
+ 695 0065 04       		.byte	0x4
+ 696 0066 07       		.byte	0x7
+ 697 0067 F0020000 		.4byte	.LASF8
+ 698 006b 03       		.uleb128 0x3
+ 699 006c 08       		.byte	0x8
+ 700 006d 07       		.byte	0x7
+ 701 006e 3E020000 		.4byte	.LASF9
+ 702 0072 03       		.uleb128 0x3
+ 703 0073 04       		.byte	0x4
+ 704 0074 07       		.byte	0x7
+ 705 0075 22000000 		.4byte	.LASF10
+ 706 0079 03       		.uleb128 0x3
+ 707 007a 01       		.byte	0x1
+ 708 007b 08       		.byte	0x8
+ 709 007c A6020000 		.4byte	.LASF11
+ 710 0080 03       		.uleb128 0x3
+ 711 0081 08       		.byte	0x8
+ 712 0082 04       		.byte	0x4
+ 713 0083 02030000 		.4byte	.LASF12
+ 714 0087 03       		.uleb128 0x3
+ 715 0088 04       		.byte	0x4
+ 716 0089 04       		.byte	0x4
+ 717 008a 19010000 		.4byte	.LASF13
+ 718 008e 04       		.uleb128 0x4
+ 719 008f ED000000 		.4byte	.LASF14
+ 720 0093 02       		.byte	0x2
+ 721 0094 E401     		.2byte	0x1e4
+ 722 0096 48000000 		.4byte	0x48
+ 723 009a 04       		.uleb128 0x4
+ 724 009b D2000000 		.4byte	.LASF15
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 18
+
+
+ 725 009f 02       		.byte	0x2
+ 726 00a0 E501     		.2byte	0x1e5
+ 727 00a2 56000000 		.4byte	0x56
+ 728 00a6 04       		.uleb128 0x4
+ 729 00a7 D2020000 		.4byte	.LASF16
+ 730 00ab 02       		.byte	0x2
+ 731 00ac E601     		.2byte	0x1e6
+ 732 00ae 64000000 		.4byte	0x64
+ 733 00b2 04       		.uleb128 0x4
+ 734 00b3 7C020000 		.4byte	.LASF17
+ 735 00b7 02       		.byte	0x2
+ 736 00b8 9002     		.2byte	0x290
+ 737 00ba BE000000 		.4byte	0xbe
+ 738 00be 05       		.uleb128 0x5
+ 739 00bf A6000000 		.4byte	0xa6
+ 740 00c3 06       		.uleb128 0x6
+ 741 00c4 01       		.byte	0x1
+ 742 00c5 03       		.byte	0x3
+ 743 00c6 46       		.byte	0x46
+ 744 00c7 D8000000 		.4byte	0xd8
+ 745 00cb 07       		.uleb128 0x7
+ 746 00cc 72756E00 		.ascii	"run\000"
+ 747 00d0 03       		.byte	0x3
+ 748 00d1 48       		.byte	0x48
+ 749 00d2 8E000000 		.4byte	0x8e
+ 750 00d6 00       		.byte	0
+ 751 00d7 00       		.byte	0
+ 752 00d8 08       		.uleb128 0x8
+ 753 00d9 CB000000 		.4byte	.LASF18
+ 754 00dd 03       		.byte	0x3
+ 755 00de 49       		.byte	0x49
+ 756 00df C3000000 		.4byte	0xc3
+ 757 00e3 06       		.uleb128 0x6
+ 758 00e4 10       		.byte	0x10
+ 759 00e5 03       		.byte	0x3
+ 760 00e6 4C       		.byte	0x4c
+ 761 00e7 56010000 		.4byte	0x156
+ 762 00eb 07       		.uleb128 0x7
+ 763 00ec 44697200 		.ascii	"Dir\000"
+ 764 00f0 03       		.byte	0x3
+ 765 00f1 4E       		.byte	0x4e
+ 766 00f2 8E000000 		.4byte	0x8e
+ 767 00f6 00       		.byte	0
+ 768 00f7 09       		.uleb128 0x9
+ 769 00f8 37030000 		.4byte	.LASF19
+ 770 00fc 03       		.byte	0x3
+ 771 00fd 50       		.byte	0x50
+ 772 00fe 9A000000 		.4byte	0x9a
+ 773 0102 02       		.byte	0x2
+ 774 0103 09       		.uleb128 0x9
+ 775 0104 F7010000 		.4byte	.LASF20
+ 776 0108 03       		.byte	0x3
+ 777 0109 51       		.byte	0x51
+ 778 010a 9A000000 		.4byte	0x9a
+ 779 010e 04       		.byte	0x4
+ 780 010f 07       		.uleb128 0x7
+ 781 0110 6B7000   		.ascii	"kp\000"
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 19
+
+
+ 782 0113 03       		.byte	0x3
+ 783 0114 53       		.byte	0x53
+ 784 0115 9A000000 		.4byte	0x9a
+ 785 0119 06       		.byte	0x6
+ 786 011a 07       		.uleb128 0x7
+ 787 011b 6B6900   		.ascii	"ki\000"
+ 788 011e 03       		.byte	0x3
+ 789 011f 54       		.byte	0x54
+ 790 0120 9A000000 		.4byte	0x9a
+ 791 0124 08       		.byte	0x8
+ 792 0125 09       		.uleb128 0x9
+ 793 0126 2B030000 		.4byte	.LASF21
+ 794 012a 03       		.byte	0x3
+ 795 012b 56       		.byte	0x56
+ 796 012c 9A000000 		.4byte	0x9a
+ 797 0130 0A       		.byte	0xa
+ 798 0131 09       		.uleb128 0x9
+ 799 0132 26020000 		.4byte	.LASF22
+ 800 0136 03       		.byte	0x3
+ 801 0137 57       		.byte	0x57
+ 802 0138 9A000000 		.4byte	0x9a
+ 803 013c 0C       		.byte	0xc
+ 804 013d 09       		.uleb128 0x9
+ 805 013e 9C020000 		.4byte	.LASF23
+ 806 0142 03       		.byte	0x3
+ 807 0143 58       		.byte	0x58
+ 808 0144 8E000000 		.4byte	0x8e
+ 809 0148 0E       		.byte	0xe
+ 810 0149 09       		.uleb128 0x9
+ 811 014a FC000000 		.4byte	.LASF24
+ 812 014e 03       		.byte	0x3
+ 813 014f 59       		.byte	0x59
+ 814 0150 8E000000 		.4byte	0x8e
+ 815 0154 0F       		.byte	0xf
+ 816 0155 00       		.byte	0
+ 817 0156 08       		.uleb128 0x8
+ 818 0157 D9000000 		.4byte	.LASF25
+ 819 015b 03       		.byte	0x3
+ 820 015c 5A       		.byte	0x5a
+ 821 015d E3000000 		.4byte	0xe3
+ 822 0161 0A       		.uleb128 0xa
+ 823 0162 12010000 		.4byte	.LASF57
+ 824 0166 01       		.byte	0x1
+ 825 0167 48000000 		.4byte	0x48
+ 826 016b 03       		.byte	0x3
+ 827 016c 5E       		.byte	0x5e
+ 828 016d 90010000 		.4byte	0x190
+ 829 0171 0B       		.uleb128 0xb
+ 830 0172 1A030000 		.4byte	.LASF26
+ 831 0176 00       		.byte	0
+ 832 0177 0B       		.uleb128 0xb
+ 833 0178 2B000000 		.4byte	.LASF27
+ 834 017c 01       		.byte	0x1
+ 835 017d 0B       		.uleb128 0xb
+ 836 017e AF000000 		.4byte	.LASF28
+ 837 0182 02       		.byte	0x2
+ 838 0183 0B       		.uleb128 0xb
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 20
+
+
+ 839 0184 09030000 		.4byte	.LASF29
+ 840 0188 03       		.byte	0x3
+ 841 0189 0B       		.uleb128 0xb
+ 842 018a 11030000 		.4byte	.LASF30
+ 843 018e 04       		.byte	0x4
+ 844 018f 00       		.byte	0
+ 845 0190 08       		.uleb128 0x8
+ 846 0191 23030000 		.4byte	.LASF31
+ 847 0195 03       		.byte	0x3
+ 848 0196 64       		.byte	0x64
+ 849 0197 61010000 		.4byte	0x161
+ 850 019b 0C       		.uleb128 0xc
+ 851 019c 3E010000 		.4byte	.LASF58
+ 852 01a0 01       		.byte	0x1
+ 853 01a1 4D       		.byte	0x4d
+ 854 01a2 00000000 		.4byte	.LFB32
+ 855 01a6 64000000 		.4byte	.LFE32-.LFB32
+ 856 01aa 01       		.uleb128 0x1
+ 857 01ab 9C       		.byte	0x9c
+ 858 01ac D5010000 		.4byte	0x1d5
+ 859 01b0 0D       		.uleb128 0xd
+ 860 01b1 6900     		.ascii	"i\000"
+ 861 01b3 01       		.byte	0x1
+ 862 01b4 52       		.byte	0x52
+ 863 01b5 8E000000 		.4byte	0x8e
+ 864 01b9 02       		.uleb128 0x2
+ 865 01ba 91       		.byte	0x91
+ 866 01bb 77       		.sleb128 -9
+ 867 01bc 0E       		.uleb128 0xe
+ 868 01bd 1A000000 		.4byte	.LBB2
+ 869 01c1 1E000000 		.4byte	.LBE2-.LBB2
+ 870 01c5 0F       		.uleb128 0xf
+ 871 01c6 1F010000 		.4byte	.LASF32
+ 872 01ca 01       		.byte	0x1
+ 873 01cb 54       		.byte	0x54
+ 874 01cc A6000000 		.4byte	0xa6
+ 875 01d0 02       		.uleb128 0x2
+ 876 01d1 91       		.byte	0x91
+ 877 01d2 70       		.sleb128 -16
+ 878 01d3 00       		.byte	0
+ 879 01d4 00       		.byte	0
+ 880 01d5 10       		.uleb128 0x10
+ 881 01d6 59010000 		.4byte	.LASF59
+ 882 01da 01       		.byte	0x1
+ 883 01db 63       		.byte	0x63
+ 884 01dc 00000000 		.4byte	.LFB33
+ 885 01e0 F4000000 		.4byte	.LFE33-.LFB33
+ 886 01e4 01       		.uleb128 0x1
+ 887 01e5 9C       		.byte	0x9c
+ 888 01e6 11       		.uleb128 0x11
+ 889 01e7 AB020000 		.4byte	.LASF60
+ 890 01eb 01       		.byte	0x1
+ 891 01ec 6E       		.byte	0x6e
+ 892 01ed 25000000 		.4byte	0x25
+ 893 01f1 00000000 		.4byte	.LFB34
+ 894 01f5 44020000 		.4byte	.LFE34-.LFB34
+ 895 01f9 01       		.uleb128 0x1
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 21
+
+
+ 896 01fa 9C       		.byte	0x9c
+ 897 01fb 42020000 		.4byte	0x242
+ 898 01ff 0F       		.uleb128 0xf
+ 899 0200 B9000000 		.4byte	.LASF33
+ 900 0204 01       		.byte	0x1
+ 901 0205 70       		.byte	0x70
+ 902 0206 8E000000 		.4byte	0x8e
+ 903 020a 02       		.uleb128 0x2
+ 904 020b 91       		.byte	0x91
+ 905 020c 6D       		.sleb128 -19
+ 906 020d 0F       		.uleb128 0xf
+ 907 020e E1000000 		.4byte	.LASF34
+ 908 0212 01       		.byte	0x1
+ 909 0213 71       		.byte	0x71
+ 910 0214 9A000000 		.4byte	0x9a
+ 911 0218 02       		.uleb128 0x2
+ 912 0219 91       		.byte	0x91
+ 913 021a 6E       		.sleb128 -18
+ 914 021b 0E       		.uleb128 0xe
+ 915 021c CE010000 		.4byte	.LBB3
+ 916 0220 2C000000 		.4byte	.LBE3-.LBB3
+ 917 0224 0F       		.uleb128 0xf
+ 918 0225 C8020000 		.4byte	.LASF35
+ 919 0229 01       		.byte	0x1
+ 920 022a EA       		.byte	0xea
+ 921 022b A6000000 		.4byte	0xa6
+ 922 022f 02       		.uleb128 0x2
+ 923 0230 91       		.byte	0x91
+ 924 0231 68       		.sleb128 -24
+ 925 0232 0F       		.uleb128 0xf
+ 926 0233 CD020000 		.4byte	.LASF36
+ 927 0237 01       		.byte	0x1
+ 928 0238 EB       		.byte	0xeb
+ 929 0239 A6000000 		.4byte	0xa6
+ 930 023d 02       		.uleb128 0x2
+ 931 023e 91       		.byte	0x91
+ 932 023f 64       		.sleb128 -28
+ 933 0240 00       		.byte	0
+ 934 0241 00       		.byte	0
+ 935 0242 12       		.uleb128 0x12
+ 936 0243 28010000 		.4byte	.LASF37
+ 937 0247 03       		.byte	0x3
+ 938 0248 66       		.byte	0x66
+ 939 0249 90010000 		.4byte	0x190
+ 940 024d 12       		.uleb128 0x12
+ 941 024e C4000000 		.4byte	.LASF38
+ 942 0252 03       		.byte	0x3
+ 943 0253 67       		.byte	0x67
+ 944 0254 D8000000 		.4byte	0xd8
+ 945 0258 12       		.uleb128 0x12
+ 946 0259 C0020000 		.4byte	.LASF39
+ 947 025d 03       		.byte	0x3
+ 948 025e 68       		.byte	0x68
+ 949 025f 56010000 		.4byte	0x156
+ 950 0263 12       		.uleb128 0x12
+ 951 0264 40030000 		.4byte	.LASF40
+ 952 0268 03       		.byte	0x3
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 22
+
+
+ 953 0269 69       		.byte	0x69
+ 954 026a 9A000000 		.4byte	0x9a
+ 955 026e 12       		.uleb128 0x12
+ 956 026f 00000000 		.4byte	.LASF41
+ 957 0273 03       		.byte	0x3
+ 958 0274 6A       		.byte	0x6a
+ 959 0275 9A000000 		.4byte	0x9a
+ 960 0279 12       		.uleb128 0x12
+ 961 027a 95020000 		.4byte	.LASF42
+ 962 027e 03       		.byte	0x3
+ 963 027f 6F       		.byte	0x6f
+ 964 0280 9A000000 		.4byte	0x9a
+ 965 0284 12       		.uleb128 0x12
+ 966 0285 0F020000 		.4byte	.LASF43
+ 967 0289 04       		.byte	0x4
+ 968 028a 45       		.byte	0x45
+ 969 028b 8E000000 		.4byte	0x8e
+ 970 028f 12       		.uleb128 0x12
+ 971 0290 09000000 		.4byte	.LASF44
+ 972 0294 05       		.byte	0x5
+ 973 0295 34       		.byte	0x34
+ 974 0296 5D000000 		.4byte	0x5d
+ 975 029a 13       		.uleb128 0x13
+ 976 029b 8E000000 		.4byte	0x8e
+ 977 029f AA020000 		.4byte	0x2aa
+ 978 02a3 14       		.uleb128 0x14
+ 979 02a4 72000000 		.4byte	0x72
+ 980 02a8 07       		.byte	0x7
+ 981 02a9 00       		.byte	0
+ 982 02aa 15       		.uleb128 0x15
+ 983 02ab 0F000000 		.4byte	.LASF45
+ 984 02af 01       		.byte	0x1
+ 985 02b0 3B       		.byte	0x3b
+ 986 02b1 9A020000 		.4byte	0x29a
+ 987 02b5 05       		.uleb128 0x5
+ 988 02b6 03       		.byte	0x3
+ 989 02b7 00000000 		.4byte	rxBuffer
+ 990 02bb 15       		.uleb128 0x15
+ 991 02bc F3000000 		.4byte	.LASF46
+ 992 02c0 01       		.byte	0x1
+ 993 02c1 3C       		.byte	0x3c
+ 994 02c2 9A020000 		.4byte	0x29a
+ 995 02c6 05       		.uleb128 0x5
+ 996 02c7 03       		.byte	0x3
+ 997 02c8 00000000 		.4byte	txBuffer
+ 998 02cc 15       		.uleb128 0x15
+ 999 02cd E0020000 		.4byte	.LASF47
+ 1000 02d1 01       		.byte	0x1
+ 1001 02d2 3D       		.byte	0x3d
+ 1002 02d3 8E000000 		.4byte	0x8e
+ 1003 02d7 05       		.uleb128 0x5
+ 1004 02d8 03       		.byte	0x3
+ 1005 02d9 00000000 		.4byte	isDataAvailable
+ 1006 02dd 15       		.uleb128 0x15
+ 1007 02de 62020000 		.4byte	.LASF48
+ 1008 02e2 01       		.byte	0x1
+ 1009 02e3 3E       		.byte	0x3e
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 23
+
+
+ 1010 02e4 8E000000 		.4byte	0x8e
+ 1011 02e8 05       		.uleb128 0x5
+ 1012 02e9 03       		.byte	0x3
+ 1013 02ea 00000000 		.4byte	numeroDeFallas
+ 1014 02ee 15       		.uleb128 0x15
+ 1015 02ef 71020000 		.4byte	.LASF49
+ 1016 02f3 01       		.byte	0x1
+ 1017 02f4 41       		.byte	0x41
+ 1018 02f5 87000000 		.4byte	0x87
+ 1019 02f9 05       		.uleb128 0x5
+ 1020 02fa 03       		.byte	0x3
+ 1021 02fb 00000000 		.4byte	radioCurva
+ 1022 02ff 15       		.uleb128 0x15
+ 1023 0300 52010000 		.4byte	.LASF50
+ 1024 0304 01       		.byte	0x1
+ 1025 0305 42       		.byte	0x42
+ 1026 0306 87000000 		.4byte	0x87
+ 1027 030a 05       		.uleb128 0x5
+ 1028 030b 03       		.byte	0x3
+ 1029 030c 00000000 		.4byte	offset
+ 1030 0310 15       		.uleb128 0x15
+ 1031 0311 B0020000 		.4byte	.LASF51
+ 1032 0315 01       		.byte	0x1
+ 1033 0316 43       		.byte	0x43
+ 1034 0317 8E000000 		.4byte	0x8e
+ 1035 031b 05       		.uleb128 0x5
+ 1036 031c 03       		.byte	0x3
+ 1037 031d 00000000 		.4byte	vueltaIzquierda
+ 1038 0321 15       		.uleb128 0x15
+ 1039 0322 33010000 		.4byte	.LASF52
+ 1040 0326 01       		.byte	0x1
+ 1041 0327 46       		.byte	0x46
+ 1042 0328 87000000 		.4byte	0x87
+ 1043 032c 05       		.uleb128 0x5
+ 1044 032d 03       		.byte	0x3
+ 1045 032e 00000000 		.4byte	anguloGiro
+ 1046 0332 15       		.uleb128 0x15
+ 1047 0333 04010000 		.4byte	.LASF53
+ 1048 0337 01       		.byte	0x1
+ 1049 0338 47       		.byte	0x47
+ 1050 0339 87000000 		.4byte	0x87
+ 1051 033d 05       		.uleb128 0x5
+ 1052 033e 03       		.byte	0x3
+ 1053 033f 00000000 		.4byte	porcentajeRPM
+ 1054 0343 00       		.byte	0
+ 1055              		.section	.debug_abbrev,"",%progbits
+ 1056              	.Ldebug_abbrev0:
+ 1057 0000 01       		.uleb128 0x1
+ 1058 0001 11       		.uleb128 0x11
+ 1059 0002 01       		.byte	0x1
+ 1060 0003 25       		.uleb128 0x25
+ 1061 0004 0E       		.uleb128 0xe
+ 1062 0005 13       		.uleb128 0x13
+ 1063 0006 0B       		.uleb128 0xb
+ 1064 0007 03       		.uleb128 0x3
+ 1065 0008 0E       		.uleb128 0xe
+ 1066 0009 1B       		.uleb128 0x1b
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 24
+
+
+ 1067 000a 0E       		.uleb128 0xe
+ 1068 000b 55       		.uleb128 0x55
+ 1069 000c 17       		.uleb128 0x17
+ 1070 000d 11       		.uleb128 0x11
+ 1071 000e 01       		.uleb128 0x1
+ 1072 000f 10       		.uleb128 0x10
+ 1073 0010 17       		.uleb128 0x17
+ 1074 0011 00       		.byte	0
+ 1075 0012 00       		.byte	0
+ 1076 0013 02       		.uleb128 0x2
+ 1077 0014 24       		.uleb128 0x24
+ 1078 0015 00       		.byte	0
+ 1079 0016 0B       		.uleb128 0xb
+ 1080 0017 0B       		.uleb128 0xb
+ 1081 0018 3E       		.uleb128 0x3e
+ 1082 0019 0B       		.uleb128 0xb
+ 1083 001a 03       		.uleb128 0x3
+ 1084 001b 08       		.uleb128 0x8
+ 1085 001c 00       		.byte	0
+ 1086 001d 00       		.byte	0
+ 1087 001e 03       		.uleb128 0x3
+ 1088 001f 24       		.uleb128 0x24
+ 1089 0020 00       		.byte	0
+ 1090 0021 0B       		.uleb128 0xb
+ 1091 0022 0B       		.uleb128 0xb
+ 1092 0023 3E       		.uleb128 0x3e
+ 1093 0024 0B       		.uleb128 0xb
+ 1094 0025 03       		.uleb128 0x3
+ 1095 0026 0E       		.uleb128 0xe
+ 1096 0027 00       		.byte	0
+ 1097 0028 00       		.byte	0
+ 1098 0029 04       		.uleb128 0x4
+ 1099 002a 16       		.uleb128 0x16
+ 1100 002b 00       		.byte	0
+ 1101 002c 03       		.uleb128 0x3
+ 1102 002d 0E       		.uleb128 0xe
+ 1103 002e 3A       		.uleb128 0x3a
+ 1104 002f 0B       		.uleb128 0xb
+ 1105 0030 3B       		.uleb128 0x3b
+ 1106 0031 05       		.uleb128 0x5
+ 1107 0032 49       		.uleb128 0x49
+ 1108 0033 13       		.uleb128 0x13
+ 1109 0034 00       		.byte	0
+ 1110 0035 00       		.byte	0
+ 1111 0036 05       		.uleb128 0x5
+ 1112 0037 35       		.uleb128 0x35
+ 1113 0038 00       		.byte	0
+ 1114 0039 49       		.uleb128 0x49
+ 1115 003a 13       		.uleb128 0x13
+ 1116 003b 00       		.byte	0
+ 1117 003c 00       		.byte	0
+ 1118 003d 06       		.uleb128 0x6
+ 1119 003e 13       		.uleb128 0x13
+ 1120 003f 01       		.byte	0x1
+ 1121 0040 0B       		.uleb128 0xb
+ 1122 0041 0B       		.uleb128 0xb
+ 1123 0042 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 25
+
+
+ 1124 0043 0B       		.uleb128 0xb
+ 1125 0044 3B       		.uleb128 0x3b
+ 1126 0045 0B       		.uleb128 0xb
+ 1127 0046 01       		.uleb128 0x1
+ 1128 0047 13       		.uleb128 0x13
+ 1129 0048 00       		.byte	0
+ 1130 0049 00       		.byte	0
+ 1131 004a 07       		.uleb128 0x7
+ 1132 004b 0D       		.uleb128 0xd
+ 1133 004c 00       		.byte	0
+ 1134 004d 03       		.uleb128 0x3
+ 1135 004e 08       		.uleb128 0x8
+ 1136 004f 3A       		.uleb128 0x3a
+ 1137 0050 0B       		.uleb128 0xb
+ 1138 0051 3B       		.uleb128 0x3b
+ 1139 0052 0B       		.uleb128 0xb
+ 1140 0053 49       		.uleb128 0x49
+ 1141 0054 13       		.uleb128 0x13
+ 1142 0055 38       		.uleb128 0x38
+ 1143 0056 0B       		.uleb128 0xb
+ 1144 0057 00       		.byte	0
+ 1145 0058 00       		.byte	0
+ 1146 0059 08       		.uleb128 0x8
+ 1147 005a 16       		.uleb128 0x16
+ 1148 005b 00       		.byte	0
+ 1149 005c 03       		.uleb128 0x3
+ 1150 005d 0E       		.uleb128 0xe
+ 1151 005e 3A       		.uleb128 0x3a
+ 1152 005f 0B       		.uleb128 0xb
+ 1153 0060 3B       		.uleb128 0x3b
+ 1154 0061 0B       		.uleb128 0xb
+ 1155 0062 49       		.uleb128 0x49
+ 1156 0063 13       		.uleb128 0x13
+ 1157 0064 00       		.byte	0
+ 1158 0065 00       		.byte	0
+ 1159 0066 09       		.uleb128 0x9
+ 1160 0067 0D       		.uleb128 0xd
+ 1161 0068 00       		.byte	0
+ 1162 0069 03       		.uleb128 0x3
+ 1163 006a 0E       		.uleb128 0xe
+ 1164 006b 3A       		.uleb128 0x3a
+ 1165 006c 0B       		.uleb128 0xb
+ 1166 006d 3B       		.uleb128 0x3b
+ 1167 006e 0B       		.uleb128 0xb
+ 1168 006f 49       		.uleb128 0x49
+ 1169 0070 13       		.uleb128 0x13
+ 1170 0071 38       		.uleb128 0x38
+ 1171 0072 0B       		.uleb128 0xb
+ 1172 0073 00       		.byte	0
+ 1173 0074 00       		.byte	0
+ 1174 0075 0A       		.uleb128 0xa
+ 1175 0076 04       		.uleb128 0x4
+ 1176 0077 01       		.byte	0x1
+ 1177 0078 03       		.uleb128 0x3
+ 1178 0079 0E       		.uleb128 0xe
+ 1179 007a 0B       		.uleb128 0xb
+ 1180 007b 0B       		.uleb128 0xb
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 26
+
+
+ 1181 007c 49       		.uleb128 0x49
+ 1182 007d 13       		.uleb128 0x13
+ 1183 007e 3A       		.uleb128 0x3a
+ 1184 007f 0B       		.uleb128 0xb
+ 1185 0080 3B       		.uleb128 0x3b
+ 1186 0081 0B       		.uleb128 0xb
+ 1187 0082 01       		.uleb128 0x1
+ 1188 0083 13       		.uleb128 0x13
+ 1189 0084 00       		.byte	0
+ 1190 0085 00       		.byte	0
+ 1191 0086 0B       		.uleb128 0xb
+ 1192 0087 28       		.uleb128 0x28
+ 1193 0088 00       		.byte	0
+ 1194 0089 03       		.uleb128 0x3
+ 1195 008a 0E       		.uleb128 0xe
+ 1196 008b 1C       		.uleb128 0x1c
+ 1197 008c 0B       		.uleb128 0xb
+ 1198 008d 00       		.byte	0
+ 1199 008e 00       		.byte	0
+ 1200 008f 0C       		.uleb128 0xc
+ 1201 0090 2E       		.uleb128 0x2e
+ 1202 0091 01       		.byte	0x1
+ 1203 0092 3F       		.uleb128 0x3f
+ 1204 0093 19       		.uleb128 0x19
+ 1205 0094 03       		.uleb128 0x3
+ 1206 0095 0E       		.uleb128 0xe
+ 1207 0096 3A       		.uleb128 0x3a
+ 1208 0097 0B       		.uleb128 0xb
+ 1209 0098 3B       		.uleb128 0x3b
+ 1210 0099 0B       		.uleb128 0xb
+ 1211 009a 11       		.uleb128 0x11
+ 1212 009b 01       		.uleb128 0x1
+ 1213 009c 12       		.uleb128 0x12
+ 1214 009d 06       		.uleb128 0x6
+ 1215 009e 40       		.uleb128 0x40
+ 1216 009f 18       		.uleb128 0x18
+ 1217 00a0 9642     		.uleb128 0x2116
+ 1218 00a2 19       		.uleb128 0x19
+ 1219 00a3 01       		.uleb128 0x1
+ 1220 00a4 13       		.uleb128 0x13
+ 1221 00a5 00       		.byte	0
+ 1222 00a6 00       		.byte	0
+ 1223 00a7 0D       		.uleb128 0xd
+ 1224 00a8 34       		.uleb128 0x34
+ 1225 00a9 00       		.byte	0
+ 1226 00aa 03       		.uleb128 0x3
+ 1227 00ab 08       		.uleb128 0x8
+ 1228 00ac 3A       		.uleb128 0x3a
+ 1229 00ad 0B       		.uleb128 0xb
+ 1230 00ae 3B       		.uleb128 0x3b
+ 1231 00af 0B       		.uleb128 0xb
+ 1232 00b0 49       		.uleb128 0x49
+ 1233 00b1 13       		.uleb128 0x13
+ 1234 00b2 02       		.uleb128 0x2
+ 1235 00b3 18       		.uleb128 0x18
+ 1236 00b4 00       		.byte	0
+ 1237 00b5 00       		.byte	0
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 27
+
+
+ 1238 00b6 0E       		.uleb128 0xe
+ 1239 00b7 0B       		.uleb128 0xb
+ 1240 00b8 01       		.byte	0x1
+ 1241 00b9 11       		.uleb128 0x11
+ 1242 00ba 01       		.uleb128 0x1
+ 1243 00bb 12       		.uleb128 0x12
+ 1244 00bc 06       		.uleb128 0x6
+ 1245 00bd 00       		.byte	0
+ 1246 00be 00       		.byte	0
+ 1247 00bf 0F       		.uleb128 0xf
+ 1248 00c0 34       		.uleb128 0x34
+ 1249 00c1 00       		.byte	0
+ 1250 00c2 03       		.uleb128 0x3
+ 1251 00c3 0E       		.uleb128 0xe
+ 1252 00c4 3A       		.uleb128 0x3a
+ 1253 00c5 0B       		.uleb128 0xb
+ 1254 00c6 3B       		.uleb128 0x3b
+ 1255 00c7 0B       		.uleb128 0xb
+ 1256 00c8 49       		.uleb128 0x49
+ 1257 00c9 13       		.uleb128 0x13
+ 1258 00ca 02       		.uleb128 0x2
+ 1259 00cb 18       		.uleb128 0x18
+ 1260 00cc 00       		.byte	0
+ 1261 00cd 00       		.byte	0
+ 1262 00ce 10       		.uleb128 0x10
+ 1263 00cf 2E       		.uleb128 0x2e
+ 1264 00d0 00       		.byte	0
+ 1265 00d1 3F       		.uleb128 0x3f
+ 1266 00d2 19       		.uleb128 0x19
+ 1267 00d3 03       		.uleb128 0x3
+ 1268 00d4 0E       		.uleb128 0xe
+ 1269 00d5 3A       		.uleb128 0x3a
+ 1270 00d6 0B       		.uleb128 0xb
+ 1271 00d7 3B       		.uleb128 0x3b
+ 1272 00d8 0B       		.uleb128 0xb
+ 1273 00d9 11       		.uleb128 0x11
+ 1274 00da 01       		.uleb128 0x1
+ 1275 00db 12       		.uleb128 0x12
+ 1276 00dc 06       		.uleb128 0x6
+ 1277 00dd 40       		.uleb128 0x40
+ 1278 00de 18       		.uleb128 0x18
+ 1279 00df 9642     		.uleb128 0x2116
+ 1280 00e1 19       		.uleb128 0x19
+ 1281 00e2 00       		.byte	0
+ 1282 00e3 00       		.byte	0
+ 1283 00e4 11       		.uleb128 0x11
+ 1284 00e5 2E       		.uleb128 0x2e
+ 1285 00e6 01       		.byte	0x1
+ 1286 00e7 3F       		.uleb128 0x3f
+ 1287 00e8 19       		.uleb128 0x19
+ 1288 00e9 03       		.uleb128 0x3
+ 1289 00ea 0E       		.uleb128 0xe
+ 1290 00eb 3A       		.uleb128 0x3a
+ 1291 00ec 0B       		.uleb128 0xb
+ 1292 00ed 3B       		.uleb128 0x3b
+ 1293 00ee 0B       		.uleb128 0xb
+ 1294 00ef 49       		.uleb128 0x49
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 28
+
+
+ 1295 00f0 13       		.uleb128 0x13
+ 1296 00f1 11       		.uleb128 0x11
+ 1297 00f2 01       		.uleb128 0x1
+ 1298 00f3 12       		.uleb128 0x12
+ 1299 00f4 06       		.uleb128 0x6
+ 1300 00f5 40       		.uleb128 0x40
+ 1301 00f6 18       		.uleb128 0x18
+ 1302 00f7 9642     		.uleb128 0x2116
+ 1303 00f9 19       		.uleb128 0x19
+ 1304 00fa 01       		.uleb128 0x1
+ 1305 00fb 13       		.uleb128 0x13
+ 1306 00fc 00       		.byte	0
+ 1307 00fd 00       		.byte	0
+ 1308 00fe 12       		.uleb128 0x12
+ 1309 00ff 34       		.uleb128 0x34
+ 1310 0100 00       		.byte	0
+ 1311 0101 03       		.uleb128 0x3
+ 1312 0102 0E       		.uleb128 0xe
+ 1313 0103 3A       		.uleb128 0x3a
+ 1314 0104 0B       		.uleb128 0xb
+ 1315 0105 3B       		.uleb128 0x3b
+ 1316 0106 0B       		.uleb128 0xb
+ 1317 0107 49       		.uleb128 0x49
+ 1318 0108 13       		.uleb128 0x13
+ 1319 0109 3F       		.uleb128 0x3f
+ 1320 010a 19       		.uleb128 0x19
+ 1321 010b 3C       		.uleb128 0x3c
+ 1322 010c 19       		.uleb128 0x19
+ 1323 010d 00       		.byte	0
+ 1324 010e 00       		.byte	0
+ 1325 010f 13       		.uleb128 0x13
+ 1326 0110 01       		.uleb128 0x1
+ 1327 0111 01       		.byte	0x1
+ 1328 0112 49       		.uleb128 0x49
+ 1329 0113 13       		.uleb128 0x13
+ 1330 0114 01       		.uleb128 0x1
+ 1331 0115 13       		.uleb128 0x13
+ 1332 0116 00       		.byte	0
+ 1333 0117 00       		.byte	0
+ 1334 0118 14       		.uleb128 0x14
+ 1335 0119 21       		.uleb128 0x21
+ 1336 011a 00       		.byte	0
+ 1337 011b 49       		.uleb128 0x49
+ 1338 011c 13       		.uleb128 0x13
+ 1339 011d 2F       		.uleb128 0x2f
+ 1340 011e 0B       		.uleb128 0xb
+ 1341 011f 00       		.byte	0
+ 1342 0120 00       		.byte	0
+ 1343 0121 15       		.uleb128 0x15
+ 1344 0122 34       		.uleb128 0x34
+ 1345 0123 00       		.byte	0
+ 1346 0124 03       		.uleb128 0x3
+ 1347 0125 0E       		.uleb128 0xe
+ 1348 0126 3A       		.uleb128 0x3a
+ 1349 0127 0B       		.uleb128 0xb
+ 1350 0128 3B       		.uleb128 0x3b
+ 1351 0129 0B       		.uleb128 0xb
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 29
+
+
+ 1352 012a 49       		.uleb128 0x49
+ 1353 012b 13       		.uleb128 0x13
+ 1354 012c 3F       		.uleb128 0x3f
+ 1355 012d 19       		.uleb128 0x19
+ 1356 012e 02       		.uleb128 0x2
+ 1357 012f 18       		.uleb128 0x18
+ 1358 0130 00       		.byte	0
+ 1359 0131 00       		.byte	0
+ 1360 0132 00       		.byte	0
+ 1361              		.section	.debug_aranges,"",%progbits
+ 1362 0000 2C000000 		.4byte	0x2c
+ 1363 0004 0200     		.2byte	0x2
+ 1364 0006 00000000 		.4byte	.Ldebug_info0
+ 1365 000a 04       		.byte	0x4
+ 1366 000b 00       		.byte	0
+ 1367 000c 0000     		.2byte	0
+ 1368 000e 0000     		.2byte	0
+ 1369 0010 00000000 		.4byte	.LFB32
+ 1370 0014 64000000 		.4byte	.LFE32-.LFB32
+ 1371 0018 00000000 		.4byte	.LFB33
+ 1372 001c F4000000 		.4byte	.LFE33-.LFB33
+ 1373 0020 00000000 		.4byte	.LFB34
+ 1374 0024 44020000 		.4byte	.LFE34-.LFB34
+ 1375 0028 00000000 		.4byte	0
+ 1376 002c 00000000 		.4byte	0
+ 1377              		.section	.debug_ranges,"",%progbits
+ 1378              	.Ldebug_ranges0:
+ 1379 0000 00000000 		.4byte	.LFB32
+ 1380 0004 64000000 		.4byte	.LFE32
+ 1381 0008 00000000 		.4byte	.LFB33
+ 1382 000c F4000000 		.4byte	.LFE33
+ 1383 0010 00000000 		.4byte	.LFB34
+ 1384 0014 44020000 		.4byte	.LFE34
+ 1385 0018 00000000 		.4byte	0
+ 1386 001c 00000000 		.4byte	0
+ 1387              		.section	.debug_line,"",%progbits
+ 1388              	.Ldebug_line0:
+ 1389 0000 01010000 		.section	.debug_str,"MS",%progbits,1
+ 1389      02006A00 
+ 1389      00000201 
+ 1389      FB0E0D00 
+ 1389      01010101 
+ 1390              	.LASF41:
+ 1391 0000 73706565 		.ascii	"speedCur\000"
+ 1391      64437572 
+ 1391      00
+ 1392              	.LASF44:
+ 1393 0009 70694F75 		.ascii	"piOut\000"
+ 1393      7400
+ 1394              	.LASF45:
+ 1395 000f 72784275 		.ascii	"rxBuffer\000"
+ 1395      66666572 
+ 1395      00
+ 1396              	.LASF5:
+ 1397 0018 73686F72 		.ascii	"short int\000"
+ 1397      7420696E 
+ 1397      7400
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 30
+
+
+ 1398              	.LASF10:
+ 1399 0022 73697A65 		.ascii	"sizetype\000"
+ 1399      74797065 
+ 1399      00
+ 1400              	.LASF27:
+ 1401 002b 6F766572 		.ascii	"overCur\000"
+ 1401      43757200 
+ 1402              	.LASF1:
+ 1403 0033 6C6F6E67 		.ascii	"long long int\000"
+ 1403      206C6F6E 
+ 1403      6720696E 
+ 1403      7400
+ 1404              	.LASF56:
+ 1405 0041 433A5C55 		.ascii	"C:\\Users\\Andres Elizondo\\Documents\\PSoC Creator"
+ 1405      73657273 
+ 1405      5C416E64 
+ 1405      72657320 
+ 1405      456C697A 
+ 1406 0070 5C53656E 		.ascii	"\\Sensored BLDC Motor Control\\Sensored BLDC Motor "
+ 1406      736F7265 
+ 1406      6420424C 
+ 1406      4443204D 
+ 1406      6F746F72 
+ 1407 00a1 436F6E74 		.ascii	"Control.cydsn\000"
+ 1407      726F6C2E 
+ 1407      63796473 
+ 1407      6E00
+ 1408              	.LASF28:
+ 1409 00af 68616C6C 		.ascii	"hallError\000"
+ 1409      4572726F 
+ 1409      7200
+ 1410              	.LASF33:
+ 1411 00b9 48616C6C 		.ascii	"HallReader\000"
+ 1411      52656164 
+ 1411      657200
+ 1412              	.LASF38:
+ 1413 00c4 55495F43 		.ascii	"UI_Cmd\000"
+ 1413      6D6400
+ 1414              	.LASF18:
+ 1415 00cb 55495F43 		.ascii	"UI_CMD\000"
+ 1415      4D4400
+ 1416              	.LASF15:
+ 1417 00d2 75696E74 		.ascii	"uint16\000"
+ 1417      313600
+ 1418              	.LASF25:
+ 1419 00d9 55495F44 		.ascii	"UI_DATA\000"
+ 1419      41544100 
+ 1420              	.LASF34:
+ 1421 00e1 70776D43 		.ascii	"pwmCntLocal\000"
+ 1421      6E744C6F 
+ 1421      63616C00 
+ 1422              	.LASF14:
+ 1423 00ed 75696E74 		.ascii	"uint8\000"
+ 1423      3800
+ 1424              	.LASF46:
+ 1425 00f3 74784275 		.ascii	"txBuffer\000"
+ 1425      66666572 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 31
+
+
+ 1425      00
+ 1426              	.LASF24:
+ 1427 00fc 6D617843 		.ascii	"maxCurr\000"
+ 1427      75727200 
+ 1428              	.LASF53:
+ 1429 0104 706F7263 		.ascii	"porcentajeRPM\000"
+ 1429      656E7461 
+ 1429      6A655250 
+ 1429      4D00
+ 1430              	.LASF57:
+ 1431 0112 5F457272 		.ascii	"_Error\000"
+ 1431      6F7200
+ 1432              	.LASF13:
+ 1433 0119 666C6F61 		.ascii	"float\000"
+ 1433      7400
+ 1434              	.LASF32:
+ 1435 011f 72656164 		.ascii	"readData\000"
+ 1435      44617461 
+ 1435      00
+ 1436              	.LASF37:
+ 1437 0128 6572726F 		.ascii	"errorState\000"
+ 1437      72537461 
+ 1437      746500
+ 1438              	.LASF52:
+ 1439 0133 616E6775 		.ascii	"anguloGiro\000"
+ 1439      6C6F4769 
+ 1439      726F00
+ 1440              	.LASF58:
+ 1441 013e 49525348 		.ascii	"IRSHandler\000"
+ 1441      616E646C 
+ 1441      657200
+ 1442              	.LASF7:
+ 1443 0149 6C6F6E67 		.ascii	"long int\000"
+ 1443      20696E74 
+ 1443      00
+ 1444              	.LASF50:
+ 1445 0152 6F666673 		.ascii	"offset\000"
+ 1445      657400
+ 1446              	.LASF59:
+ 1447 0159 696E7465 		.ascii	"interpretaDatos\000"
+ 1447      72707265 
+ 1447      74614461 
+ 1447      746F7300 
+ 1448              	.LASF54:
+ 1449 0169 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1449      43313120 
+ 1449      352E342E 
+ 1449      31203230 
+ 1449      31363036 
+ 1450 019c 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0 -mthumb -g -O"
+ 1450      20726576 
+ 1450      6973696F 
+ 1450      6E203233 
+ 1450      37373135 
+ 1451 01cf 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1451      66756E63 
+ 1451      74696F6E 
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 32
+
+
+ 1451      2D736563 
+ 1451      74696F6E 
+ 1452              	.LASF20:
+ 1453 01f7 73706565 		.ascii	"speedRpmRef\000"
+ 1453      6452706D 
+ 1453      52656600 
+ 1454              	.LASF2:
+ 1455 0203 6C6F6E67 		.ascii	"long double\000"
+ 1455      20646F75 
+ 1455      626C6500 
+ 1456              	.LASF43:
+ 1457 020f 73746174 		.ascii	"stateSys\000"
+ 1457      65537973 
+ 1457      00
+ 1458              	.LASF4:
+ 1459 0218 756E7369 		.ascii	"unsigned char\000"
+ 1459      676E6564 
+ 1459      20636861 
+ 1459      7200
+ 1460              	.LASF22:
+ 1461 0226 6D696E53 		.ascii	"minSpeedRpm\000"
+ 1461      70656564 
+ 1461      52706D00 
+ 1462              	.LASF3:
+ 1463 0232 7369676E 		.ascii	"signed char\000"
+ 1463      65642063 
+ 1463      68617200 
+ 1464              	.LASF9:
+ 1465 023e 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1465      206C6F6E 
+ 1465      6720756E 
+ 1465      7369676E 
+ 1465      65642069 
+ 1466              	.LASF0:
+ 1467 0255 756E7369 		.ascii	"unsigned int\000"
+ 1467      676E6564 
+ 1467      20696E74 
+ 1467      00
+ 1468              	.LASF48:
+ 1469 0262 6E756D65 		.ascii	"numeroDeFallas\000"
+ 1469      726F4465 
+ 1469      46616C6C 
+ 1469      617300
+ 1470              	.LASF49:
+ 1471 0271 72616469 		.ascii	"radioCurva\000"
+ 1471      6F437572 
+ 1471      766100
+ 1472              	.LASF17:
+ 1473 027c 72656733 		.ascii	"reg32\000"
+ 1473      3200
+ 1474              	.LASF6:
+ 1475 0282 73686F72 		.ascii	"short unsigned int\000"
+ 1475      7420756E 
+ 1475      7369676E 
+ 1475      65642069 
+ 1475      6E7400
+ 1476              	.LASF42:
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 33
+
+
+ 1477 0295 70776D43 		.ascii	"pwmCnt\000"
+ 1477      6E7400
+ 1478              	.LASF23:
+ 1479 029c 706F6C65 		.ascii	"polePairs\000"
+ 1479      50616972 
+ 1479      7300
+ 1480              	.LASF11:
+ 1481 02a6 63686172 		.ascii	"char\000"
+ 1481      00
+ 1482              	.LASF60:
+ 1483 02ab 6D61696E 		.ascii	"main\000"
+ 1483      00
+ 1484              	.LASF51:
+ 1485 02b0 7675656C 		.ascii	"vueltaIzquierda\000"
+ 1485      7461497A 
+ 1485      71756965 
+ 1485      72646100 
+ 1486              	.LASF39:
+ 1487 02c0 55495F44 		.ascii	"UI_Data\000"
+ 1487      61746100 
+ 1488              	.LASF35:
+ 1489 02c8 746D7031 		.ascii	"tmp1\000"
+ 1489      00
+ 1490              	.LASF36:
+ 1491 02cd 746D7032 		.ascii	"tmp2\000"
+ 1491      00
+ 1492              	.LASF16:
+ 1493 02d2 75696E74 		.ascii	"uint32\000"
+ 1493      333200
+ 1494              	.LASF55:
+ 1495 02d9 6D61696E 		.ascii	"main.c\000"
+ 1495      2E6300
+ 1496              	.LASF47:
+ 1497 02e0 69734461 		.ascii	"isDataAvailable\000"
+ 1497      74614176 
+ 1497      61696C61 
+ 1497      626C6500 
+ 1498              	.LASF8:
+ 1499 02f0 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1499      20756E73 
+ 1499      69676E65 
+ 1499      6420696E 
+ 1499      7400
+ 1500              	.LASF12:
+ 1501 0302 646F7562 		.ascii	"double\000"
+ 1501      6C6500
+ 1502              	.LASF29:
+ 1503 0309 6C6F7756 		.ascii	"lowVolt\000"
+ 1503      6F6C7400 
+ 1504              	.LASF30:
+ 1505 0311 68696768 		.ascii	"highVolt\000"
+ 1505      566F6C74 
+ 1505      00
+ 1506              	.LASF26:
+ 1507 031a 6E6F5F65 		.ascii	"no_error\000"
+ 1507      72726F72 
+ 1507      00
+ARM GAS  C:\Users\ANDRES~1\AppData\Local\Temp\ccu2TWt9.s 			page 34
+
+
+ 1508              	.LASF31:
+ 1509 0323 4572726F 		.ascii	"Error_T\000"
+ 1509      725F5400 
+ 1510              	.LASF21:
+ 1511 032b 6D617853 		.ascii	"maxSpeedRpm\000"
+ 1511      70656564 
+ 1511      52706D00 
+ 1512              	.LASF19:
+ 1513 0337 73706565 		.ascii	"speedRpm\000"
+ 1513      6452706D 
+ 1513      00
+ 1514              	.LASF40:
+ 1515 0340 73706565 		.ascii	"speedRef\000"
+ 1515      64526566 
+ 1515      00
+ 1516              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
