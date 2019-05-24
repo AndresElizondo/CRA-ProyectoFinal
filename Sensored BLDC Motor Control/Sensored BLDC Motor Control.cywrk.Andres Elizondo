@@ -345,22 +345,14 @@
 </userData>
 </CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997>
 <Unloaded />
-<OpenDocs>
-<name v=".\Sensored BLDC Motor Control.cydsn\TopDesign\TopDesign.cysch" />
-<name v=".\Sensored BLDC Motor Control.cydsn\main.c" />
-<name v=".\Sensored BLDC Motor Control.cydsn\Sensored BLDC Motor Control.cydwr" />
-<name v=".\Sensored BLDC Motor Control.cydsn\speedloop.c" />
-<name v=".\Sensored BLDC Motor Control.cydsn\Generated_Source\PSoC4\UART_Pi_SPI_UART_INT.c" />
-<name v=".\Sensored BLDC Motor Control.cydsn\motor.c" />
-<name v=".\Sensored BLDC Motor Control.cydsn\userinterface.c" />
-</OpenDocs>
+<OpenDocs />
 <OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
 
   Actipro Docking/MDI for WinForms
   Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
   http://www.actiprosoftware.com
 
---><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1368, 711" SelectedTabbedMdiWindow="b4bb78e0-a438-4344-8f5e-80c14654a7e4"><DocumentWindow Key="C:\Users\Andres Elizondo\Documents\PSoC Creator\Sensored BLDC Motor Control\Sensored BLDC Motor Control.cydsn\TopDesign\TopDesign.cysch" Guid="36a67793-8409-40ff-b145-c7697f7fd5f6" /><DocumentWindow Key="C:\Users\Andres Elizondo\Documents\PSoC Creator\Sensored BLDC Motor Control\Sensored BLDC Motor Control.cydsn\main.c" Guid="b4bb78e0-a438-4344-8f5e-80c14654a7e4" /><DocumentWindow Key="C:\Users\Andres Elizondo\Documents\PSoC Creator\Sensored BLDC Motor Control\Sensored BLDC Motor Control.cydsn\Sensored BLDC Motor Control.cydwr" Guid="277632cc-afad-471f-8d7c-47fd7b89703d" /><DocumentWindow Key="C:\Users\Andres Elizondo\Documents\PSoC Creator\Sensored BLDC Motor Control\Sensored BLDC Motor Control.cydsn\speedloop.c" Guid="18c8f876-9e6f-4690-88c6-0692af9b5697" /><DocumentWindow Key="C:\Users\Andres Elizondo\Documents\PSoC Creator\Sensored BLDC Motor Control\Sensored BLDC Motor Control.cydsn\Generated_Source\PSoC4\UART_Pi_SPI_UART_INT.c" Guid="52954ef8-70d8-4124-aff9-b572ef4b76a8" /><DocumentWindow Key="C:\Users\Andres Elizondo\Documents\PSoC Creator\Sensored BLDC Motor Control\Sensored BLDC Motor Control.cydsn\motor.c" Guid="fb989ea7-399f-470e-9fd3-9731d0545651" /><DocumentWindow Key="C:\Users\Andres Elizondo\Documents\PSoC Creator\Sensored BLDC Motor Control\Sensored BLDC Motor Control.cydsn\userinterface.c" Guid="0b83bb0d-2c30-4eed-aa66-456514a9f241" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1622, 711" SelectedTabbedMdiWindow="1f389c47-0aaf-4d5c-a453-089a615cb82e"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="1f389c47-0aaf-4d5c-a453-089a615cb82e" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>
